@@ -13,7 +13,8 @@
  - тестирование всех модулей
 
 <h4>Запуск бота</h4>
-![image](https://github.com/ivalukyan/sport-club-bot/assets/146388672/e6559653-1908-4ea9-b5ea-a8c530d92bbb)
+<img src=https://github.com/ivalukyan/sport-club-bot/assets/146388672/2b60bd44-901a-4fdd-9ec6-80785ba548ca>
+
 <h4>Регистрация</h4>
 1. ![image](https://github.com/ivalukyan/sport-club-bot/assets/146388672/17dde489-8b7d-4dcd-9b96-949d4b8fdc74)
 2. 
