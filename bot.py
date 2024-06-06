@@ -17,7 +17,7 @@ from aiogram.types import (
     KeyboardButton,
     Message,
     ReplyKeyboardMarkup,
-    ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton,
+    ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
 from aiogram.methods import EditMessageText, DeleteMessage
 from env import TOKEN
@@ -66,7 +66,7 @@ async def signup(message: Message, state: FSMContext) -> None:
         [
             KeyboardButton(text="м"),
             KeyboardButton(text="ж"),
-         ]
+        ]
     ], resize_keyboard=True, one_time_keyboard=True))
     await state.set_state(Form.signup_gender)
 
@@ -200,26 +200,34 @@ async def save_new_number(message: Message, state: FSMContext) -> None:
 async def login(message: Message, state: FSMContext) -> None:
     await state.set_state(Form.number_login)
     await message.answer("<b>ВХОД В СИСТЕМУ</b>\n\n"
-                         "Номер: \n"
-                         "Пароль: ")
-    await message.answer("Введите номер своего телефона ->")
+                         "Введите номер своего телефона: ")
 
 
 @router.message(Form.number_login)
 async def input_number(message: Message, state: FSMContext) -> None:
     await state.update_data(input_number=message.text)
-    await state.set_state(Form.password_login)
-    await message.answer("Введите пароль ->")
-
-
-@router.message(Form.password_login)
-async def input_password(message: Message, state: FSMContext) -> None:
-    await state.update_data(input_password=message.text)
     data = await state.get_data()
-    if bcrypt.checkpw(data['input_password'].encode(), hash_pass) and str(user_data['user1']['number']) == str(data['input_number']):
-        await message.answer("Добро пожаловать, в спортивный клуб!")
+    print(data)
+    if str(user_data['user1']['number']) == str(
+            data['input_number']):
+        await message.answer(f"{message.from_user.first_name}, добро пожаловать, в спортивный клуб!")
+        await message.answer("Функционал", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Становая тяга", callback_data="norm_1"),
+                InlineKeyboardButton(text="Жим лежа", callback_data="norm_2"),
+                InlineKeyboardButton(text="Присед", callback_data="norm_3"),
+            ]
+        ]))
     else:
         await message.answer("Упс...похоже ошибка в веденных данных")
+
+
+@router.callback_query(F.data == "norm_1")
+async def callback_query_norm_1(callback: CallbackQuery, state: FSMContext) -> None:
+    try:
+        await callback.message.answer("60x5")
+    except Exception.args:
+        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 async def main():
@@ -228,8 +236,6 @@ async def main():
     dp - dispatcher
     """
     # Initialize Bot instance with default bot properties which will be passed to all API calls
-
-    global bot
 
     bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
