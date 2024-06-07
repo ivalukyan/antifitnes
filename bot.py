@@ -7,6 +7,9 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 
 from env import TOKEN
+from auth import signup
+from auth import login
+
 
 router = Router()
 
@@ -18,9 +21,9 @@ async def main():
     """
     # Initialize Bot instance with default bot properties which will be passed to all API calls
 
-    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
-    dp.include_router(router)
+    dp.include_routers(signup.router, login.router)
+    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
     # Start event dispatching
     await dp.start_polling(bot)

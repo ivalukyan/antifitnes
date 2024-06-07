@@ -1,6 +1,6 @@
 import logging
 
-from aiogram import F
+from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -9,7 +9,7 @@ from aiogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
 
-from bot import router
+router = Router()
 
 
 class Form(StatesGroup):

@@ -1,16 +1,16 @@
 import re
 
-from aiogram import F
+from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import (
     KeyboardButton,
     Message,
-    ReplyKeyboardMarkup,
+    ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
 
-from bot import router
+router = Router()
 
 
 class Form(StatesGroup):
@@ -46,27 +46,26 @@ async def command_start(message: Message, state: FSMContext) -> None:
 async def signup(message: Message, state: FSMContext) -> None:
     await state.update_data(name=message.from_user.first_name)
     await state.update_data(username=message.from_user.username)
-    await message.answer("Укажите свой пол:", reply_markup=ReplyKeyboardMarkup(keyboard=[
+    await message.answer("Укажите свой пол:", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [
-            KeyboardButton(text="м"),
-            KeyboardButton(text="ж"),
+            InlineKeyboardButton(text="м", callback_data="gen_m"),
+            InlineKeyboardButton(text="ж", callback_data="gen_j"),
         ]
     ], resize_keyboard=True, one_time_keyboard=True))
-    await state.set_state(Form.signup_gender)
 
 
-@router.message(Form.signup_gender, F.text.casefold() == "м")
-async def gen_men(message: Message, state: FSMContext):
-    await state.update_data(gender=message.text)
+@router.callback_query(F.data == "gen_m")
+async def gen_m_callback(callback: CallbackQuery, state: FSMContext) -> None:
+    await state.update_data(gender='м')
     await state.set_state(Form.signup_number)
-    await message.answer("Введите номер телефона:")
+    await callback.message.answer("Введите номер телефона: ")
 
 
-@router.message(Form.signup_number, F.text.casefold() == "ж")
-async def geb_women(message: Message, state: FSMContext):
-    await state.update_data(gender=message.text)
+@router.callback_query(F.data == "gen_j")
+async def gen_j_callback(callback: CallbackQuery, state: FSMContext) -> None:
+    await state.update_data(gender='ж')
     await state.set_state(Form.signup_number)
-    await message.answer("Введите номер телефона:")
+    await callback.message.answer('Введите номер телефона: ')
 
 
 def check_number(user_number) -> bool:
@@ -87,14 +86,14 @@ async def add_number(message: Message, state: FSMContext) -> None:
         data = await state.get_data()
         await message.answer(f"<b>РЕГИСТРАЦИЯ</b>\n\n"
                              f"Имя: {data['name']}\n"
-                             f"Пол: {data['gender']}"
+                             f"Пол: {data['gender']}\n"
                              f"Имя пользователя: {data['username']}\n"
                              f"Телефон: {data['number']}\n")
         await message.answer("Подтвердите если все данные введены корректно:",
-                             reply_markup=ReplyKeyboardMarkup(keyboard=[
+                             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                  [
-                                     KeyboardButton(text="да"),
-                                     KeyboardButton(text="нет"),
+                                     InlineKeyboardButton(text="да", callback_data="yes"),
+                                     InlineKeyboardButton(text="нет", callback_data="no"),
                                  ]
                              ], resize_keyboard=True, one_time_keyboard=True))
         await state.set_state(Form.signup_end)
@@ -102,54 +101,55 @@ async def add_number(message: Message, state: FSMContext) -> None:
         await message.answer("Упс... походу вы ввели не номер телефона")
 
 
-@router.message(Form.signup_end, F.text.casefold() == "да")
-async def end_signup(message: Message, state: FSMContext) -> None:
-    await message.answer("Вы успешно зарегистрированные в системе!\n\n"
-                         "В войдите в аккаунт с помощью - <b>/login</b>")
+@router.callback_query(F.data == "yes")
+async def yes_callback(callback: CallbackQuery) -> None:
+    await callback.message.answer("Вы успешно зарегистрированные в системе!\n\n"
+                                  "В войдите в аккаунт с помощью - <b>/login</b>")
     # Отправка данных админу и в БД
 
 
-@router.message(Form.signup_end, F.text.casefold() == "нет")
-async def edit_form_signup(message: Message, state: FSMContext) -> None:
-    # Исправление поля выбранного пользователем с помощью кнопки
+@router.callback_query(F.data == "no")
+async def no_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await state.set_state(Form.signup_replace)
-    await message.answer(f"<i>{message.from_user.first_name}</i>, какое поле вы хотели бы заменить?\n",
-                         reply_markup=ReplyKeyboardMarkup(keyboard=[
-                             [
-                                 KeyboardButton(text="Имя"),
-                                 KeyboardButton(text="Номер"),
-                                 KeyboardButton(text="↩️")
-                             ]
-                         ], resize_keyboard=True, one_time_keyboard=True))
+    await callback.message.answer(
+        f"<i>{callback.message.from_user.first_name}</i>, какое поле вы хотели бы заменить?\n",
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Имя", callback_data="name"),
+                InlineKeyboardButton(text="Номер", callback_data="number"),
+                InlineKeyboardButton(text="↩️", callback_data="back")
+            ]
+        ], resize_keyboard=True, one_time_keyboard=True))
 
 
-@router.message(Form.signup_replace, F.text.casefold() == "имя")
-async def replace_name_form_signup(message: Message, state: FSMContext) -> None:
+@router.callback_query(F.data == "name")
+async def name_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await state.set_state(Form.save_name)
-    await message.answer("Введите новое имя: ")
+    await callback.message.answer("Введите новое имя: ")
 
 
-@router.message(Form.signup_replace, F.text.casefold() == "номер")
-async def replace_number_form_signup(message: Message, state: FSMContext) -> None:
+@router.callback_query(F.data == "number")
+async def number_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await state.set_state(Form.save_number)
-    await message.answer("Введите новый номер: ")
+    await callback.message.answer("Введите новый номер: ")
 
 
-@router.message(Form.signup_replace, F.text.casefold() == "↩️")
-async def back_menu_form_signup(message: Message, state: FSMContext) -> None:
+@router.callback_query(F.data == 'back')
+async def back_callback(callback: CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
-    await message.answer(f"<b>РЕГИСТРАЦИЯ</b>\n\n"
+    await callback.message.answer(f"<b>РЕГИСТРАЦИЯ</b>\n\n"
                          f"Имя: {data['name']}\n"
                          f"Пол: {data['gender']}\n"
                          f"Имя пользователя: {data['username']}\n"
                          f"Телефон: {data['number']}\n")
-    await message.answer("Подтвердите если все данные введены корректно:", reply_markup=ReplyKeyboardMarkup(keyboard=[
-        [
-            KeyboardButton(text="да"),
-            KeyboardButton(text="нет"),
+    await callback.message.answer("Подтвердите если все данные введены корректно:", reply_markup=InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="да", callback_data="yes"),
+                InlineKeyboardButton(text="нет", callback_data="no"),
+            ]
         ]
-    ], resize_keyboard=True, one_time_keyboard=True))
-    await state.set_state(Form.signup_end)
+    ), resize_keyboard=True, one_time_keyboard=True)
 
 
 @router.message(Form.save_name)
