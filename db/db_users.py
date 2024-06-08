@@ -31,10 +31,28 @@ def update_user_phone_number(id, phone_number):
 def get_phone_number(id):
     cursor.execute("""SELECT phone_number FROM users WHERE id = %s""", (id,))
     result = cursor.fetchone()[0]
-    return result
+    if result is not None:
+        return result
+    else:
+        return None
 
 
 def get_name(id):
     cursor.execute("""SELECT first_name FROM users WHERE id = %s""", (id,))
     result = cursor.fetchone()[0]
-    return result
+    if result is not None:
+        return result
+    else:
+        return None
+
+
+def check_login(id):
+    cursor.execute("""SELECT id FROM users""")
+    result = cursor.fetchall()
+    res = []
+    for i in range(len(result)):
+        res.append(result[i][0])
+    if id in res:
+        return True
+    else:
+        return False

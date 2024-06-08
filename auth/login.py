@@ -8,7 +8,7 @@ from aiogram.types import (
     Message,
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
-from db.db_users import get_phone_number, get_name
+from db.db_users import get_phone_number, get_name, check_login
 
 router = Router()
 
@@ -35,21 +35,23 @@ async def input_number(message: Message, state: FSMContext) -> None:
     await state.update_data(input_number=message.text)
     data = await state.get_data()
     # В дальнейшем будет сравнение с БД
-    if get_phone_number(message.from_user.id) == data['input_number']:
-        await message.answer(f"{get_name(message.from_user.id)}, добро пожаловать, в спортивный клуб!")
-        await message.answer("📎Профиль📎", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [
-                InlineKeyboardButton(text="История тренировок", callback_data="history_tren"),
-                InlineKeyboardButton(text="Кол-во реферальных баллов", callback_data="ref_bonus"),
-            ],
-            [
-                InlineKeyboardButton(text="Абонемент", callback_data="card"),
-                InlineKeyboardButton(text="Нормативы", callback_data="normatives")
-            ]
-        ]))
+    if check_login(message.from_user.id):
+        if get_phone_number(message.from_user.id) == data['input_number']:
+            await message.answer(f"{get_name(message.from_user.id)}, добро пожаловать, в спортивный клуб!")
+            await message.answer("📎Профиль📎", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                [
+                    InlineKeyboardButton(text="История тренировок", callback_data="history_tren"),
+                    InlineKeyboardButton(text="Кол-во реферальных баллов", callback_data="ref_bonus"),
+                ],
+                [
+                    InlineKeyboardButton(text="Абонемент", callback_data="card"),
+                    InlineKeyboardButton(text="Нормативы", callback_data="normatives")
+                ]
+            ]))
+        else:
+            await message.answer("Упс...похоже ошибка в веденных данных")
     else:
-        await message.answer("Упс...похоже ошибка в веденных данных")
-
+        await message.answer("Вы не зарегестрированы в системе, сначала зарегистрируйтесь")
 
 @router.callback_query(F.data == "history_tren")
 async def callback_history_tren(callback: CallbackQuery, state: FSMContext) -> None:
