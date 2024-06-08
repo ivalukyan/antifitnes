@@ -1,5 +1,3 @@
-import logging
-
 from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
@@ -10,8 +8,8 @@ from aiogram.types import (
 )
 
 from bot import bot
-from env import ADMINS
 from db.db_users import get_all_users
+from env import ADMINS
 
 router = Router()
 
