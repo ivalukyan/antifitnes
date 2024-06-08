@@ -1,14 +1,14 @@
 import re
 
 from aiogram import F, Router
-from aiogram.filters import Command, CommandStart
+from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import (
-    KeyboardButton,
     Message,
-    ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
+    InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
+
 from db.db_users import add_users
 
 router = Router()
@@ -108,7 +108,6 @@ async def add_number(message: Message, state: FSMContext) -> None:
 async def yes_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.edit_text("Вы успешно зарегистрированные в системе!\n\n"
                                      "В войдите в аккаунт с помощью - <b>/login</b>")
-    # Отправка данных админу и в БД
     data = await state.get_data()
     add_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
 
@@ -163,7 +162,6 @@ async def save_new_name(message: Message, state: FSMContext) -> None:
     if check_name(name):
         await state.update_data(name=name)
         data = await state.get_data()
-        # Добавление данных в БД
         await message.answer("Имя заменено, вы успешно зарегистрированы")
         await message.answer(f"<b>РЕГИСТРАЦИЯ</b>\n\n"
                              f"Имя: {data['name']}\n"
