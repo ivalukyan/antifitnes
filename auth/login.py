@@ -8,7 +8,7 @@ from aiogram.types import (
     Message,
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
-from db.db_users import get_phone_number
+from db.db_users import get_phone_number, get_name
 
 router = Router()
 
@@ -35,9 +35,8 @@ async def input_number(message: Message, state: FSMContext) -> None:
     await state.update_data(input_number=message.text)
     data = await state.get_data()
     # В дальнейшем будет сравнение с БД
-    if get_phone_number(message.from_user.id) == str(
-            data['input_number']):
-        await message.answer(f"{message.from_user.first_name}, добро пожаловать, в спортивный клуб!")
+    if get_phone_number(message.from_user.id) == data['input_number']:
+        await message.answer(f"{get_name(message.from_user.id)}, добро пожаловать, в спортивный клуб!")
         await message.answer("📎Профиль📎", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [
                 InlineKeyboardButton(text="История тренировок", callback_data="history_tren"),

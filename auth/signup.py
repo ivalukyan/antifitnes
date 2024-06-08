@@ -107,7 +107,7 @@ async def add_number(message: Message, state: FSMContext) -> None:
 @router.callback_query(F.data == "yes")
 async def yes_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.edit_text("Вы успешно зарегистрированные в системе!\n\n"
-                                  "В войдите в аккаунт с помощью - <b>/login</b>")
+                                     "В войдите в аккаунт с помощью - <b>/login</b>")
     # Отправка данных админу и в БД
     data = await state.get_data()
     add_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
@@ -143,10 +143,10 @@ async def number_callback(callback: CallbackQuery, state: FSMContext) -> None:
 async def back_callback(callback: CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
     await callback.message.edit_text(f"<b>РЕГИСТРАЦИЯ</b>\n\n"
-                         f"Имя: {data['name']}\n"
-                         f"Пол: {data['gender']}\n"
-                         f"Имя пользователя: {data['username']}\n"
-                         f"Телефон: {data['number']}\n")
+                                     f"Имя: {data['name']}\n"
+                                     f"Пол: {data['gender']}\n"
+                                     f"Имя пользователя: {data['username']}\n"
+                                     f"Телефон: {data['number']}\n")
     await callback.message.answer("Подтвердите если все данные введены корректно:", reply_markup=InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -170,7 +170,10 @@ async def save_new_name(message: Message, state: FSMContext) -> None:
                              f"Пол: {data['gender']}\n"
                              f"Имя пользователя: {data['username']}\n"
                              f"Телефон: {data['number']}\n")
+        await message.answer("Вы успешно зарегистрированные в системе!\n\n"
+                             "В войдите в аккаунт с помощью - <b>/login</b>")
         add_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
+        await state.clear()
     else:
         await message.answer("Упс... имя введено не верно")
 
@@ -187,6 +190,9 @@ async def save_new_number(message: Message, state: FSMContext) -> None:
                              f"Пол: {data['gender']}\n"
                              f"Имя пользователя: {data['username']}\n"
                              f"Телефон: {data['number']}\n")
+        await message.answer("Вы успешно зарегистрированные в системе!\n\n"
+                             "В войдите в аккаунт с помощью - <b>/login</b>")
         add_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
+        await state.clear()
     else:
         await message.answer("Упс... номер введен не правильно")
