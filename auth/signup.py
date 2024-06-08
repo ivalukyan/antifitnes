@@ -9,6 +9,7 @@ from aiogram.types import (
     Message,
     ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
+from db.db_users import add_users
 
 router = Router()
 
@@ -34,16 +35,9 @@ class Form(StatesGroup):
     save_number = State()
 
 
-@router.message(CommandStart())
-async def command_start(message: Message, state: FSMContext) -> None:
-    await message.answer(
-        f"Здравствуйте, <i>{message.from_user.first_name}</i>, вас приветствует бот спортивного клуба\n\n"
-        f"Для того чтобы продолжить ввойдите в свой аккканут с помощью команды - <b>/login</b>\n"
-        f"или зарегестрируйтесь с помощью команды - <b>/signup</b>")
-
-
 @router.message(Command('signup'))
 async def signup(message: Message, state: FSMContext) -> None:
+    await state.update_data(id=message.from_user.id)
     await state.update_data(name=message.from_user.first_name)
     await state.update_data(username=message.from_user.username)
     await message.answer("Укажите свой пол:", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
@@ -58,20 +52,29 @@ async def signup(message: Message, state: FSMContext) -> None:
 async def gen_m_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await state.update_data(gender='м')
     await state.set_state(Form.signup_number)
-    await callback.message.answer("Введите номер телефона: ")
+    await callback.message.edit_text("Введите номер телефона: ")
 
 
 @router.callback_query(F.data == "gen_j")
 async def gen_j_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await state.update_data(gender='ж')
     await state.set_state(Form.signup_number)
-    await callback.message.answer('Введите номер телефона: ')
+    await callback.message.edit_text('Введите номер телефона: ')
 
 
 def check_number(user_number) -> bool:
-    phone_number_pattern = r'^\+\d{1,2}|8\d{3}\d{3}\d{4}$'
+    phone_number_pattern = r'^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$'
 
     if re.match(phone_number_pattern, user_number):
+        return True
+    else:
+        return False
+
+
+def check_name(user_name) -> bool:
+    name_pattern = r'^[А-Я][а-яё]*$'
+
+    if re.match(name_pattern, user_name):
         return True
     else:
         return False
@@ -102,16 +105,18 @@ async def add_number(message: Message, state: FSMContext) -> None:
 
 
 @router.callback_query(F.data == "yes")
-async def yes_callback(callback: CallbackQuery) -> None:
-    await callback.message.answer("Вы успешно зарегистрированные в системе!\n\n"
+async def yes_callback(callback: CallbackQuery, state: FSMContext) -> None:
+    await callback.message.edit_text("Вы успешно зарегистрированные в системе!\n\n"
                                   "В войдите в аккаунт с помощью - <b>/login</b>")
     # Отправка данных админу и в БД
+    data = await state.get_data()
+    add_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
 
 
 @router.callback_query(F.data == "no")
 async def no_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await state.set_state(Form.signup_replace)
-    await callback.message.answer(
+    await callback.message.edit_text(
         f"<i>{callback.message.from_user.first_name}</i>, какое поле вы хотели бы заменить?\n",
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [
@@ -125,19 +130,19 @@ async def no_callback(callback: CallbackQuery, state: FSMContext) -> None:
 @router.callback_query(F.data == "name")
 async def name_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await state.set_state(Form.save_name)
-    await callback.message.answer("Введите новое имя: ")
+    await callback.message.edit_text("Введите новое имя: ")
 
 
 @router.callback_query(F.data == "number")
 async def number_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await state.set_state(Form.save_number)
-    await callback.message.answer("Введите новый номер: ")
+    await callback.message.edit_text("Введите новый номер: ")
 
 
 @router.callback_query(F.data == 'back')
 async def back_callback(callback: CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
-    await callback.message.answer(f"<b>РЕГИСТРАЦИЯ</b>\n\n"
+    await callback.message.edit_text(f"<b>РЕГИСТРАЦИЯ</b>\n\n"
                          f"Имя: {data['name']}\n"
                          f"Пол: {data['gender']}\n"
                          f"Имя пользователя: {data['username']}\n"
@@ -155,25 +160,33 @@ async def back_callback(callback: CallbackQuery, state: FSMContext) -> None:
 @router.message(Form.save_name)
 async def save_new_name(message: Message, state: FSMContext) -> None:
     name = message.text
-    await state.update_data(name=name)
-    data = await state.get_data()
-    # Добавление данных в БД
-    await message.answer("Имя заменено, вы успешно зарегистрированы")
-    await message.answer(f"<b>РЕГИСТРАЦИЯ</b>\n\n"
-                         f"Имя: {data['name']}\n"
-                         f"Пол: {data['gender']}\n"
-                         f"Имя пользователя: {data['username']}\n"
-                         f"Телефон: {data['number']}\n")
+    if check_name(name):
+        await state.update_data(name=name)
+        data = await state.get_data()
+        # Добавление данных в БД
+        await message.answer("Имя заменено, вы успешно зарегистрированы")
+        await message.answer(f"<b>РЕГИСТРАЦИЯ</b>\n\n"
+                             f"Имя: {data['name']}\n"
+                             f"Пол: {data['gender']}\n"
+                             f"Имя пользователя: {data['username']}\n"
+                             f"Телефон: {data['number']}\n")
+        add_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
+    else:
+        await message.answer("Упс... имя введено не верно")
 
 
 @router.message(Form.save_number)
 async def save_new_number(message: Message, state: FSMContext) -> None:
     number = message.text
-    await state.update_data(number=number)
-    data = await state.get_data()
-    await message.answer("Номер изменен")
-    await message.answer(f"<b>РЕГИСТРАЦИЯ</b>\n\n"
-                         f"Имя: {data['name']}\n"
-                         f"Пол: {data['gender']}\n"
-                         f"Имя пользователя: {data['username']}\n"
-                         f"Телефон: {data['number']}\n")
+    if check_number(number):
+        await state.update_data(number=number)
+        data = await state.get_data()
+        await message.answer("Номер изменен")
+        await message.answer(f"<b>РЕГИСТРАЦИЯ</b>\n\n"
+                             f"Имя: {data['name']}\n"
+                             f"Пол: {data['gender']}\n"
+                             f"Имя пользователя: {data['username']}\n"
+                             f"Телефон: {data['number']}\n")
+        add_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
+    else:
+        await message.answer("Упс... номер введен не правильно")
