@@ -17,7 +17,7 @@ from stats import top
 
 
 router = Router()
-
+bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 @router.message(CommandStart())
 async def command_start(message: Message) -> None:
@@ -36,7 +36,6 @@ async def main():
 
     dp = Dispatcher()
     dp.include_routers(signup.router, login.router, training_session.router, top.router, router)
-    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
     # Start event dispatching
     await dp.start_polling(bot)

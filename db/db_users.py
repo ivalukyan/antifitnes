@@ -56,3 +56,13 @@ def check_login(id):
         return True
     else:
         return False
+
+
+def get_all_users():
+    cursor.execute("""SELECT id FROM users""")
+    result = cursor.fetchall()
+    res = []
+    for i in range(len(result)):
+        res.append(result[i][0])
+
+    return res
