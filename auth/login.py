@@ -34,9 +34,8 @@ async def login(message: Message, state: FSMContext) -> None:
 async def input_number(message: Message, state: FSMContext) -> None:
     await state.update_data(input_number=message.text)
     data = await state.get_data()
-    # В дальнейшем будет сравнение с БД
     if check_login(message.from_user.id):
-        if get_phone_number(message.from_user.id) == data['input_number']:
+        if get_phone_number(message.from_user.id)[-10:] == data['input_number'][-10:]:
             await message.answer(f"{get_name(message.from_user.id)}, добро пожаловать, в спортивный клуб!")
             await message.answer("📎Профиль📎", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [
