@@ -9,7 +9,7 @@ from aiogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
 
-from db.db_users import add_users
+from db.db_users import add_users, get_all_users
 
 router = Router()
 
@@ -40,12 +40,16 @@ async def signup(message: Message, state: FSMContext) -> None:
     await state.update_data(id=message.from_user.id)
     await state.update_data(name=message.from_user.first_name)
     await state.update_data(username=message.from_user.username)
-    await message.answer("Укажите свой пол:", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-        [
-            InlineKeyboardButton(text="м", callback_data="gen_m"),
-            InlineKeyboardButton(text="ж", callback_data="gen_j"),
-        ]
-    ], resize_keyboard=True, one_time_keyboard=True))
+    if message.from_user.id not in get_all_users():
+        await message.answer("Укажите свой пол:", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [
+                InlineKeyboardButton(text="м", callback_data="gen_m"),
+                InlineKeyboardButton(text="ж", callback_data="gen_j"),
+            ]
+        ], resize_keyboard=True, one_time_keyboard=True))
+        await state.clear()
+    else:
+        await message.answer("Вы уже зарегистрированны.")
 
 
 @router.callback_query(F.data == "gen_m")
