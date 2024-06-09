@@ -9,6 +9,7 @@ from aiogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
 from db.db_users import get_phone_number, get_name, check_login
+from auth.signup import check_number
 
 router = Router()
 
@@ -34,7 +35,7 @@ async def login(message: Message, state: FSMContext) -> None:
 async def input_number(message: Message, state: FSMContext) -> None:
     await state.update_data(input_number=message.text)
     data = await state.get_data()
-    if check_login(message.from_user.id):
+    if check_login(message.from_user.id) and check_number(data['input_number']):
         if get_phone_number(message.from_user.id)[-10:] == data['input_number'][-10:]:
             await message.answer(f"{get_name(message.from_user.id)}, добро пожаловать, в спортивный клуб!")
             await message.answer("📎Профиль📎", reply_markup=InlineKeyboardMarkup(inline_keyboard=[

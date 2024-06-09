@@ -38,8 +38,8 @@ class Form(StatesGroup):
 @router.message(Command('signup'))
 async def signup(message: Message, state: FSMContext) -> None:
     await state.update_data(id=message.from_user.id)
-    await state.update_data(name=message.from_user.first_name)
-    await state.update_data(username=message.from_user.username)
+    await state.update_data(first_name=str(message.from_user.first_name))
+    await state.update_data(username=str(message.from_user.username))
     if message.from_user.id not in get_all_users():
         await message.answer("Укажите свой пол:", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [
@@ -47,7 +47,6 @@ async def signup(message: Message, state: FSMContext) -> None:
                 InlineKeyboardButton(text="ж", callback_data="gen_j"),
             ]
         ], resize_keyboard=True, one_time_keyboard=True))
-        await state.clear()
     else:
         await message.answer("Вы уже зарегистрированны.")
 
@@ -91,8 +90,9 @@ async def add_number(message: Message, state: FSMContext) -> None:
         await state.update_data(number=number)
         await state.set_state(Form.signup_approve)
         data = await state.get_data()
+        print(data)
         await message.answer(f"<b>РЕГИСТРАЦИЯ</b>\n\n"
-                             f"Имя: {data['name']}\n"
+                             f"Имя: {data['first_name']}\n"
                              f"Пол: {data['gender']}\n"
                              f"Имя пользователя: {data['username']}\n"
                              f"Телефон: {data['number']}\n")
