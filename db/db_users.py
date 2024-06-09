@@ -5,7 +5,7 @@ def add_users(id, first_name, username, gender, phone_number):
     cursor.execute("""CREATE TABLE IF NOT EXISTS users(
                 ID SERIAL PRIMARY KEY,
                 FIRST_NAME TEXT NOT NULL,
-                USERNAMES TEXT NOT NULL,
+                USERNAMES TEXT,
                 GENDER TEXT NOT NULL,
                 PHONE_NUMBER VARCHAR(12));
             """)
