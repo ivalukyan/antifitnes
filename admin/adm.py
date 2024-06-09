@@ -20,12 +20,12 @@ class Form(StatesGroup):
     """
 
     # Admin
-    req_adm = State()
+    mailing = State()
 
 
 # ADMIN
 def check_admin(user_id) -> bool:
-    if user_id in ADMINS:
+    if str(user_id) in ADMINS:
         return True
     return False
 
@@ -41,13 +41,17 @@ async def login(message: Message, state: FSMContext) -> None:
 
 
 @router.callback_query(F.data == "request_adm")
-async def request_adm(callback: CallbackQuery, state: FSMContext) -> None:
-    await state.set_state(Form.req_adm)
+async def callback_request_adm(callback: CallbackQuery, state: FSMContext) -> None:
+    await state.set_state(Form.mailing)
     await callback.message.edit_text("Введите сообщение для рассылки: ")
 
 
-@router.message(Form.req_adm)
-async def request_adm(state: FSMContext) -> None:
+@router.message(Form.mailing)
+async def request_adm(message: Message, state: FSMContext) -> None:
+    mes = message.text
     users = get_all_users()
+    print(users)
+    await state.clear()
     for _ in users:
-        bot.send_message(_, "‼️РАССЛЫКА‼️")
+        await bot.send_message(int(_), f"‼️РАССЛЫКА‼️\n\n"
+                                       f"{mes}")
