@@ -1,5 +1,3 @@
-import logging
-
 from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
@@ -8,8 +6,9 @@ from aiogram.types import (
     Message,
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
-from db.db_users import get_phone_number, get_name, check_login
+
 from auth.signup import check_number
+from db.db_users import get_phone_number, get_name, check_login
 
 router = Router()
 
