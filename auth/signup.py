@@ -107,7 +107,7 @@ async def add_number(message: Message, state: FSMContext) -> None:
 @router.callback_query(F.data == "yes")
 async def yes_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.edit_text("Вы успешно зарегистрированные в системе!\n\n"
-                                     "В войдите в аккаунт с помощью - <b>/login</b>")
+                                     "Войдите в аккаунт с помощью - <b>/login</b>")
     data = await state.get_data()
     add_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
 
@@ -169,7 +169,7 @@ async def save_new_name(message: Message, state: FSMContext) -> None:
                              f"Имя пользователя: {data['username']}\n"
                              f"Телефон: {data['number']}\n")
         await message.answer("Вы успешно зарегистрированные в системе!\n\n"
-                             "В войдите в аккаунт с помощью - <b>/login</b>")
+                             "Войдите в аккаунт с помощью - <b>/login</b>")
         add_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
         await state.clear()
     else:
@@ -189,7 +189,7 @@ async def save_new_number(message: Message, state: FSMContext) -> None:
                              f"Имя пользователя: {data['username']}\n"
                              f"Телефон: {data['number']}\n")
         await message.answer("Вы успешно зарегистрированные в системе!\n\n"
-                             "В войдите в аккаунт с помощью - <b>/login</b>")
+                             "Войдите в аккаунт с помощью - <b>/login</b>")
         add_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
         await state.clear()
     else:
