@@ -52,60 +52,49 @@ async def input_number(message: Message, state: FSMContext) -> None:
     else:
         await message.answer("Вы не зарегестрированы в системе, сначала зарегистрируйтесь")
 
+
 @router.callback_query(F.data == "history_tren")
 async def callback_history_tren(callback: CallbackQuery, state: FSMContext) -> None:
-    try:
-        await callback.message.edit_text("На данный момент истории тренировок нет.",
-                                         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                                             [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
-                                         ]))
-    except Exception.args:
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    await callback.message.edit_text("На данный момент истории тренировок нет.",
+                                     reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                                         [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
+                                     ]))
 
 
 @router.callback_query(F.data == "ref_bonus")
 async def callback_ref_bonus(callback: CallbackQuery) -> None:
-    try:
-        await callback.message.edit_text("На данный момент бонусов нет",
-                                         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                                             [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
-                                         ]))
-    except Exception.args:
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname) - %(message)s')
+    await callback.message.edit_text("На данный момент бонусов нет",
+                                     reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                                         [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
+                                     ]))
 
 
 @router.callback_query(F.data == "card")
 async def callback_card(callback: CallbackQuery) -> None:
-    try:
-        await callback.message.edit_text("На данный момент нет данных абонемента",
-                                         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                                             [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
-                                         ]))
-    except Exception.args:
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    await callback.message.edit_text("На данный момент нет данных абонемента",
+                                     reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                                         [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
+                                     ]))
 
 
 @router.callback_query(F.data == "normatives")
 async def callback_normatives(callback: CallbackQuery) -> None:
-    try:
-        await callback.message.edit_text("📉АНАЛИЗ НОРМАТИВОВ📉\n\n"
+    await callback.message.edit_text("📉АНАЛИЗ НОРМАТИВОВ📉\n\n"
                                          "Элемент находится в разработке...",
                                          reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                              [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                          ]))
-    except Exception.args:
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname) - %(message)s')
 
 
 @router.callback_query(F.data == "back_menu")
 async def callback_back_menu(callback: CallbackQuery) -> None:
     await callback.message.edit_text("📎Профиль📎", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [
-                InlineKeyboardButton(text="История тренировок", callback_data="history_tren"),
-                InlineKeyboardButton(text="Кол-во реферальных баллов", callback_data="ref_bonus"),
-            ],
-            [
-                InlineKeyboardButton(text="Абонемент", callback_data="card"),
-                InlineKeyboardButton(text="Нормативы", callback_data="normatives")
-            ]
-        ]))
+        [
+            InlineKeyboardButton(text="История тренировок", callback_data="history_tren"),
+            InlineKeyboardButton(text="Кол-во реферальных баллов", callback_data="ref_bonus"),
+        ],
+        [
+            InlineKeyboardButton(text="Абонемент", callback_data="card"),
+            InlineKeyboardButton(text="Нормативы", callback_data="normatives")
+        ]
+    ]))
