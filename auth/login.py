@@ -47,6 +47,7 @@ async def input_number(message: Message, state: FSMContext) -> None:
                     InlineKeyboardButton(text="Нормативы", callback_data="normatives")
                 ]
             ]))
+            await state.clear()
         else:
             await message.answer("Упс...похоже ошибка в веденных данных")
     else:
@@ -59,35 +60,39 @@ async def callback_history_tren(callback: CallbackQuery, state: FSMContext) -> N
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))
+    await state.clear()
 
 
 @router.callback_query(F.data == "ref_bonus")
-async def callback_ref_bonus(callback: CallbackQuery) -> None:
+async def callback_ref_bonus(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.edit_text("На данный момент бонусов нет",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))
+    await state.clear()
 
 
 @router.callback_query(F.data == "card")
-async def callback_card(callback: CallbackQuery) -> None:
+async def callback_card(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.edit_text("На данный момент нет данных абонемента",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))
+    await state.clear()
 
 
 @router.callback_query(F.data == "normatives")
-async def callback_normatives(callback: CallbackQuery) -> None:
+async def callback_normatives(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.edit_text("📉АНАЛИЗ НОРМАТИВОВ📉\n\n"
-                                         "Элемент находится в разработке...",
-                                         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                                             [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
-                                         ]))
+                                     "Элемент находится в разработке...",
+                                     reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                                         [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
+                                     ]))
+    await state.clear()
 
 
 @router.callback_query(F.data == "back_menu")
-async def callback_back_menu(callback: CallbackQuery) -> None:
+async def callback_back_menu(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.edit_text("📎Профиль📎", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [
             InlineKeyboardButton(text="История тренировок", callback_data="history_tren"),
@@ -98,3 +103,4 @@ async def callback_back_menu(callback: CallbackQuery) -> None:
             InlineKeyboardButton(text="Нормативы", callback_data="normatives")
         ]
     ]))
+    await state.clear()
