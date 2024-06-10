@@ -8,9 +8,11 @@ from aiogram.types import (
 )
 
 from auth.signup import check_number
-from db.db_users import get_phone_number, get_name, check_login
+from db.db_users import get_phone_number, get_name, check_login, get_current_standards
 
 router = Router()
+
+database = {'user_id': 0}
 
 
 class Form(StatesGroup):
@@ -33,6 +35,7 @@ async def login(message: Message, state: FSMContext) -> None:
 @router.message(Form.number_login)
 async def input_number(message: Message, state: FSMContext) -> None:
     await state.update_data(input_number=message.text)
+    database['user_id'] = message.from_user.id
     data = await state.get_data()
     if check_login(message.from_user.id) and check_number(data['input_number']):
         if get_phone_number(message.from_user.id)[-10:] == data['input_number'][-10:]:
@@ -47,48 +50,45 @@ async def input_number(message: Message, state: FSMContext) -> None:
                     InlineKeyboardButton(text="Нормативы", callback_data="normatives")
                 ]
             ]))
-            await state.clear()
         else:
             await message.answer("Упс...похоже ошибка в веденных данных")
+        await state.clear()
     else:
         await message.answer("Вы не зарегестрированы в системе, сначала зарегистрируйтесь")
 
 
 @router.callback_query(F.data == "history_tren")
-async def callback_history_tren(callback: CallbackQuery, state: FSMContext) -> None:
+async def callback_history_tren(callback: CallbackQuery) -> None:
     await callback.message.edit_text("На данный момент истории тренировок нет.",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))
-    await state.clear()
 
 
 @router.callback_query(F.data == "ref_bonus")
-async def callback_ref_bonus(callback: CallbackQuery, state: FSMContext) -> None:
+async def callback_ref_bonus(callback: CallbackQuery) -> None:
     await callback.message.edit_text("На данный момент бонусов нет",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))
-    await state.clear()
 
 
 @router.callback_query(F.data == "card")
-async def callback_card(callback: CallbackQuery, state: FSMContext) -> None:
+async def callback_card(callback: CallbackQuery) -> None:
     await callback.message.edit_text("На данный момент нет данных абонемента",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))
-    await state.clear()
 
 
 @router.callback_query(F.data == "normatives")
-async def callback_normatives(callback: CallbackQuery, state: FSMContext) -> None:
-    await callback.message.edit_text("📉АНАЛИЗ НОРМАТИВОВ📉\n\n"
-                                     "Элемент находится в разработке...",
+async def callback_normatives(callback: CallbackQuery) -> None:
+    normative = get_current_standards(database['user_id'])
+    await callback.message.edit_text(f"📉АНАЛИЗ НОРМАТИВОВ📉\n\n"
+                                     f"{normative}",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))
-    await state.clear()
 
 
 @router.callback_query(F.data == "back_menu")

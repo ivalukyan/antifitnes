@@ -15,13 +15,15 @@ from auth import login
 from schedule import training_session
 from stats import top
 from admin import adm
-
+from db.db_users import create_users
 
 router = Router()
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
+
 @router.message(CommandStart())
 async def command_start(message: Message) -> None:
+    create_users()
     await message.answer(
         f"Здравствуйте, <i>{message.from_user.first_name}</i>, вас приветствует бот спортивного клуба\n\n"
         f"Для того чтобы продолжить ввойдите в свой аккканут с помощью команды - <b>/login</b>\n"
@@ -54,5 +56,5 @@ async def main():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     asyncio.run(main())

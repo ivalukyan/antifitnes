@@ -9,7 +9,7 @@ from aiogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
 
-from db.db_users import add_users, get_all_users
+from db.db_users import insert_users, get_all_users
 
 router = Router()
 
@@ -90,7 +90,6 @@ async def add_number(message: Message, state: FSMContext) -> None:
         await state.update_data(number=number)
         await state.set_state(Form.signup_approve)
         data = await state.get_data()
-        print(data)
         await message.answer(f"<b>РЕГИСТРАЦИЯ</b>\n\n"
                              f"Имя: {data['first_name']}\n"
                              f"Пол: {data['gender']}\n"
@@ -113,7 +112,7 @@ async def yes_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.edit_text("Вы успешно зарегистрированные в системе!\n\n"
                                      "Войдите в аккаунт с помощью - <b>/login</b>")
     data = await state.get_data()
-    add_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
+    insert_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
 
 
 @router.callback_query(F.data == "no")
@@ -174,7 +173,7 @@ async def save_new_name(message: Message, state: FSMContext) -> None:
                              f"Телефон: {data['number']}\n")
         await message.answer("Вы успешно зарегистрированные в системе!\n\n"
                              "Войдите в аккаунт с помощью - <b>/login</b>")
-        add_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
+        insert_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
         await state.clear()
     else:
         await message.answer("Упс... имя введено не верно")
@@ -194,7 +193,7 @@ async def save_new_number(message: Message, state: FSMContext) -> None:
                              f"Телефон: {data['number']}\n")
         await message.answer("Вы успешно зарегистрированные в системе!\n\n"
                              "Войдите в аккаунт с помощью - <b>/login</b>")
-        add_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
+        insert_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
         await state.clear()
     else:
         await message.answer("Упс... номер введен не правильно")

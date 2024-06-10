@@ -1,19 +1,24 @@
 from db.router import cursor, conn
 
 
-def add_users(id, first_name, username, gender, phone_number):
+def create_users():
     cursor.execute("""CREATE TABLE IF NOT EXISTS users(
                 ID SERIAL PRIMARY KEY,
                 FIRST_NAME TEXT NOT NULL,
                 USERNAMES TEXT,
                 GENDER TEXT NOT NULL,
-                PHONE_NUMBER VARCHAR(12));
+                PHONE_NUMBER VARCHAR(12),
+                CURRENT_STANDARD TEXT);
             """)
 
     conn.commit()
 
-    cursor.execute("""INSERT INTO users(ID, FIRST_NAME, USERNAMES, GENDER, PHONE_NUMBER) VALUES (%s, %s, %s, %s, %s)""",
-                   (id, first_name, username, gender, phone_number,))
+
+def insert_users(id, first_name, username, gender, phone_number):
+    cursor.execute(
+        """INSERT INTO users(ID, FIRST_NAME, USERNAMES, GENDER, PHONE_NUMBER, CURRENT_STANDARD) VALUES (%s, %s, %s, 
+        %s, %s, %s)""",
+        (id, first_name, username, gender, phone_number, None,))
 
     conn.commit()
 
@@ -66,3 +71,14 @@ def get_all_users():
         res.append(result[i][0])
 
     return res
+
+
+def get_current_standards(id):
+    cursor.execute("""SELECT current_standard FROM users WHERE id = %s""", (id,))
+    result = cursor.fetchone()
+
+    try:
+        if result is not None:
+            return result[0]
+    except TypeError:
+        raise TypeError("No result found")
