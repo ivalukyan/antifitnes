@@ -1,6 +1,7 @@
 import re
 
 from aiogram import F, Router
+from aiogram.client.session import aiohttp
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -10,6 +11,7 @@ from aiogram.types import (
 )
 
 from db.db_users import insert_users, get_all_users
+from env import ALL_USERS_URL
 
 router = Router()
 
@@ -53,14 +55,14 @@ async def signup(message: Message, state: FSMContext) -> None:
 
 @router.callback_query(F.data == "gen_m")
 async def gen_m_callback(callback: CallbackQuery, state: FSMContext) -> None:
-    await state.update_data(gender='м')
+    await state.update_data(gender='Men')
     await state.set_state(Form.signup_number)
     await callback.message.edit_text("Введите номер телефона: ")
 
 
 @router.callback_query(F.data == "gen_j")
 async def gen_j_callback(callback: CallbackQuery, state: FSMContext) -> None:
-    await state.update_data(gender='ж')
+    await state.update_data(gender='Women')
     await state.set_state(Form.signup_number)
     await callback.message.edit_text('Введите номер телефона: ')
 
@@ -112,7 +114,13 @@ async def yes_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.edit_text("Вы успешно зарегистрированные в системе!\n\n"
                                      "Войдите в аккаунт с помощью - <b>/login</b>")
     data = await state.get_data()
-    insert_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
+
+    if data["gender"] == 'Men':
+        insert_users(data['id'], data['first_name'], data['username'], data['gender'], data['number'])
+        await post_user(data['id'], data['first_name'], data['username'], 'gen_men', data['number'])
+    elif data["gender"] == 'Women':
+        insert_users(data['id'], data['first_name'], data['username'], data['gender'], data['number'])
+        await post_user(data['id'], data['first_name'], data['username'], 'gen_women', data['number'])
 
 
 @router.callback_query(F.data == "no")
@@ -173,8 +181,15 @@ async def save_new_name(message: Message, state: FSMContext) -> None:
                              f"Телефон: {data['number']}\n")
         await message.answer("Вы успешно зарегистрированные в системе!\n\n"
                              "Войдите в аккаунт с помощью - <b>/login</b>")
-        insert_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
+
+        if data["gender"] == 'Men':
+            insert_users(data['id'], data['first_name'], data['username'], data['gender'], data['number'])
+            await post_user(data['id'], data['first_name'], data['username'], 'gen_men', data['number'])
+        elif data["gender"] == 'Women':
+            insert_users(data['id'], data['first_name'], data['username'], data['gender'], data['number'])
+            await post_user(data['id'], data['first_name'], data['username'], 'gen_women', data['number'])
         await state.clear()
+
     else:
         await message.answer("Упс... имя введено не верно")
 
@@ -193,7 +208,29 @@ async def save_new_number(message: Message, state: FSMContext) -> None:
                              f"Телефон: {data['number']}\n")
         await message.answer("Вы успешно зарегистрированные в системе!\n\n"
                              "Войдите в аккаунт с помощью - <b>/login</b>")
-        insert_users(data['id'], data['name'], data['username'], data['gender'], data['number'])
+
+        if data["gender"] == 'Men':
+            insert_users(data['id'], data['first_name'], data['username'], data['gender'], data['number'])
+            await post_user(data['id'], data['first_name'], data['username'], 'gen_men', data['number'])
+        elif data["gender"] == 'Women':
+            insert_users(data['id'], data['first_name'], data['username'], data['gender'], data['number'])
+            await post_user(data['id'], data['first_name'], data['username'], 'gen_women', data['number'])
         await state.clear()
+
     else:
         await message.answer("Упс... номер введен не правильно")
+
+
+async def post_user(user_id, first_name, username, gender, phone_number):
+    user = {
+        "id": user_id,
+        "first_name": first_name,
+        "username": username,
+        "gender": 'gen_men',  # проблема в получаемых данных
+        "phone_number": phone_number,
+        "current_standard": None
+    }
+    async with aiohttp.ClientSession() as session:
+        response = await session.post(f"{ALL_USERS_URL}", data=user)
+
+        print(await response.json())

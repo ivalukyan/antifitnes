@@ -36,6 +36,7 @@ async def login(message: Message, state: FSMContext) -> None:
 async def input_number(message: Message, state: FSMContext) -> None:
     await state.update_data(input_number=message.text)
     database['user_id'] = message.from_user.id
+    # user = await get_users()
     data = await state.get_data()
     if check_login(message.from_user.id) and check_number(data['input_number']):
         if get_phone_number(message.from_user.id)[-10:] == data['input_number'][-10:]:
