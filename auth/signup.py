@@ -183,11 +183,11 @@ async def save_new_name(message: Message, state: FSMContext) -> None:
                              "Войдите в аккаунт с помощью - <b>/login</b>")
 
         if data["gender"] == 'Men':
-            insert_users(data['id'], data['first_name'], data['username'], data['gender'], data['number'])
-            await post_user(data['id'], data['first_name'], data['username'], 'gen_men', data['number'])
+            insert_users(data['id'], name, data['username'], data['gender'], data['number'])
+            await post_user(data['id'], name, data['username'], 'gen_men', data['number'])
         elif data["gender"] == 'Women':
-            insert_users(data['id'], data['first_name'], data['username'], data['gender'], data['number'])
-            await post_user(data['id'], data['first_name'], data['username'], 'gen_women', data['number'])
+            insert_users(data['id'], name, data['username'], data['gender'], data['number'])
+            await post_user(data['id'], name, data['username'], 'gen_women', data['number'])
         await state.clear()
 
     else:
@@ -210,11 +210,11 @@ async def save_new_number(message: Message, state: FSMContext) -> None:
                              "Войдите в аккаунт с помощью - <b>/login</b>")
 
         if data["gender"] == 'Men':
-            insert_users(data['id'], data['first_name'], data['username'], data['gender'], data['number'])
-            await post_user(data['id'], data['first_name'], data['username'], 'gen_men', data['number'])
+            insert_users(data['id'], data['first_name'], data['username'], data['gender'], number)
+            await post_user(data['id'], data['first_name'], data['username'], 'gen_men', number)
         elif data["gender"] == 'Women':
-            insert_users(data['id'], data['first_name'], data['username'], data['gender'], data['number'])
-            await post_user(data['id'], data['first_name'], data['username'], 'gen_women', data['number'])
+            insert_users(data['id'], data['first_name'], data['username'], data['gender'], number)
+            await post_user(data['id'], data['first_name'], data['username'], 'gen_women', number)
         await state.clear()
 
     else:
@@ -231,6 +231,6 @@ async def post_user(user_id, first_name, username, gender, phone_number):
         "current_standard": None
     }
     async with aiohttp.ClientSession() as session:
-        response = await session.post(f"{ALL_USERS_URL}", data=user)
+        await session.post(f"{ALL_USERS_URL}", data=user)
 
-        print(await response.json())
+        # print(await response.json())
