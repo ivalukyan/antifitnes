@@ -52,8 +52,7 @@ async def bot_users_callback(callback: CallbackQuery) -> None:
                                       f"<i>id</i> - {data[_]['id']}\n"
                                       f"<i>name</i> - {data[_]['first_name']}\n"
                                       f"<i>username</i> - {data[_]['username']}\n"
-                                      f"<i>phone</i> - {data[_]['phone_number']}\n"
-                                      f"<i>normative</i> - {data[_]['current_standard']}")
+                                      f"<i>phone</i> - {data[_]['phone_number']}")
 
 
 @router.callback_query(F.data == "request_adm")

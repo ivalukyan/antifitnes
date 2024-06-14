@@ -10,7 +10,7 @@ from aiogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
 
-from db.db_users import insert_users, get_all_users
+from db.db_users import get_all_users
 from env import ALL_USERS_URL
 
 router = Router()
@@ -226,9 +226,8 @@ async def post_user(user_id, first_name, username, gender, phone_number):
         "id": user_id,
         "first_name": first_name,
         "username": username,
-        "gender": 'gen_men',  # проблема в получаемых данных
-        "phone_number": phone_number,
-        "current_standard": "-"
+        "gender": gender,
+        "phone_number": phone_number
     }
     async with aiohttp.ClientSession() as session:
         await session.post(f"{ALL_USERS_URL}", data=user)

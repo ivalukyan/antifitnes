@@ -21,5 +21,7 @@ from sport_bot import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('all_users/', views.BotUsers.as_view()),
+    path('users/', views.BotUsers.as_view()),
+    path('standards/', views.StandardsUser.as_view()),
+    path('profile/', views.ProfileUser.as_view()),
 ]
