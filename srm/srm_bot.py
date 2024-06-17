@@ -20,7 +20,7 @@ headers = {
     f'Cache-Control': "no-cache"
 }
 
-""" BOOKING """
+""" PROFILE """
 
 
 # get all staff
