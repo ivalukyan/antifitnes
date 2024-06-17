@@ -13,13 +13,13 @@ class StandardsAdmin(admin.ModelAdmin):
     list_display = ['id', 'thunder', 'turkish_ascent_axel', 'turkish_ascent_kettlebell', 'bench_press', 'axel_jerk',
                     'taking_on_axel_chest', 'gluteal_bridge', 'deadlift', 'jerk', 'taking_on_the_chest',
                     'axel_deadlift',
-                    'classic_squat', 'front_squat', 'squat_over_the_head', 'back_squat', 'skipping_rope', 'push_ups',
+                    'classic_squat', 'front_squat', 'squat_over_the_head', 'skipping_rope', 'push_ups',
                     'shuttle_running', 'farmer_walk', 'pull_ups', 'high_jump', 'long_jump', 'holding_the_axel',
                     'handstand']
     list_editable = ['thunder', 'turkish_ascent_axel', 'turkish_ascent_kettlebell', 'bench_press', 'axel_jerk',
                      'taking_on_axel_chest', 'gluteal_bridge', 'deadlift', 'jerk', 'taking_on_the_chest',
                      'axel_deadlift',
-                     'classic_squat', 'front_squat', 'squat_over_the_head', 'back_squat', 'skipping_rope', 'push_ups',
+                     'classic_squat', 'front_squat', 'squat_over_the_head', 'skipping_rope', 'push_ups',
                      'shuttle_running', 'farmer_walk', 'pull_ups', 'high_jump', 'long_jump', 'holding_the_axel',
                      'handstand']
 

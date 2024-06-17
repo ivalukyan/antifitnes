@@ -11,7 +11,7 @@ from aiogram.types import (
 )
 
 from db.db_users import get_all_users
-from env import ALL_USERS_URL
+from env import ALL_USERS_URL, PROFILE_URL
 
 router = Router()
 
@@ -118,9 +118,11 @@ async def yes_callback(callback: CallbackQuery, state: FSMContext) -> None:
     if data["gender"] == 'Men':
         # insert_users(data['id'], data['first_name'], data['username'], data['gender'], data['number'])
         await post_user(data['id'], data['first_name'], data['username'], 'gen_men', data['number'])
+        await post_profile(data['id'], "", 0, "", "")
     elif data["gender"] == 'Women':
         # insert_users(data['id'], data['first_name'], data['username'], data['gender'], data['number'])
         await post_user(data['id'], data['first_name'], data['username'], 'gen_women', data['number'])
+        await post_profile(data['id'], "", 0, "", "")
 
 
 @router.callback_query(F.data == "no")
@@ -185,9 +187,11 @@ async def save_new_name(message: Message, state: FSMContext) -> None:
         if data["gender"] == 'Men':
             # insert_users(data['id'], name, data['username'], data['gender'], data['number'])
             await post_user(data['id'], name, data['username'], 'gen_men', data['number'])
+            await post_profile(data['id'], "", 0, "", "")
         elif data["gender"] == 'Women':
             # insert_users(data['id'], name, data['username'], data['gender'], data['number'])
             await post_user(data['id'], name, data['username'], 'gen_women', data['number'])
+            await post_profile(data['id'], "", 0, "", "")
         await state.clear()
 
     else:
@@ -212,9 +216,11 @@ async def save_new_number(message: Message, state: FSMContext) -> None:
         if data["gender"] == 'Men':
             # insert_users(data['id'], data['first_name'], data['username'], data['gender'], number)
             await post_user(data['id'], data['first_name'], data['username'], 'gen_men', number)
+            await post_profile(data['id'], "", 0, "", "")
         elif data["gender"] == 'Women':
             # insert_users(data['id'], data['first_name'], data['username'], data['gender'], number)
             await post_user(data['id'], data['first_name'], data['username'], 'gen_women', number)
+            await post_profile(data['id'], "", 0, "", "")
         await state.clear()
 
     else:
@@ -230,6 +236,18 @@ async def post_user(user_id, first_name, username, gender, phone_number):
         "phone_number": phone_number
     }
     async with aiohttp.ClientSession() as session:
-        await session.post(f"{ALL_USERS_URL}", data=user)
+        await session.post(ALL_USERS_URL, data=user)
 
         # print(await response.json())
+
+
+async def post_profile(user_id, training_history, number_of_referral_points, info_subscription, current_standard):
+    profile_data = {
+        "id": user_id,
+        "training_history": training_history,
+        "number_of_referral_points": number_of_referral_points,
+        "info_subscription": info_subscription,
+        "current_standard": current_standard
+    }
+    async with aiohttp.ClientSession() as session:
+        await session.post(PROFILE_URL, data=profile_data)

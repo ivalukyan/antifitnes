@@ -20,7 +20,7 @@ def get_phone_number(id):
     if result is not None:
         return result
     else:
-        return None
+        raise ValueError("No phone number found")
 
 
 def get_name(id):
@@ -29,7 +29,7 @@ def get_name(id):
     if result is not None:
         return result
     else:
-        return None
+        raise ValueError("No name")
 
 
 def check_login(id):

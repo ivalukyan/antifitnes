@@ -8,7 +8,9 @@ from aiogram.types import (
 )
 
 from auth.signup import check_number
-from db.db_users import get_phone_number, get_name, check_login, get_current_standards
+from db.db_users import get_phone_number, get_name, check_login
+from db.db_standards import get_standards_by_id
+from db.db_profile import training_history, number_of_referral_points, info_subscription
 
 router = Router()
 
@@ -60,7 +62,9 @@ async def input_number(message: Message, state: FSMContext) -> None:
 
 @router.callback_query(F.data == "history_tren")
 async def callback_history_tren(callback: CallbackQuery) -> None:
-    await callback.message.edit_text("На данный момент истории тренировок нет.",
+    msg = training_history(database['user_id'])
+    await callback.message.edit_text(f"🔗ИСТОРИЯ ТРЕНИРОВОК🔗\n\n"
+                                     f"{msg}",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))
@@ -68,7 +72,9 @@ async def callback_history_tren(callback: CallbackQuery) -> None:
 
 @router.callback_query(F.data == "ref_bonus")
 async def callback_ref_bonus(callback: CallbackQuery) -> None:
-    await callback.message.edit_text("На данный момент бонусов нет",
+    msg = number_of_referral_points(database['user_id'])
+    await callback.message.edit_text("🔗Реферальные бонусы🔗\n\n"
+                                     f"{msg}",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))
@@ -76,7 +82,9 @@ async def callback_ref_bonus(callback: CallbackQuery) -> None:
 
 @router.callback_query(F.data == "card")
 async def callback_card(callback: CallbackQuery) -> None:
-    await callback.message.edit_text("На данный момент нет данных абонемента",
+    msg = info_subscription(database['user_id'])
+    await callback.message.edit_text("🪪АБОНЕМЕНТ🪪\n\n"
+                                     f"{msg}",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))
@@ -84,9 +92,9 @@ async def callback_card(callback: CallbackQuery) -> None:
 
 @router.callback_query(F.data == "normatives")
 async def callback_normatives(callback: CallbackQuery) -> None:
-    normative = get_current_standards(database['user_id'])
+    msg = get_standards_by_id(database['user_id'])
     await callback.message.edit_text(f"📉АНАЛИЗ НОРМАТИВОВ📉\n\n"
-                                     f"{normative}",
+                                     f"{msg}",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))
