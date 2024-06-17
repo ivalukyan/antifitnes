@@ -1,7 +1,9 @@
 import re
 
-from aiogram import F, Router
+from aiogram import F, Router, Bot
+from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session import aiohttp
+from aiogram.enums import ParseMode
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -11,7 +13,7 @@ from aiogram.types import (
 )
 
 from db.db_users import get_all_users
-from env import ALL_USERS_URL, PROFILE_URL
+from env import ALL_USERS_URL, PROFILE_URL, ADMINS, TOKEN
 
 router = Router()
 
@@ -116,11 +118,9 @@ async def yes_callback(callback: CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
 
     if data["gender"] == 'Men':
-        # insert_users(data['id'], data['first_name'], data['username'], data['gender'], data['number'])
         await post_user(data['id'], data['first_name'], data['username'], 'gen_men', data['number'])
         await post_profile(data['id'], "", 0, "", "")
     elif data["gender"] == 'Women':
-        # insert_users(data['id'], data['first_name'], data['username'], data['gender'], data['number'])
         await post_user(data['id'], data['first_name'], data['username'], 'gen_women', data['number'])
         await post_profile(data['id'], "", 0, "", "")
 
@@ -185,11 +185,9 @@ async def save_new_name(message: Message, state: FSMContext) -> None:
                              "Войдите в аккаунт с помощью - <b>/login</b>")
 
         if data["gender"] == 'Men':
-            # insert_users(data['id'], name, data['username'], data['gender'], data['number'])
             await post_user(data['id'], name, data['username'], 'gen_men', data['number'])
             await post_profile(data['id'], "", 0, "", "")
         elif data["gender"] == 'Women':
-            # insert_users(data['id'], name, data['username'], data['gender'], data['number'])
             await post_user(data['id'], name, data['username'], 'gen_women', data['number'])
             await post_profile(data['id'], "", 0, "", "")
         await state.clear()
@@ -214,11 +212,9 @@ async def save_new_number(message: Message, state: FSMContext) -> None:
                              "Войдите в аккаунт с помощью - <b>/login</b>")
 
         if data["gender"] == 'Men':
-            # insert_users(data['id'], data['first_name'], data['username'], data['gender'], number)
             await post_user(data['id'], data['first_name'], data['username'], 'gen_men', number)
             await post_profile(data['id'], "", 0, "", "")
         elif data["gender"] == 'Women':
-            # insert_users(data['id'], data['first_name'], data['username'], data['gender'], number)
             await post_user(data['id'], data['first_name'], data['username'], 'gen_women', number)
             await post_profile(data['id'], "", 0, "", "")
         await state.clear()

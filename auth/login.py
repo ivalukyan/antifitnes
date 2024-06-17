@@ -11,6 +11,8 @@ from auth.signup import check_number
 from db.db_users import get_phone_number, get_name, check_login
 from db.db_standards import get_standards_by_id
 from db.db_profile import training_history, number_of_referral_points, info_subscription
+from srm.srm_bot import check_crm, update_profile
+
 
 router = Router()
 
@@ -40,8 +42,10 @@ async def input_number(message: Message, state: FSMContext) -> None:
     database['user_id'] = message.from_user.id
     # user = await get_users()
     data = await state.get_data()
-    if check_login(message.from_user.id) and check_number(data['input_number']):
+
+    if check_login(message.from_user.id) and check_number(data['input_number']) and (await check_crm(data['input_number'])):
         if get_phone_number(message.from_user.id)[-10:] == data['input_number'][-10:]:
+            await update_profile(data['input_number'], message.from_user.id)
             await message.answer(f"{get_name(message.from_user.id)}, добро пожаловать, в спортивный клуб!")
             await message.answer("📎Профиль📎", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [
@@ -57,12 +61,13 @@ async def input_number(message: Message, state: FSMContext) -> None:
             await message.answer("Упс...похоже ошибка в веденных данных")
         await state.clear()
     else:
-        await message.answer("Вы не зарегестрированы в системе, сначала зарегистрируйтесь")
+        await message.answer("Вы не зарегестрированы в системе, сначала зарегистрируйтесь\nИли подождите пока вас подтвердит"
+                             "администратор")
 
 
 @router.callback_query(F.data == "history_tren")
 async def callback_history_tren(callback: CallbackQuery) -> None:
-    msg = training_history(database['user_id'])
+    msg = await training_history(database['user_id'])
     await callback.message.edit_text(f"🔗ИСТОРИЯ ТРЕНИРОВОК🔗\n\n"
                                      f"{msg}",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
@@ -72,7 +77,7 @@ async def callback_history_tren(callback: CallbackQuery) -> None:
 
 @router.callback_query(F.data == "ref_bonus")
 async def callback_ref_bonus(callback: CallbackQuery) -> None:
-    msg = number_of_referral_points(database['user_id'])
+    msg = await number_of_referral_points(database['user_id'])
     await callback.message.edit_text("🔗Реферальные бонусы🔗\n\n"
                                      f"{msg}",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
@@ -82,7 +87,7 @@ async def callback_ref_bonus(callback: CallbackQuery) -> None:
 
 @router.callback_query(F.data == "card")
 async def callback_card(callback: CallbackQuery) -> None:
-    msg = info_subscription(database['user_id'])
+    msg = await info_subscription(database['user_id'])
     await callback.message.edit_text("🪪АБОНЕМЕНТ🪪\n\n"
                                      f"{msg}",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
@@ -92,7 +97,7 @@ async def callback_card(callback: CallbackQuery) -> None:
 
 @router.callback_query(F.data == "normatives")
 async def callback_normatives(callback: CallbackQuery) -> None:
-    msg = get_standards_by_id(database['user_id'])
+    msg = await get_standards_by_id(database['user_id'])
     await callback.message.edit_text(f"📉АНАЛИЗ НОРМАТИВОВ📉\n\n"
                                      f"{msg}",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[

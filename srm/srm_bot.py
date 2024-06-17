@@ -1,17 +1,14 @@
-from yclients import YClientsAPI
+import asyncio
 import requests
+from env import LOGIN, PASSWORD, BEARER_TOKEN, USER_TOKEN, CID
+from db.router import conn, cursor
 
-# bearer_token = '36224dc01758b86bf0475d37b04c73f7'
-# user_token = 'z86ztue9x5ypue8dsc5a'
-# CID = 363723
-# FID = 363723
+bearer_token = BEARER_TOKEN
+user_token = USER_TOKEN
+CID = CID
 
-bearer_token = 'y6d2r449m7g7ck4nbr5a'
-user_token = ''
-CID = 1069469
-
-login = 'ivan230704@mail.ru'
-password = 'ccr6sb'
+login = LOGIN
+password = PASSWORD
 
 headers = {
     f"Accept": "application/vnd.yclients.v2+json",
@@ -24,7 +21,7 @@ headers = {
 
 
 # get all staff
-def get_all_staff():
+async def get_all_staff():
     url = f"https://yclients.com/api/v1/staff/{CID}"
     all_staff_info = requests.get(url, headers=headers).json()['data']
 
@@ -32,7 +29,7 @@ def get_all_staff():
 
 
 # get info about services
-def get_info_about_services():
+async def get_info_about_services():
     url = f"https://yclients.com/api/v1/services/{CID}"
     all_service_info = requests.get(url, headers=headers).json()['data']
     titles = []
@@ -45,14 +42,14 @@ def get_info_about_services():
 
 
 # get info about available days
-def get_info_availible_days():
+async def get_info_availible_days():
     url = f"https://yclients.com/api/v1/book_dates/{CID}"
     all_available_days = requests.get(url, headers=headers).json()['data']
 
     return all_available_days
 
 
-def get_user_token(login: str, password: str):
+async def get_user_token(login: str, password: str):
     url = "https://api.yclients.com/api/v1/auth"
     querystring = {
         "login": login,
@@ -63,7 +60,7 @@ def get_user_token(login: str, password: str):
     return data['data']['user_token']
 
 
-def get_clients(user_tok: str):
+async def get_clients_ids(user_tok: str):
     url = f"https://api.yclients.com/api/v1/company/{CID}/clients/search"
     head = {
         f"Accept": "application/vnd.yclients.v2+json",
@@ -80,7 +77,8 @@ def get_clients(user_tok: str):
     return ids
 
 
-def get_client_by_id(list_id: list, user_tok: str):
+async def get_client_by_id(list_id: list, user_tok: str):
+    clients = []
     for _ in list_id:
         url = f"https://api.yclients.com/api/v1/client/{CID}/{_}"
         head = {
@@ -90,10 +88,29 @@ def get_client_by_id(list_id: list, user_tok: str):
             f'Cache-Control': "no-cache"
         }
         response = requests.get(url, headers=head)
-        print(response.json())
+        if response.status_code == 200:
+            clients.append(response.json()['data'])
+
+    return clients
 
 
-def get_history_client(user_tok: int):
+async def get_phones_users(list_id: list, user_tok: str):
+    phones = []
+    for _ in list_id:
+        url = f"https://api.yclients.com/api/v1/client/{CID}/{_}"
+        head = {
+            f"Accept": "application/vnd.yclients.v2+json",
+            f'Accept-Language': 'ru-RU',
+            f'Authorization': f"Bearer {bearer_token}, User {user_tok}",
+            f'Cache-Control': "no-cache"
+        }
+        response = requests.get(url, headers=head)
+        phones.append(response.json()['data']['phone'][-10:])
+
+    return phones
+
+
+async def get_history_client(user_tok: int):
     url = f"https://api.yclients.com/api/v1/company/{CID}/clients/visits/search"
     head = {
         f"Accept": "application/vnd.yclients.v2+json",
@@ -112,18 +129,51 @@ def get_history_client(user_tok: int):
 
     response = requests.post(url, headers=head, data=payload)
     data = response.json()['data']['records']
-    # paid_abonements = data['services'][0]['paid_abonements_count']
 
-    dates_history = []
+    dates_history = ""
 
     for _ in data:
-        dates_history.append(_['date'])
+        dates_history += f"{_['date']}\n"
 
     return dates_history
 
 
-if __name__ == '__main__':
-    user_token = get_user_token(login, password)
-    users_list = get_clients(user_token)
-    get_client_by_id(users_list, user_token)
-    get_history_client(user_token)
+async def get_abonements(user_tok: int, phone_number: str):
+    url = f"https://api.yclients.com/api/v1/loyalty/abonements/"
+    head = {
+        f"Accept": "application/vnd.yclients.v2+json",
+        f'Accept-Language': 'ru-RU',
+        f'Authorization': f"Bearer {bearer_token}, User {user_tok}",
+        f'Cache-Control': "no-cache"
+    }
+    querystring = {
+        "company_id": CID,
+        'phone': phone_number
+    }
+    response = requests.get(url, headers=head, params=querystring)
+
+    if response.status_code == 200 and response.json()['meta']['count'] > 0:
+        msg = (f"Название - {response.json()['data']['balance_string']}\n"
+               f"Период - {response.json()['data']['period']}\n"
+               f"Статус - {response.json()['data']['status']['title']}")
+
+        return msg
+    else:
+        return "Абонемент у данного пользователя отсутствует."
+
+
+async def update_profile(phone_number: str, user_id):
+    cursor.execute("""UPDATE sport_bot_profile SET training_history = %s, info_subscription = %s WHERE id = %s """, (
+        await get_history_client(await get_user_token(LOGIN, PASSWORD)),
+        await get_abonements(await get_user_token(LOGIN, PASSWORD), phone_number),
+        user_id
+    ))
+
+    conn.commit()
+
+
+async def check_crm(phone_number: str) -> bool:
+    if phone_number[-10:] in await get_phones_users(await get_clients_ids(await get_user_token(LOGIN, PASSWORD)),
+                                                    await get_user_token(LOGIN, PASSWORD)):
+        return True
+    return False

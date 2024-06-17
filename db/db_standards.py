@@ -1,36 +1,36 @@
+import asyncio
 from db.router import cursor, conn
 
 
-def get_standards_by_id(user_id):
+async def get_standards_by_id(user_id):
     cursor.execute("""SELECT * FROM sport_bot_standards WHERE id=%s""", (user_id,))
     result = cursor.fetchall()[0]
 
-    print(result)
     conn.commit()
 
-    msg = (f"Гром - {result[0]}\n"
-           f"Турецкий подъем: Аксель - {result[1]}\n"
-           f"Турецкий подъем: Гиря - {result[2]}\n"
-           f"Жим лежа 1ПМ - {result[3]}\n"
-           f"Рывок акселя 1ПМ - {result[4]}\n"
-           f"Взятие на грудь акселя 1ПМ - {result[5]}\n"
-           f"Ягодичный мостик 1ПМ - {result[6]}\n"
-           f"Становая тяга 1ПМ - {result[7]}\n"
-           f"Рывок 1ПМ - {result[8]}\n"
-           f"Взятие на грудь 1ПМ - {result[9]}\n"
-           f"Становая тяга акселя 1ПМ - {result[10]}\n"
-           f"Присед 1ПМ: Классический - {result[11]}\n"
-           f"Присед 1ПМ: Фронтальный - {result[12]}\n"
-           f"Присед 1ПМ: Над головой - {result[13]}\n"
-           f"Скакалка - {result[14]}\n"
-           f"Отжимания от пола - {result[15]}\n"
-           f"Челночный бег - {result[16]}\n"
-           f"Прогулка фермера - {result[17]}\n"
-           f"Подтягивания - {result[18]}\n"
-           f"Прыжок в высоту - {result[19]}\n"
-           f"Прыжок в длину - {result[20]}\n"
-           f"Удержание акселя - {result[21]}\n"
-           f"Стойка на руках - {result[22]}\n")
+    msg = (f"Гром - {result[1]}\n"
+           f"Турецкий подъем: Аксель - {result[2]}\n"
+           f"Турецкий подъем: Гиря - {result[3]}\n"
+           f"Жим лежа 1ПМ - {result[4]}\n"
+           f"Рывок акселя 1ПМ - {result[5]}\n"
+           f"Взятие на грудь акселя 1ПМ - {result[6]}\n"
+           f"Ягодичный мостик 1ПМ - {result[7]}\n"
+           f"Становая тяга 1ПМ - {result[8]}\n"
+           f"Рывок 1ПМ - {result[9]}\n"
+           f"Взятие на грудь 1ПМ - {result[10]}\n"
+           f"Становая тяга акселя 1ПМ - {result[11]}\n"
+           f"Присед 1ПМ: Классический - {result[12]}\n"
+           f"Присед 1ПМ: Фронтальный - {result[13]}\n"
+           f"Присед 1ПМ: Над головой - {result[14]}\n"
+           f"Скакалка - {result[15]}\n"
+           f"Отжимания от пола - {result[16]}\n"
+           f"Челночный бег - {result[17]}\n"
+           f"Прогулка фермера - {result[18]}\n"
+           f"Подтягивания - {result[19]}\n"
+           f"Прыжок в высоту - {result[20]}\n"
+           f"Прыжок в длину - {result[21]}\n"
+           f"Удержание акселя - {result[22]}\n"
+           f"Стойка на руках - {result[23]}\n")
 
     if result is not None:
         return msg
@@ -38,7 +38,7 @@ def get_standards_by_id(user_id):
         raise ValueError("No standard for user id {}".format(user_id))
 
 
-def get_all_thunder():
+async def get_all_thunder():
     cursor.execute("""SELECT thunder FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -62,10 +62,10 @@ def get_all_thunder():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_turkish_ascent_axel():
+async def get_all_turkish_ascent_axel():
     cursor.execute("""SELECT turkish_ascent_axel FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -89,10 +89,10 @@ def get_all_turkish_ascent_axel():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_turkish_ascent_kettlebell():
+async def get_all_turkish_ascent_kettlebell():
     cursor.execute("""SELECT turkish_ascent_kettlebell FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -116,10 +116,10 @@ def get_all_turkish_ascent_kettlebell():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_bench_press():
+async def get_all_bench_press():
     cursor.execute("""SELECT bench_press FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -143,10 +143,10 @@ def get_all_bench_press():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_axel_jerk():
+async def get_all_axel_jerk():
     cursor.execute("""SELECT axel_jerk FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -170,10 +170,10 @@ def get_all_axel_jerk():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_taking_on_axel_chest():
+async def get_all_taking_on_axel_chest():
     cursor.execute("""SELECT taking_on_axel_chest FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -197,10 +197,10 @@ def get_all_taking_on_axel_chest():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_gluteal_bridge():
+async def get_all_gluteal_bridge():
     cursor.execute("""SELECT gluteal_bridge FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -224,10 +224,10 @@ def get_all_gluteal_bridge():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_deadlift():
+async def get_all_deadlift():
     cursor.execute("""SELECT deadlift FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -251,10 +251,10 @@ def get_all_deadlift():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_jerk():
+async def get_all_jerk():
     cursor.execute("""SELECT jerk FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -278,10 +278,10 @@ def get_all_jerk():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_taking_on_the_chest():
+async def get_all_taking_on_the_chest():
     cursor.execute("""SELECT taking_on_the_chest FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -305,10 +305,10 @@ def get_all_taking_on_the_chest():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_axel_deadlift():
+async def get_all_axel_deadlift():
     cursor.execute("""SELECT axel_deadlift FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -332,10 +332,10 @@ def get_all_axel_deadlift():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_classic_squat():
+async def get_all_classic_squat():
     cursor.execute("""SELECT classic_squat FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -359,10 +359,10 @@ def get_all_classic_squat():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_front_squat():
+async def get_all_front_squat():
     cursor.execute("""SELECT front_squat FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -386,10 +386,10 @@ def get_all_front_squat():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_squat_over_the_head():
+async def get_all_squat_over_the_head():
     cursor.execute("""SELECT squat_over_the_head FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -413,10 +413,10 @@ def get_all_squat_over_the_head():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_skipping_rope():
+async def get_all_skipping_rope():
     cursor.execute("""SELECT skipping_rope FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -440,10 +440,10 @@ def get_all_skipping_rope():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_push_ups():
+async def get_all_push_ups():
     cursor.execute("""SELECT push_ups FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -467,10 +467,10 @@ def get_all_push_ups():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_shuttle_running():
+async def get_all_shuttle_running():
     cursor.execute("""SELECT shuttle_running FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -494,10 +494,10 @@ def get_all_shuttle_running():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_farmer_walk():
+async def get_all_farmer_walk():
     cursor.execute("""SELECT farmer_walk FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -521,10 +521,10 @@ def get_all_farmer_walk():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_pull_ups():
+async def get_all_pull_ups():
     cursor.execute("""SELECT pull_ups FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -548,10 +548,10 @@ def get_all_pull_ups():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_high_jump():
+async def get_all_high_jump():
     cursor.execute("""SELECT high_jump FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -575,10 +575,10 @@ def get_all_high_jump():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_long_jump():
+async def get_all_long_jump():
     cursor.execute("""SELECT long_jump FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -602,10 +602,10 @@ def get_all_long_jump():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_holding_the_axel():
+async def get_all_holding_the_axel():
     cursor.execute("""SELECT holding_the_axel FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -629,10 +629,10 @@ def get_all_holding_the_axel():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"
 
 
-def get_all_handstand():
+async def get_all_handstand():
     cursor.execute("""SELECT handstand FROM sport_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
@@ -656,4 +656,4 @@ def get_all_handstand():
                f"10. {result[9]}")
         return msg
     else:
-        raise ValueError("No thunder found")
+        return "Количество заполненных нормативов меньше 10"

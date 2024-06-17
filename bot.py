@@ -1,10 +1,8 @@
 import asyncio
 import logging
-import sys
 
 from aiogram import Bot, Dispatcher, Router
 from aiogram.client.default import DefaultBotProperties
-from aiogram.dispatcher.dispatcher import FSMContext
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message

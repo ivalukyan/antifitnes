@@ -105,7 +105,7 @@ async def back_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "grom")
 async def grom_callback(call: CallbackQuery):
-    msg = get_all_thunder()
+    msg = await get_all_thunder()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -113,7 +113,7 @@ async def grom_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "tur_acsel")
 async def tur_acsel_callback(call: CallbackQuery):
-    msg = get_all_turkish_ascent_axel()
+    msg = await get_all_turkish_ascent_axel()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -121,7 +121,7 @@ async def tur_acsel_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "tur_gir")
 async def tur_gir_callback(call: CallbackQuery):
-    msg = get_all_turkish_ascent_kettlebell()
+    msg = await get_all_turkish_ascent_kettlebell()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -129,7 +129,7 @@ async def tur_gir_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "bench_press")
 async def bench_press_callback(call: CallbackQuery):
-    msg = get_all_bench_press()
+    msg = await get_all_bench_press()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -137,7 +137,7 @@ async def bench_press_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "jerk")
 async def jerk_callback(call: CallbackQuery):
-    msg = get_all_axel_jerk()
+    msg = await get_all_axel_jerk()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -145,7 +145,7 @@ async def jerk_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "jerk_two")
 async def jerk_two_callback(call: CallbackQuery):
-    msg = get_all_taking_on_axel_chest()
+    msg = await get_all_taking_on_axel_chest()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -153,7 +153,7 @@ async def jerk_two_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "most")
 async def most_callback(call: CallbackQuery):
-    msg = get_all_gluteal_bridge()
+    msg = await get_all_gluteal_bridge()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -161,7 +161,7 @@ async def most_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "deadlift")
 async def deadlift_callback(call: CallbackQuery):
-    msg = get_all_deadlift()
+    msg = await get_all_deadlift()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -169,7 +169,7 @@ async def deadlift_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "usual_jerk")
 async def usual_jerk_callback(call: CallbackQuery):
-    msg = get_all_jerk()
+    msg = await get_all_jerk()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -177,7 +177,7 @@ async def usual_jerk_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "chest")
 async def chest_callback(call: CallbackQuery):
-    msg = get_all_taking_on_the_chest()
+    msg = await get_all_taking_on_the_chest()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -185,7 +185,7 @@ async def chest_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "deadlift_jerk")
 async def deadlift_jerk_callback(call: CallbackQuery):
-    msg = get_all_axel_deadlift()
+    msg = await get_all_axel_deadlift()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -193,7 +193,7 @@ async def deadlift_jerk_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "squat_classic")
 async def squat_classic_callback(call: CallbackQuery):
-    msg = get_all_classic_squat()
+    msg = await get_all_classic_squat()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -201,7 +201,7 @@ async def squat_classic_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "squat_front")
 async def squat_under_head_callback(call: CallbackQuery):
-    msg = get_all_front_squat()
+    msg = await get_all_front_squat()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -209,7 +209,7 @@ async def squat_under_head_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "squat_under_head")
 async def squat_under_head_callback(call: CallbackQuery):
-    msg = get_all_squat_over_the_head()
+    msg = await get_all_squat_over_the_head()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -217,7 +217,7 @@ async def squat_under_head_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "skipping_rope")
 async def skipping_rope_callback(call: CallbackQuery):
-    msg = get_all_skipping_rope()
+    msg = await get_all_skipping_rope()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -225,7 +225,7 @@ async def skipping_rope_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "push_ups")
 async def push_up_callback(call: CallbackQuery):
-    msg = get_all_push_ups()
+    msg = await get_all_push_ups()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -233,7 +233,7 @@ async def push_up_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "shuttle_running")
 async def shuttle_running_callback(call: CallbackQuery):
-    msg = get_all_shuttle_running()
+    msg = await get_all_shuttle_running()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -241,7 +241,7 @@ async def shuttle_running_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "farmer_walk")
 async def farmer_walk_callback(call: CallbackQuery):
-    msg = get_all_farmer_walk()
+    msg = await get_all_farmer_walk()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -249,7 +249,7 @@ async def farmer_walk_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "pull_ups")
 async def pull_up_callback(call: CallbackQuery):
-    msg = get_all_pull_ups()
+    msg = await get_all_pull_ups()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -257,7 +257,7 @@ async def pull_up_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "high_jump")
 async def high_jump_callback(call: CallbackQuery):
-    msg = get_all_high_jump()
+    msg = await get_all_high_jump()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -265,7 +265,7 @@ async def high_jump_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "long_jump")
 async def long_jump_callback(call: CallbackQuery):
-    msg = get_all_long_jump()
+    msg = await get_all_long_jump()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -273,7 +273,7 @@ async def long_jump_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "holding_axel")
 async def holding_axel_callback(call: CallbackQuery):
-    msg = get_all_holding_the_axel()
+    msg = await get_all_holding_the_axel()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
@@ -281,7 +281,7 @@ async def holding_axel_callback(call: CallbackQuery):
 
 @router.callback_query(F.data == "handstand")
 async def handstand_callback(call: CallbackQuery):
-    msg = get_all_handstand()
+    msg = await get_all_handstand()
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))

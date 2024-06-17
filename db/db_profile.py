@@ -1,7 +1,8 @@
+import asyncio
 from db.router import cursor, conn
 
 
-def training_history(user_id: int):
+async def training_history(user_id: int):
     cursor.execute("""SELECT training_history FROM sport_bot_profile WHERE id =%s""", (user_id, ))
     result = cursor.fetchone()[0]
 
@@ -11,7 +12,7 @@ def training_history(user_id: int):
         raise ValueError("No training history")
 
 
-def number_of_referral_points(user_id: int):
+async def number_of_referral_points(user_id: int):
     cursor.execute("""SELECT number_of_referral_points FROM sport_bot_profile WHERE id =%s""", (user_id, ))
     result = cursor.fetchone()[0]
 
@@ -21,7 +22,7 @@ def number_of_referral_points(user_id: int):
         raise ValueError("No referral points")
 
 
-def info_subscription(user_id: int):
+async def info_subscription(user_id: int):
     cursor.execute("""SELECT info_subscription FROM sport_bot_profile WHERE id =%s""", (user_id, ))
     result = cursor.fetchone()[0]
 
