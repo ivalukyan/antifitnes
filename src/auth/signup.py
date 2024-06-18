@@ -1,9 +1,7 @@
 import re
 
-from aiogram import F, Router, Bot
-from aiogram.client.default import DefaultBotProperties
+from aiogram import F, Router
 from aiogram.client.session import aiohttp
-from aiogram.enums import ParseMode
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -12,8 +10,8 @@ from aiogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
 
-from db.db_users import get_all_users
-from env import ALL_USERS_URL, PROFILE_URL, ADMINS, TOKEN
+from src.db.db_users import get_all_users
+from src.env import ALL_USERS_URL, PROFILE_URL
 
 router = Router()
 

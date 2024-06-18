@@ -1,5 +1,4 @@
-import asyncio
-from db.router import cursor, conn
+from src.db.router import cursor, conn
 
 
 async def get_standards_by_id(user_id):

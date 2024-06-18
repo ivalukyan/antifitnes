@@ -1,4 +1,4 @@
-from db.router import cursor, conn
+from src.db.router import cursor, conn
 
 
 def create_users():

@@ -7,11 +7,11 @@ from aiogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
 
-from auth.signup import check_number
-from db.db_users import get_phone_number, get_name, check_login
-from db.db_standards import get_standards_by_id
-from db.db_profile import training_history, number_of_referral_points, info_subscription
-from srm.srm_bot import check_crm, update_profile
+from src.auth.signup import check_number
+from src.db.db_users import get_phone_number, get_name, check_login
+from src.db.db_standards import get_standards_by_id
+from src.db.db_profile import training_history, number_of_referral_points, info_subscription
+from src.srm.srm_bot import check_crm, update_profile
 
 
 router = Router()

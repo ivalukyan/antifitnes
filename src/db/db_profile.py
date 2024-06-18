@@ -1,5 +1,4 @@
-import asyncio
-from db.router import cursor, conn
+from src.db.router import cursor
 
 
 async def training_history(user_id: int):

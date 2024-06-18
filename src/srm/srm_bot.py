@@ -1,7 +1,6 @@
-import asyncio
 import requests
-from env import LOGIN, PASSWORD, BEARER_TOKEN, USER_TOKEN, CID
-from db.router import conn, cursor
+from src.env import LOGIN, PASSWORD, BEARER_TOKEN, USER_TOKEN, CID
+from src.db.router import conn, cursor
 
 bearer_token = BEARER_TOKEN
 user_token = USER_TOKEN

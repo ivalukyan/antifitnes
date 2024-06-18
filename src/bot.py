@@ -8,12 +8,11 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 
 from env import TOKEN
-from auth import signup
-from auth import login
-from schedule import training_session
-from stats import top
-from admin import adm
-from db.db_users import create_users
+from src.auth import signup, login
+from src.schedule import training_session
+from src.stats import top
+from src.admin import adm
+from src.db.db_users import create_users
 
 router = Router()
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))

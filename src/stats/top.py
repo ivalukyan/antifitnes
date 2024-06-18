@@ -1,20 +1,16 @@
-import logging
-
 from aiogram import F, Router
 from aiogram.filters import Command
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import (
     Message,
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
-from db.db_standards import (get_all_thunder, get_all_pull_ups, get_all_jerk, get_all_holding_the_axel,
-                             get_all_taking_on_axel_chest, get_all_axel_jerk, get_all_taking_on_the_chest,
-                             get_all_deadlift, get_all_axel_deadlift, get_all_handstand, get_all_turkish_ascent_axel,
-                             get_all_push_ups, get_all_high_jump, get_all_long_jump, get_all_bench_press,
-                             get_all_turkish_ascent_kettlebell, get_standards_by_id, get_all_farmer_walk,
-                             get_all_front_squat, get_all_classic_squat, get_all_squat_over_the_head,
-                             get_all_gluteal_bridge, get_all_skipping_rope, get_all_shuttle_running)
+from src.db.db_standards import (get_all_thunder, get_all_pull_ups, get_all_jerk, get_all_holding_the_axel,
+                                 get_all_taking_on_axel_chest, get_all_axel_jerk, get_all_taking_on_the_chest,
+                                 get_all_deadlift, get_all_axel_deadlift, get_all_handstand, get_all_turkish_ascent_axel,
+                                 get_all_push_ups, get_all_high_jump, get_all_long_jump, get_all_bench_press,
+                                 get_all_turkish_ascent_kettlebell, get_all_farmer_walk,
+                                 get_all_front_squat, get_all_classic_squat, get_all_squat_over_the_head,
+                                 get_all_gluteal_bridge, get_all_skipping_rope, get_all_shuttle_running)
 
 router = Router()
 
