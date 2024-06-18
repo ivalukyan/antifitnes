@@ -7,7 +7,7 @@ from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 
-from env import TOKEN
+from src.env import TOKEN
 from src.auth import signup, login
 from src.schedule import training_session
 from src.stats import top

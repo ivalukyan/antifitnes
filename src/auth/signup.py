@@ -68,7 +68,7 @@ async def gen_j_callback(callback: CallbackQuery, state: FSMContext) -> None:
 
 
 def check_number(user_number) -> bool:
-    phone_number_pattern = r'^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$'
+    phone_number_pattern = r'^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{10}$'
 
     if re.match(phone_number_pattern, user_number):
         return True
@@ -216,7 +216,6 @@ async def save_new_number(message: Message, state: FSMContext) -> None:
             await post_user(data['id'], data['first_name'], data['username'], 'gen_women', number)
             await post_profile(data['id'], "", 0, "", "")
         await state.clear()
-
     else:
         await message.answer("Упс... номер введен не правильно")
 

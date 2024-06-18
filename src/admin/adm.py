@@ -9,7 +9,7 @@ from aiogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
 
-from src.bot import bot
+from bot import bot
 from src.db.db_users import get_all_users
 from src.env import ADMINS, ALL_USERS_URL, ADMIN_PANEL
 

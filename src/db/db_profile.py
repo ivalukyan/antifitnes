@@ -8,7 +8,7 @@ async def training_history(user_id: int):
     if result is not None:
         return result
     else:
-        raise ValueError("No training history")
+        return None
 
 
 async def number_of_referral_points(user_id: int):
@@ -18,7 +18,7 @@ async def number_of_referral_points(user_id: int):
     if result is not None:
         return result
     else:
-        raise ValueError("No referral points")
+        return None
 
 
 async def info_subscription(user_id: int):
@@ -28,7 +28,7 @@ async def info_subscription(user_id: int):
     if result is not None:
         return result
     else:
-        raise ValueError("No info subscription")
+        return None
 
 
 
