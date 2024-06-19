@@ -43,10 +43,10 @@ async def input_number(message: Message, state: FSMContext) -> None:
     # user = await get_users()
     data = await state.get_data()
 
-    if check_login(message.from_user.id) and check_number(data['input_number']) and (await check_crm(data['input_number'])):
-        if get_phone_number(message.from_user.id)[-10:] == data['input_number'][-10:]:
+    if await check_login(message.from_user.id) and await check_number(data['input_number']) and (await check_crm(data['input_number'])):
+        if await get_phone_number(message.from_user.id)[-10:] == data['input_number'][-10:]:
             await update_profile(data['input_number'], message.from_user.id)
-            await message.answer(f"{get_name(message.from_user.id)}, добро пожаловать, в спортивный клуб!")
+            await message.answer(f"{await get_name(message.from_user.id)}, добро пожаловать, в спортивный клуб!")
             await message.answer("📎Профиль📎", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [
                     InlineKeyboardButton(text="История тренировок", callback_data="history_tren"),
@@ -61,7 +61,8 @@ async def input_number(message: Message, state: FSMContext) -> None:
             await message.answer("Упс...похоже ошибка в веденных данных")
         await state.clear()
     else:
-        await message.answer("Вы не зарегестрированы в системе, сначала зарегистрируйтесь\nИли подождите пока вас подтвердит"
+        await message.answer("Вы не зарегестрированы в системе, сначала зарегистрируйтесь\n"
+                             "Или подождите пока вас подтвердит"
                              "администратор")
     await state.clear()
 

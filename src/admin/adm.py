@@ -37,22 +37,10 @@ async def login(message: Message, state: FSMContext) -> None:
     if check_admin(message.from_user.id):
         await message.answer("<b>АДМИН ПАНЕЛЬ</b>", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="Рассылка", callback_data="request_adm")],
-            [InlineKeyboardButton(text="Пользователи", callback_data="bot_users")],
             [InlineKeyboardButton(text="Админ панель", url=ADMIN_PANEL)]
         ]))
     else:
         await message.answer("Вам не выдана данная роль")
-
-
-@router.callback_query(F.data == "bot_users")
-async def bot_users_callback(callback: CallbackQuery) -> None:
-    data = await get_users()
-    for _ in range(len(data)):
-        await callback.message.answer(f"<b>ПОЛЬЗОВАТЕЛЬ</b>\n\n"
-                                      f"<i>id</i> - {data[_]['id']}\n"
-                                      f"<i>name</i> - {data[_]['first_name']}\n"
-                                      f"<i>username</i> - {data[_]['username']}\n"
-                                      f"<i>phone</i> - {data[_]['phone_number']}")
 
 
 @router.callback_query(F.data == "request_adm")
@@ -64,14 +52,8 @@ async def callback_request_adm(callback: CallbackQuery, state: FSMContext) -> No
 @router.message(Form.mailing)
 async def request_adm(message: Message, state: FSMContext) -> None:
     mes = message.text
-    users = get_all_users()
+    users = await get_all_users()
     await state.clear()
     for _ in users:
         await bot.send_message(int(_), f"‼️РАССЛЫКА‼️\n\n"
                                        f"{mes}")
-
-
-async def get_users():
-    async with aiohttp.ClientSession() as session:
-        async with session.get(f"{ALL_USERS_URL}") as response:
-            return await response.json()

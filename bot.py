@@ -20,7 +20,7 @@ bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 @router.message(CommandStart())
 async def command_start(message: Message) -> None:
-    create_users()
+    await create_users()
     await message.answer(
         f"Здравствуйте, <i>{message.from_user.first_name}</i>, вас приветствует бот спортивного клуба\n\n"
         f"Для того чтобы продолжить ввойдите в свой аккканут с помощью команды - <b>/login</b>\n"

@@ -10,7 +10,8 @@ from aiogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
 
-from src.db.db_users import get_all_users
+from src.db.db_users import get_all_users, add_user
+from src.db.db_profile import add_info_profile
 from env import ALL_USERS_URL, PROFILE_URL
 
 router = Router()
@@ -42,7 +43,7 @@ async def signup(message: Message, state: FSMContext) -> None:
     await state.update_data(id=message.from_user.id)
     await state.update_data(first_name=str(message.from_user.first_name))
     await state.update_data(username=str(message.from_user.username))
-    if message.from_user.id not in get_all_users():
+    if message.from_user.id not in (await get_all_users()):
         await message.answer("Укажите свой пол:", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [
                 InlineKeyboardButton(text="м", callback_data="gen_m"),
@@ -67,7 +68,7 @@ async def gen_j_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.edit_text('Введите номер телефона: ')
 
 
-def check_number(user_number) -> bool:
+async def check_number(user_number) -> bool:
     phone_number_pattern = r'^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{10}$'
 
     if re.match(phone_number_pattern, user_number):
@@ -76,7 +77,7 @@ def check_number(user_number) -> bool:
         return False
 
 
-def check_name(user_name) -> bool:
+async def check_name(user_name) -> bool:
     name_pattern = r'^[А-Я][а-яё]*$'
 
     if re.match(name_pattern, user_name):
@@ -116,11 +117,11 @@ async def yes_callback(callback: CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
 
     if data["gender"] == 'Men':
-        await post_user(data['id'], data['first_name'], data['username'], 'gen_men', data['number'])
-        await post_profile(data['id'], "", 0, "", "")
+        await add_user(data['id'], data['first_name'], data['username'], 'gen_men', data['number'])
+        await add_info_profile(data['id'], "", 0, "", "")
     elif data["gender"] == 'Women':
-        await post_user(data['id'], data['first_name'], data['username'], 'gen_women', data['number'])
-        await post_profile(data['id'], "", 0, "", "")
+        await add_user(data['id'], data['first_name'], data['username'], 'gen_women', data['number'])
+        await add_info_profile(data['id'], "", 0, "", "")
 
 
 @router.callback_query(F.data == "no")
@@ -170,7 +171,7 @@ async def back_callback(callback: CallbackQuery, state: FSMContext) -> None:
 @router.message(Form.save_name)
 async def save_new_name(message: Message, state: FSMContext) -> None:
     name = message.text
-    if check_name(name):
+    if await check_name(name):
         await state.update_data(name=name)
         data = await state.get_data()
         await message.answer("Имя заменено, вы успешно зарегистрированы")
@@ -183,11 +184,11 @@ async def save_new_name(message: Message, state: FSMContext) -> None:
                              "Войдите в аккаунт с помощью - <b>/login</b>")
 
         if data["gender"] == 'Men':
-            await post_user(data['id'], name, data['username'], 'gen_men', data['number'])
-            await post_profile(data['id'], "", 0, "", "")
+            await add_user(data['id'], data['first_name'], data['username'], 'gen_men', data['number'])
+            await add_info_profile(data['id'], "", 0, "", "")
         elif data["gender"] == 'Women':
-            await post_user(data['id'], name, data['username'], 'gen_women', data['number'])
-            await post_profile(data['id'], "", 0, "", "")
+            await add_user(data['id'], data['first_name'], data['username'], 'gen_women', data['number'])
+            await add_info_profile(data['id'], "", 0, "", "")
         await state.clear()
 
     else:
@@ -210,37 +211,11 @@ async def save_new_number(message: Message, state: FSMContext) -> None:
                              "Войдите в аккаунт с помощью - <b>/login</b>")
 
         if data["gender"] == 'Men':
-            await post_user(data['id'], data['first_name'], data['username'], 'gen_men', number)
-            await post_profile(data['id'], "", 0, "", "")
+            await add_user(data['id'], data['first_name'], data['username'], 'gen_men', data['number'])
+            await add_info_profile(data['id'], "", 0, "", "")
         elif data["gender"] == 'Women':
-            await post_user(data['id'], data['first_name'], data['username'], 'gen_women', number)
-            await post_profile(data['id'], "", 0, "", "")
+            await add_user(data['id'], data['first_name'], data['username'], 'gen_women', data['number'])
+            await add_info_profile(data['id'], "", 0, "", "")
         await state.clear()
     else:
         await message.answer("Упс... номер введен не правильно")
-
-
-async def post_user(user_id, first_name, username, gender, phone_number):
-    user = {
-        "id": user_id,
-        "first_name": first_name,
-        "username": username,
-        "gender": gender,
-        "phone_number": phone_number
-    }
-    async with aiohttp.ClientSession() as session:
-        await session.post(ALL_USERS_URL, data=user)
-
-        # print(await response.json())
-
-
-async def post_profile(user_id, training_history, number_of_referral_points, info_subscription, current_standard):
-    profile_data = {
-        "id": user_id,
-        "training_history": training_history,
-        "number_of_referral_points": number_of_referral_points,
-        "info_subscription": info_subscription,
-        "current_standard": current_standard
-    }
-    async with aiohttp.ClientSession() as session:
-        await session.post(PROFILE_URL, data=profile_data)

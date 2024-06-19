@@ -1,7 +1,7 @@
 from src.db.router import cursor, conn
 
 
-def create_users():
+async def create_users():
     cursor.execute("""CREATE TABLE IF NOT EXISTS app_bot_user(
                 ID SERIAL PRIMARY KEY,
                 FIRST_NAME TEXT NOT NULL,
@@ -14,8 +14,8 @@ def create_users():
     conn.commit()
 
 
-def get_phone_number(id):
-    cursor.execute("""SELECT phone_number FROM app_bot_user WHERE id = %s""", (id,))
+async def get_phone_number(user_id):
+    cursor.execute("""SELECT phone_number FROM app_bot_user WHERE id = %s""", (user_id,))
     result = cursor.fetchone()[0]
     if result is not None:
         return result
@@ -23,8 +23,8 @@ def get_phone_number(id):
         raise ValueError("No phone number found")
 
 
-def get_name(id):
-    cursor.execute("""SELECT first_name FROM app_bot_user WHERE id = %s""", (id,))
+async def get_name(user_id):
+    cursor.execute("""SELECT first_name FROM app_bot_user WHERE id = %s""", (user_id,))
     result = cursor.fetchone()[0]
     if result is not None:
         return result
@@ -32,19 +32,19 @@ def get_name(id):
         raise ValueError("No name")
 
 
-def check_login(id):
+async def check_login(user_id: int):
     cursor.execute("""SELECT id FROM app_bot_user""")
     result = cursor.fetchall()
     res = []
     for i in range(len(result)):
         res.append(result[i][0])
-    if id in res:
+    if user_id in res:
         return True
     else:
         return False
 
 
-def get_all_users():
+async def get_all_users():
     cursor.execute("""SELECT id FROM app_bot_user""")
     result = cursor.fetchall()
     res = []
@@ -54,8 +54,8 @@ def get_all_users():
     return res
 
 
-def get_current_standards(id):
-    cursor.execute("""SELECT current_standard FROM app_bot_user WHERE id = %s""", (id,))
+async def get_current_standards(user_id):
+    cursor.execute("""SELECT current_standard FROM app_bot_user WHERE id = %s""", (user_id,))
     result = cursor.fetchone()
 
     try:
@@ -63,3 +63,10 @@ def get_current_standards(id):
             return result[0]
     except TypeError:
         raise TypeError("No result found")
+
+
+async def add_user(user_id, first_name, username, gender, phone_number):
+    cursor.execute("""INSERT INTO app_bot_user(id, first_name, username, gender, phone_number) 
+    VALUES (%s, %s, %s, %s, %s)""", (user_id, first_name, username, gender, phone_number, ))
+
+    conn.commit()
