@@ -4,7 +4,7 @@ services:
     build:
       context: .
     container_name: web_app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver
     volumes:
       - .:/app
     env_file:
@@ -26,14 +26,13 @@ services:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
 
-#
-#  app:
-#    build:
-#      context: .
-#    environment:
-#      - .env
-#    container_name: bot_app
-#    command: ["/sport_club_bot_app/docker/bot_app.sh"]
-#    depends_on:
-#      - db
-#      - web
+
+  app:
+    build:
+      context: .
+    environment:
+      - .env
+    container_name: bot_app
+    command: python bot.py run
+    depends_on:
+      - db
