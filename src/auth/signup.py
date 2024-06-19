@@ -89,7 +89,7 @@ async def check_name(user_name) -> bool:
 @router.message(Form.signup_number)
 async def add_number(message: Message, state: FSMContext) -> None:
     number = message.text
-    if check_number(number):
+    if await check_number(number):
         await state.update_data(number=number)
         await state.set_state(Form.signup_approve)
         data = await state.get_data()
@@ -184,10 +184,10 @@ async def save_new_name(message: Message, state: FSMContext) -> None:
                              "Войдите в аккаунт с помощью - <b>/login</b>")
 
         if data["gender"] == 'Men':
-            await add_user(data['id'], data['first_name'], data['username'], 'gen_men', data['number'])
+            await add_user(data['id'], name, data['username'], 'gen_men', data['number'])
             await add_info_profile(data['id'], "", 0, "", "")
         elif data["gender"] == 'Women':
-            await add_user(data['id'], data['first_name'], data['username'], 'gen_women', data['number'])
+            await add_user(data['id'], name, data['username'], 'gen_women', data['number'])
             await add_info_profile(data['id'], "", 0, "", "")
         await state.clear()
 

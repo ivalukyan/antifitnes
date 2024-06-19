@@ -162,7 +162,7 @@ async def get_abonements(user_tok: int, phone_number: str):
 
 
 async def update_profile(phone_number: str, user_id):
-    cursor.execute("""UPDATE sport_bot_profile SET training_history = %s, info_subscription = %s WHERE id = %s """, (
+    cursor.execute("""UPDATE app_bot_profile SET training_history = %s, info_subscription = %s WHERE id = %s """, (
         await get_history_client(await get_user_token(LOGIN, PASSWORD)),
         await get_abonements(await get_user_token(LOGIN, PASSWORD), phone_number),
         user_id

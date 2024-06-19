@@ -43,8 +43,8 @@ async def input_number(message: Message, state: FSMContext) -> None:
     # user = await get_users()
     data = await state.get_data()
 
-    if await check_login(message.from_user.id) and await check_number(data['input_number']) and (await check_crm(data['input_number'])):
-        if await get_phone_number(message.from_user.id)[-10:] == data['input_number'][-10:]:
+    if (await check_login(message.from_user.id)) and (await check_number(data['input_number'])) and (await check_crm(data['input_number'])):
+        if (await get_phone_number(message.from_user.id))[-10:] == data['input_number'][-10:]:
             await update_profile(data['input_number'], message.from_user.id)
             await message.answer(f"{await get_name(message.from_user.id)}, добро пожаловать, в спортивный клуб!")
             await message.answer("📎Профиль📎", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
