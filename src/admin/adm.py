@@ -11,7 +11,7 @@ from aiogram.types import (
 
 from bot import bot
 from src.db.db_users import get_all_users
-from src.env import ADMINS, ALL_USERS_URL, ADMIN_PANEL
+from env import ADMINS, ALL_USERS_URL, ADMIN_PANEL
 
 router = Router()
 

@@ -1,5 +1,5 @@
 import requests
-from src.env import LOGIN, PASSWORD, BEARER_TOKEN, USER_TOKEN, CID
+from env import LOGIN, PASSWORD, BEARER_TOKEN, USER_TOKEN, CID
 from src.db.router import conn, cursor
 
 bearer_token = BEARER_TOKEN

@@ -11,7 +11,7 @@ from aiogram.types import (
 )
 
 from src.db.db_users import get_all_users
-from src.env import ALL_USERS_URL, PROFILE_URL
+from env import ALL_USERS_URL, PROFILE_URL
 
 router = Router()
 

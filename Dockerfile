@@ -1,20 +1,14 @@
 FROM python:3.10
 
+RUN mkdir /app_bot
+WORKDIR /app_bot
 
 ENV PYTHONUNBUFFERED 1
 
-# Устанавливаем рабочую директорию внутри Docker контейнера
-WORKDIR /app_bot
-
-
-COPY requirements.txt /app_bot/
-
-
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-
-COPY . /app_bot/
-
+COPY . .
 
 EXPOSE 8000
 

@@ -1,9 +1,3 @@
-#!/bin/sh
+#!/bin/bash
 
-cd src
-
-cd backend
-
-cd src
-
-python manage.py runserver
+python manage.py runserver 0.0.0.0:8000
