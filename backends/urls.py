@@ -17,6 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from app_bot import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('users/', views.BotUsers.as_view()),
+    path('standards/', views.StandardsUser.as_view()),
+    path('profile/', views.ProfileUser.as_view()),
 ]
+

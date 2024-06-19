@@ -2,7 +2,7 @@ from src.db.router import cursor, conn
 
 
 async def get_standards_by_id(user_id):
-    cursor.execute("""SELECT * FROM sport_bot_standards WHERE id=%s""", (user_id,))
+    cursor.execute("""SELECT * FROM app_bot_standards WHERE id=%s""", (user_id,))
     result = cursor.fetchall()[0]
 
     conn.commit()
@@ -38,7 +38,7 @@ async def get_standards_by_id(user_id):
 
 
 async def get_all_thunder():
-    cursor.execute("""SELECT thunder FROM sport_bot_standards""")
+    cursor.execute("""SELECT thunder FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -65,7 +65,7 @@ async def get_all_thunder():
 
 
 async def get_all_turkish_ascent_axel():
-    cursor.execute("""SELECT turkish_ascent_axel FROM sport_bot_standards""")
+    cursor.execute("""SELECT turkish_ascent_axel FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -92,7 +92,7 @@ async def get_all_turkish_ascent_axel():
 
 
 async def get_all_turkish_ascent_kettlebell():
-    cursor.execute("""SELECT turkish_ascent_kettlebell FROM sport_bot_standards""")
+    cursor.execute("""SELECT turkish_ascent_kettlebell FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -119,7 +119,7 @@ async def get_all_turkish_ascent_kettlebell():
 
 
 async def get_all_bench_press():
-    cursor.execute("""SELECT bench_press FROM sport_bot_standards""")
+    cursor.execute("""SELECT bench_press FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -146,7 +146,7 @@ async def get_all_bench_press():
 
 
 async def get_all_axel_jerk():
-    cursor.execute("""SELECT axel_jerk FROM sport_bot_standards""")
+    cursor.execute("""SELECT axel_jerk FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -173,7 +173,7 @@ async def get_all_axel_jerk():
 
 
 async def get_all_taking_on_axel_chest():
-    cursor.execute("""SELECT taking_on_axel_chest FROM sport_bot_standards""")
+    cursor.execute("""SELECT taking_on_axel_chest FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -200,7 +200,7 @@ async def get_all_taking_on_axel_chest():
 
 
 async def get_all_gluteal_bridge():
-    cursor.execute("""SELECT gluteal_bridge FROM sport_bot_standards""")
+    cursor.execute("""SELECT gluteal_bridge FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -227,7 +227,7 @@ async def get_all_gluteal_bridge():
 
 
 async def get_all_deadlift():
-    cursor.execute("""SELECT deadlift FROM sport_bot_standards""")
+    cursor.execute("""SELECT deadlift FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -254,7 +254,7 @@ async def get_all_deadlift():
 
 
 async def get_all_jerk():
-    cursor.execute("""SELECT jerk FROM sport_bot_standards""")
+    cursor.execute("""SELECT jerk FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -281,7 +281,7 @@ async def get_all_jerk():
 
 
 async def get_all_taking_on_the_chest():
-    cursor.execute("""SELECT taking_on_the_chest FROM sport_bot_standards""")
+    cursor.execute("""SELECT taking_on_the_chest FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -308,7 +308,7 @@ async def get_all_taking_on_the_chest():
 
 
 async def get_all_axel_deadlift():
-    cursor.execute("""SELECT axel_deadlift FROM sport_bot_standards""")
+    cursor.execute("""SELECT axel_deadlift FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -335,7 +335,7 @@ async def get_all_axel_deadlift():
 
 
 async def get_all_classic_squat():
-    cursor.execute("""SELECT classic_squat FROM sport_bot_standards""")
+    cursor.execute("""SELECT classic_squat FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -362,7 +362,7 @@ async def get_all_classic_squat():
 
 
 async def get_all_front_squat():
-    cursor.execute("""SELECT front_squat FROM sport_bot_standards""")
+    cursor.execute("""SELECT front_squat FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -389,7 +389,7 @@ async def get_all_front_squat():
 
 
 async def get_all_squat_over_the_head():
-    cursor.execute("""SELECT squat_over_the_head FROM sport_bot_standards""")
+    cursor.execute("""SELECT squat_over_the_head FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -416,7 +416,7 @@ async def get_all_squat_over_the_head():
 
 
 async def get_all_skipping_rope():
-    cursor.execute("""SELECT skipping_rope FROM sport_bot_standards""")
+    cursor.execute("""SELECT skipping_rope FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -443,7 +443,7 @@ async def get_all_skipping_rope():
 
 
 async def get_all_push_ups():
-    cursor.execute("""SELECT push_ups FROM sport_bot_standards""")
+    cursor.execute("""SELECT push_ups FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -470,7 +470,7 @@ async def get_all_push_ups():
 
 
 async def get_all_shuttle_running():
-    cursor.execute("""SELECT shuttle_running FROM sport_bot_standards""")
+    cursor.execute("""SELECT shuttle_running FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -497,7 +497,7 @@ async def get_all_shuttle_running():
 
 
 async def get_all_farmer_walk():
-    cursor.execute("""SELECT farmer_walk FROM sport_bot_standards""")
+    cursor.execute("""SELECT farmer_walk FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -524,7 +524,7 @@ async def get_all_farmer_walk():
 
 
 async def get_all_pull_ups():
-    cursor.execute("""SELECT pull_ups FROM sport_bot_standards""")
+    cursor.execute("""SELECT pull_ups FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -551,7 +551,7 @@ async def get_all_pull_ups():
 
 
 async def get_all_high_jump():
-    cursor.execute("""SELECT high_jump FROM sport_bot_standards""")
+    cursor.execute("""SELECT high_jump FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -578,7 +578,7 @@ async def get_all_high_jump():
 
 
 async def get_all_long_jump():
-    cursor.execute("""SELECT long_jump FROM sport_bot_standards""")
+    cursor.execute("""SELECT long_jump FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -605,7 +605,7 @@ async def get_all_long_jump():
 
 
 async def get_all_holding_the_axel():
-    cursor.execute("""SELECT holding_the_axel FROM sport_bot_standards""")
+    cursor.execute("""SELECT holding_the_axel FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
@@ -632,7 +632,7 @@ async def get_all_holding_the_axel():
 
 
 async def get_all_handstand():
-    cursor.execute("""SELECT handstand FROM sport_bot_standards""")
+    cursor.execute("""SELECT handstand FROM app_bot_standards""")
     result = cursor.fetchall()[0]
     print(result)
 
