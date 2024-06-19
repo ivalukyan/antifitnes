@@ -1,8 +1,11 @@
 <h2>Телеграмм бот для спортивного клуба</h2>
 
-Для запуска проекта на виртуальной машине ```docker compose run web python manage.py migrate``` 
-Затем ```docker compose run web python manage.py createsuperuser``` - создаем _staff_ для **_admin_** панели.
-И в конечном итоге поднимаем весь проект ```docker compose up```
+<h5>Команды для запуска _**Docker Compose**_</h5>
+1. ```docker compose biuld``` - сборка контейнера
+2. ```docker compose run web python manage.py makemigrations``` - создание миграций для Django
+3. ```docker compose run web python manage.py migrate``` - применение миграций для Django
+4. ```docker compose run web python manage.py createsuperuser``` - создание пользователя admin панели
+5. ```docker compose up``` - запуск контейнера
 ---
 <h3>Задачи</h3>
 ✅ - _выполнено_
