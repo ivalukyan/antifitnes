@@ -37,7 +37,7 @@ async def login(message: Message, state: FSMContext) -> None:
     if check_admin(message.from_user.id):
         await message.answer("<b>АДМИН ПАНЕЛЬ</b>", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="Рассылка", callback_data="request_adm")],
-            [InlineKeyboardButton(text="Админ панель", url='http://localhost:8000/admin/')]
+            [InlineKeyboardButton(text="Админ панель", url='http://0.0.0.0:8000/admin/')]
         ]))
     else:
         await message.answer("Вам не выдана данная роль")

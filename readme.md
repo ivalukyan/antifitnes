@@ -1,7 +1,7 @@
 <h2>Телеграмм бот для спортивного клуба</h2>
 
 <h5>Команды для запуска _**Docker Compose**_</h5>
-1. ```docker compose biuld``` - сборка контейнера
+1. ```docker compose build``` - сборка контейнера
 2. ```docker compose run web python manage.py makemigrations``` - создание миграций для Django
 3. ```docker compose run web python manage.py migrate``` - применение миграций для Django
 4. ```docker compose run web python manage.py createsuperuser``` - создание пользователя admin панели
