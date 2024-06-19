@@ -32,7 +32,7 @@ services:
       context: .
     environment:
       - .env
-    container_name: bot_app
+    container_name: bot
     command: python bot.py run
     env_file:
       - .env

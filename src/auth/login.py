@@ -63,6 +63,7 @@ async def input_number(message: Message, state: FSMContext) -> None:
     else:
         await message.answer("Вы не зарегестрированы в системе, сначала зарегистрируйтесь\nИли подождите пока вас подтвердит"
                              "администратор")
+    await state.clear()
 
 
 @router.callback_query(F.data == "history_tren")
