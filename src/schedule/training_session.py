@@ -10,5 +10,5 @@ router = Router()
 @router.message(Command('schedule'))
 async def schedule(message: Message):
     await message.answer("<b>ЗАПИСЬ НА ТРЕНИРОВКУ</b>\n\n", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Запись на тренировку', url="https://n1164665.yclients.com")]
+        [InlineKeyboardButton(text='Запись на тренировку', url="https://o770.yclients.com/loyalty")]
     ]))
