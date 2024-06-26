@@ -4,11 +4,10 @@ from src.db.router import cursor, conn
 async def training_history(user_id: int):
     cursor.execute("""SELECT training_history FROM app_bot_profile WHERE id =%s""", (user_id, ))
     result = cursor.fetchone()[0]
-
     if result is not None:
         return result
     else:
-        return None
+        return "История тренировок отсутствует"
 
 
 async def number_of_referral_points(user_id: int):

@@ -11,7 +11,7 @@ from src.auth.signup import check_number
 from src.db.db_users import get_phone_number, get_name, check_login
 from src.db.db_standards import get_standards_by_id
 from src.db.db_profile import training_history, number_of_referral_points, info_subscription
-from src.srm.srm_bot import check_crm, update_profile
+from src.srm.srm_bot import check_crm, update_profile, crm_info
 
 
 router = Router()
@@ -39,39 +39,49 @@ async def login(message: Message, state: FSMContext) -> None:
 @router.message(Form.number_login)
 async def input_number(message: Message, state: FSMContext) -> None:
     await state.update_data(input_number=message.text)
+
     database['user_id'] = message.from_user.id
-    # user = await get_users()
     data = await state.get_data()
 
-    if (await check_login(message.from_user.id)) and (await check_number(data['input_number'])) and (await check_crm(data['input_number'])):
-        if (await get_phone_number(message.from_user.id))[-10:] == data['input_number'][-10:]:
-            await update_profile(data['input_number'], message.from_user.id)
-            await message.answer(f"{await get_name(message.from_user.id)}, добро пожаловать, в спортивный клуб!")
-            await message.answer("📎Профиль📎", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                [
-                    InlineKeyboardButton(text="История тренировок", callback_data="history_tren"),
-                    InlineKeyboardButton(text="Кол-во реферальных баллов", callback_data="ref_bonus"),
-                ],
-                [
-                    InlineKeyboardButton(text="Абонемент", callback_data="card"),
-                    InlineKeyboardButton(text="Нормативы", callback_data="normatives")
-                ]
-            ]))
+    await crm_info()
+
+    if (await check_crm(data['input_number'])) and (await check_number(data['input_number'])):
+
+        if (await check_login(message.from_user.id)) and (await check_number(data['input_number'])):
+
+            if (await get_phone_number(message.from_user.id))[-10:] == data['input_number'][-10:]:
+
+                await update_profile(data['input_number'], message.from_user.id)
+                await message.answer(f"{await get_name(message.from_user.id)}, добро пожаловать, в спортивный клуб!")
+
+                await message.answer("📎Профиль📎", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                    [
+                        InlineKeyboardButton(text="История тренировок", callback_data="history_tren"),
+                        InlineKeyboardButton(text="Кол-во реферальных баллов", callback_data="ref_bonus"),
+                    ],
+                    [
+                        InlineKeyboardButton(text="Абонемент", callback_data="card"),
+                        InlineKeyboardButton(text="Нормативы", callback_data="normatives")
+                    ]
+                ]))
+            else:
+                await message.answer("Упс...похоже ошибка в веденных данных\nПовторите вход снова - <i>/login</i>")
+            await state.clear()
+
         else:
-            await message.answer("Упс...похоже ошибка в веденных данных")
+            await message.answer("Вы не зарегестрированы в системе <i>telegram-bot</i>, сначала зарегистрируйтесь\n"
+                                 "<i>/signup</i> - регистрация")
         await state.clear()
+
     else:
-        await message.answer("Вы не зарегестрированы в системе, сначала зарегистрируйтесь\n"
-                             "Или подождите пока вас подтвердит"
-                             "администратор")
+        await message.answer("Вы не зарегестрированны в CRM")
     await state.clear()
 
 
 @router.callback_query(F.data == "history_tren")
 async def callback_history_tren(callback: CallbackQuery) -> None:
     msg = await training_history(database['user_id'])
-    await callback.message.edit_text(f"🔗ИСТОРИЯ ТРЕНИРОВОК🔗\n\n"
-                                     f"{msg}",
+    await callback.message.edit_text(f"🔗ИСТОРИЯ ТРЕНИРОВОК🔗\n\n %s" % msg,
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))
@@ -80,8 +90,7 @@ async def callback_history_tren(callback: CallbackQuery) -> None:
 @router.callback_query(F.data == "ref_bonus")
 async def callback_ref_bonus(callback: CallbackQuery) -> None:
     msg = await number_of_referral_points(database['user_id'])
-    await callback.message.edit_text("🔗Реферальные бонусы🔗\n\n"
-                                     f"{msg}",
+    await callback.message.edit_text("🔗Реферальные бонусы🔗\n\n%s" % msg,
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))
@@ -90,8 +99,7 @@ async def callback_ref_bonus(callback: CallbackQuery) -> None:
 @router.callback_query(F.data == "card")
 async def callback_card(callback: CallbackQuery) -> None:
     msg = await info_subscription(database['user_id'])
-    await callback.message.edit_text("🪪АБОНЕМЕНТ🪪\n\n"
-                                     f"{msg}",
+    await callback.message.edit_text(f"🪪АБОНЕМЕНТ🪪\n\n{msg}",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))
@@ -100,8 +108,7 @@ async def callback_card(callback: CallbackQuery) -> None:
 @router.callback_query(F.data == "normatives")
 async def callback_normatives(callback: CallbackQuery) -> None:
     msg = await get_standards_by_id(database['user_id'])
-    await callback.message.edit_text(f"📉АНАЛИЗ НОРМАТИВОВ📉\n\n"
-                                     f"{msg}",
+    await callback.message.edit_text(f"📉АНАЛИЗ НОРМАТИВОВ📉\n\n{msg}",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
                                      ]))

@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 import aiohttp
+import logging
 
 
 from env import LOGIN, PASSWORD, BEARER_TOKEN, USER_TOKEN, CID
@@ -22,6 +23,15 @@ headers = {
 }
 
 """ PROFILE """
+
+logging.basicConfig(level=logging.INFO, filemode="w",
+                    format="%(asctime)s %(levelname)s %(message)s")
+
+crm = {
+    'user_token': str,
+    'ids': list,
+    'phones': list
+}
 
 
 # get all staff
@@ -50,7 +60,7 @@ async def get_user_token(login: str, password: str):
         raise HttpBadRequest("Bad request - 400")
 
 
-async def get_clients_ids(user_tok: str):
+async def get_clients_ids(user_tok):
     url = f"https://api.yclients.com/api/v1/company/{CID}/clients/search"
     head = {
         f"Accept": "application/vnd.yclients.v2+json",
@@ -70,7 +80,7 @@ async def get_clients_ids(user_tok: str):
         raise HttpBadRequest("Bad request - 400")
 
 
-async def get_client_by_id(list_id: list, user_tok: str):
+async def get_client_by_id(list_id, user_tok):
     head = {
         f"Accept": "application/vnd.yclients.v2+json",
         f'Accept-Language': 'ru-RU',
@@ -89,7 +99,7 @@ async def get_client_by_id(list_id: list, user_tok: str):
     return clients
 
 
-async def get_phones_users(list_id: list, user_tok: str):
+async def get_phones_users(list_id, user_tok):
     head = {
         f"Accept": "application/vnd.yclients.v2+json",
         f'Accept-Language': 'ru-RU',
@@ -108,7 +118,7 @@ async def get_phones_users(list_id: list, user_tok: str):
     return phones
 
 
-async def get_history_client(user_tok: int, phone: str, client_id: str):
+async def get_history_client(user_tok, phone, client_id):
     url = f"https://api.yclients.com/api/v1/company/{CID}/clients/visits/search"
     head = {
         f"Accept": "application/vnd.yclients.v2+json",
@@ -120,7 +130,7 @@ async def get_history_client(user_tok: int, phone: str, client_id: str):
     payload = {
         "client_id": client_id,
         "client_phone": phone[-11:],
-        "from": "2024-01-01",
+        "from": "2023-01-01",
         "to": datetime.datetime.now().strftime('%Y-%m-%d')
     }
 
@@ -134,14 +144,16 @@ async def get_history_client(user_tok: int, phone: str, client_id: str):
         dates_history = ""
 
         for _ in data:
-            dates_history += f"{_['date']}\n"
+            dates_history += "%s\n" % _['data']
 
-        return data
+        if dates_history != "":
+            return data
+        else: return "История тренировок отсутствует"
     else:
         raise HttpBadRequest("Bad Request - 400")
 
 
-async def get_abonements(user_tok: int, phone_number: str):
+async def get_abonements(user_tok, phone_number):
     url = f"https://api.yclients.com/api/v1/loyalty/abonements/"
     head = {
         f"Accept": "application/vnd.yclients.v2+json",
@@ -176,12 +188,9 @@ async def get_abonements(user_tok: int, phone_number: str):
 async def update_profile(phone_number: str, user_id):
     phone = '+7' + phone_number[-10:]
     key = '+7' + phone_number[-10:]
-    arr = await get_clients_ids(await get_user_token(LOGIN, PASSWORD))
-    phone_numbers = await get_phones_users(arr, await get_user_token(LOGIN, PASSWORD))
     cursor.execute("""UPDATE app_bot_profile SET training_history = %s, info_subscription = %s WHERE id = %s """, (
-        await get_history_client(await get_user_token(LOGIN, PASSWORD), phone,
-                                 arr[await search(phone_numbers, key)]),
-        await get_abonements(await get_user_token(LOGIN, PASSWORD), phone),
+        await get_history_client(crm['user_token'], phone, crm['ids'][await search(crm['phones'], key)]),
+        await get_abonements(crm['user_token'], phone),
         user_id
     ))
 
@@ -189,13 +198,18 @@ async def update_profile(phone_number: str, user_id):
 
 
 async def check_crm(phone_number: str) -> bool:
-    if phone_number[-10:] in await get_phones_users(await get_clients_ids(await get_user_token(LOGIN, PASSWORD)),
-                                                    await get_user_token(LOGIN, PASSWORD)):
+    if phone_number[-10:] in crm['phones']:
         return True
     return False
 
 
-async def search(arr: list, key: str):
+async def search(arr, key):
     for _ in range(len(arr)):
         if arr[_] == (key[-10:]):
             return _
+
+
+async def crm_info():
+    crm['user_token'] = await get_user_token(LOGIN, PASSWORD)
+    crm['ids'] = await get_clients_ids(crm['user_token'])
+    crm['phones'] = await get_phones_users(crm['ids'], crm['user_token'])
