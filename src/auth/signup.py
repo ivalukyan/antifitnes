@@ -59,7 +59,7 @@ async def signup(message: Message, state: FSMContext) -> None:
 async def gen_m_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await state.update_data(gender='Men')
     await state.set_state(Form.signup_number)
-    await callback.message.edit_text("Введите номер телефона: ")
+    await callback.message.edit_text("Введите номер телефона: \n<i>пример:</i> +79889998989")
 
 
 @router.callback_query(F.data == "gen_j")
@@ -150,7 +150,7 @@ async def name_callback(callback: CallbackQuery, state: FSMContext) -> None:
 @router.callback_query(F.data == "number")
 async def number_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await state.set_state(Form.save_number)
-    await callback.message.edit_text("Введите новый номер: \n<i>пример: +79889999898</i>")
+    await callback.message.edit_text("Введите новый номер: \n<i>пример:</i> +79889998989")
 
 
 @router.callback_query(F.data == 'back')

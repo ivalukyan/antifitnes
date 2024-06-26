@@ -128,7 +128,6 @@ async def get_history_client(user_tok: int, phone: str, client_id: str):
         async with session.post(url, headers=head, data=payload) as response:
             response = await response.json()
 
-
     if response['success']:
         data = response['data']['records']
 
@@ -175,12 +174,14 @@ async def get_abonements(user_tok: int, phone_number: str):
 
 
 async def update_profile(phone_number: str, user_id):
+    phone = '+7' + phone_number[-10:]
+    key = '+7' + phone_number[-10:]
     arr = await get_clients_ids(await get_user_token(LOGIN, PASSWORD))
     phone_numbers = await get_phones_users(arr, await get_user_token(LOGIN, PASSWORD))
     cursor.execute("""UPDATE app_bot_profile SET training_history = %s, info_subscription = %s WHERE id = %s """, (
-        await get_history_client(await get_user_token(LOGIN, PASSWORD), '+79213224013',
-                                 arr[await search(phone_numbers, '+79213224013')]),
-        await get_abonements(await get_user_token(LOGIN, PASSWORD), phone_number),
+        await get_history_client(await get_user_token(LOGIN, PASSWORD), phone,
+                                 arr[await search(phone_numbers, key)]),
+        await get_abonements(await get_user_token(LOGIN, PASSWORD), phone),
         user_id
     ))
 
