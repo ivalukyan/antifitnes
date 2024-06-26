@@ -11,18 +11,23 @@ from src.db.db_standards import (get_all_thunder, get_all_pull_ups, get_all_jerk
                                  get_all_turkish_ascent_kettlebell, get_all_farmer_walk,
                                  get_all_front_squat, get_all_classic_squat, get_all_squat_over_the_head,
                                  get_all_gluteal_bridge, get_all_skipping_rope, get_all_shuttle_running)
+from src.srm.srm_bot import check_crm
+from src.db.db_users import crm_eqv
 
 router = Router()
 
 
 @router.message(Command('top'))
 async def top(message: Message) -> None:
-    await message.answer("Выберите норматив: ", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-        [
-            InlineKeyboardButton(text="Силовые нормативы", callback_data="power_standards"),
-            InlineKeyboardButton(text="Функциональные нормативы", callback_data="fun_standards"),
-        ]
-    ]), resize_keyboard=True, one_time_keyboard=True)
+    if await check_crm(await crm_eqv(message.from_user.id)):
+        await message.answer("Выберите норматив: ", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Силовые нормативы", callback_data="power_standards"),
+                InlineKeyboardButton(text="Функциональные нормативы", callback_data="fun_standards"),
+            ]
+        ]), resize_keyboard=True, one_time_keyboard=True)
+    else:
+        await message.answer("Вы не зарегестрированы в CRM")
 
 
 @router.callback_query(F.data == "power_standards")

@@ -70,3 +70,14 @@ async def add_user(user_id, first_name, username, gender, phone_number):
     VALUES (%s, %s, %s, %s, %s)""", (user_id, first_name, username, gender, phone_number, ))
 
     conn.commit()
+
+
+async def crm_eqv(user_id):
+    if user_id in await get_all_users():
+        cursor.execute("""SELECT phone_number FROM app_bot_user WHERE id = %s""", (user_id, ))
+        result = cursor.fetchone()[0]
+
+        return result
+    return None
+
+

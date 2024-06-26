@@ -198,8 +198,10 @@ async def update_profile(phone_number: str, user_id):
 
 
 async def check_crm(phone_number: str) -> bool:
-    if phone_number[-10:] in crm['phones']:
-        return True
+    if phone_number is not None:
+        if phone_number[-10:] in crm['phones']:
+            return True
+        return False
     return False
 
 
