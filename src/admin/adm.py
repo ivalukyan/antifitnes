@@ -11,7 +11,7 @@ from aiogram.types import (
 
 from bot import bot
 from src.db.db_users import get_all_users
-from env import ADMINS, ALL_USERS_URL, ADMIN_PANEL
+from env import ADMINS, HOST_PROD
 
 router = Router()
 
@@ -37,7 +37,7 @@ async def login(message: Message, state: FSMContext) -> None:
     if check_admin(message.from_user.id):
         await message.answer("<b>АДМИН ПАНЕЛЬ</b>", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="Рассылка", callback_data="request_adm")],
-            [InlineKeyboardButton(text="Админ панель", url='http://127.0.0.1:8000/admin')]
+            [InlineKeyboardButton(text="Админ панель", url=f'http://{HOST_PROD}:8000/admin')]
         ]))
     else:
         await message.answer("Вам не выдана данная роль")

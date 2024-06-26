@@ -12,6 +12,7 @@ from aiogram.types import (
 
 from src.db.db_users import get_all_users, add_user
 from src.db.db_profile import add_info_profile
+from src.db.db_standards import insert_standard
 from env import ALL_USERS_URL, PROFILE_URL
 
 router = Router()
@@ -119,9 +120,11 @@ async def yes_callback(callback: CallbackQuery, state: FSMContext) -> None:
     if data["gender"] == 'Men':
         await add_user(data['id'], data['first_name'], data['username'], 'gen_men', data['number'])
         await add_info_profile(data['id'], "", 0, "", "")
+        await insert_standard(data['id'])
     elif data["gender"] == 'Women':
         await add_user(data['id'], data['first_name'], data['username'], 'gen_women', data['number'])
         await add_info_profile(data['id'], "", 0, "", "")
+        await insert_standard(data['id'])
 
 
 @router.callback_query(F.data == "no")
@@ -186,9 +189,11 @@ async def save_new_name(message: Message, state: FSMContext) -> None:
         if data["gender"] == 'Men':
             await add_user(data['id'], name, data['username'], 'gen_men', data['number'])
             await add_info_profile(data['id'], "", 0, "", "")
+            await insert_standard(data['id'])
         elif data["gender"] == 'Women':
             await add_user(data['id'], name, data['username'], 'gen_women', data['number'])
             await add_info_profile(data['id'], "", 0, "", "")
+            await insert_standard(data['id'])
         await state.clear()
 
     else:
@@ -213,9 +218,11 @@ async def save_new_number(message: Message, state: FSMContext) -> None:
         if data["gender"] == 'Men':
             await add_user(data['id'], data['first_name'], data['username'], 'gen_men', data['number'])
             await add_info_profile(data['id'], "", 0, "", "")
+            await insert_standard(data['id'])
         elif data["gender"] == 'Women':
             await add_user(data['id'], data['first_name'], data['username'], 'gen_women', data['number'])
             await add_info_profile(data['id'], "", 0, "", "")
+            await insert_standard(data['id'])
         await state.clear()
     else:
         await message.answer("Упс... номер введен не правильно")

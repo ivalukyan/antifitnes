@@ -1,6 +1,9 @@
-import requests
+import datetime
+import aiohttp
+
 from env import LOGIN, PASSWORD, BEARER_TOKEN, USER_TOKEN, CID
 from src.db.router import conn, cursor
+from aiohttp.http_exceptions import HttpBadRequest
 
 bearer_token = BEARER_TOKEN
 user_token = USER_TOKEN
@@ -22,30 +25,12 @@ headers = {
 # get all staff
 async def get_all_staff():
     url = f"https://yclients.com/api/v1/staff/{CID}"
-    all_staff_info = requests.get(url, headers=headers).json()['data']
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, headers=headers) as response:
+            response = await response.json()
 
+    all_staff_info = response["data"]
     return all_staff_info
-
-
-# get info about services
-async def get_info_about_services():
-    url = f"https://yclients.com/api/v1/services/{CID}"
-    all_service_info = requests.get(url, headers=headers).json()['data']
-    titles = []
-    ids = []
-    for _ in range(len(all_service_info)):
-        ids.append(all_service_info[_]['id'])
-        titles.append(all_service_info[_]['title'])
-
-    return titles, ids
-
-
-# get info about available days
-async def get_info_availible_days():
-    url = f"https://yclients.com/api/v1/book_dates/{CID}"
-    all_available_days = requests.get(url, headers=headers).json()['data']
-
-    return all_available_days
 
 
 async def get_user_token(login: str, password: str):
@@ -54,9 +39,13 @@ async def get_user_token(login: str, password: str):
         "login": login,
         "password": password
     }
-    response = requests.post(url, headers=headers, data=querystring)
-    data = response.json()
-    return data['data']['user_token']
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, headers=headers, data=querystring) as response:
+            response = await response.json()
+    try:
+        return response['data']['user_token']
+    except HttpBadRequest:
+        raise HttpBadRequest("Bad request - 400")
 
 
 async def get_clients_ids(user_tok: str):
@@ -67,49 +56,57 @@ async def get_clients_ids(user_tok: str):
         f'Authorization': f"Bearer {bearer_token}, User {user_tok}",
         f'Cache-Control': "no-cache"
     }
-    response = requests.post(url, headers=head)
-    dt = response.json()['data']
-    ids = []
-    for _ in dt:
-        ids.append(_['id'])
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, headers=head) as response:
+            dt = await response.json()
 
-    return ids
+    dt = dt['data']
+    ids = [_['id'] for _ in dt]
+    try:
+        return ids
+    except HttpBadRequest:
+        raise HttpBadRequest("Bad request - 400")
 
 
 async def get_client_by_id(list_id: list, user_tok: str):
+    head = {
+        f"Accept": "application/vnd.yclients.v2+json",
+        f'Accept-Language': 'ru-RU',
+        f'Authorization': f"Bearer {bearer_token}, User {user_tok}",
+        f'Cache-Control': "no-cache"
+    }
     clients = []
     for _ in list_id:
         url = f"https://api.yclients.com/api/v1/client/{CID}/{_}"
-        head = {
-            f"Accept": "application/vnd.yclients.v2+json",
-            f'Accept-Language': 'ru-RU',
-            f'Authorization': f"Bearer {bearer_token}, User {user_tok}",
-            f'Cache-Control': "no-cache"
-        }
-        response = requests.get(url, headers=head)
-        if response.status_code == 200:
-            clients.append(response.json()['data'])
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers=head) as response:
+                response = await response.json()
+        if response['success']:
+            clients.append(response['data'])
 
     return clients
 
 
 async def get_phones_users(list_id: list, user_tok: str):
+    head = {
+        f"Accept": "application/vnd.yclients.v2+json",
+        f'Accept-Language': 'ru-RU',
+        f'Authorization': f"Bearer {bearer_token}, User {user_tok}",
+        f'Cache-Control': "no-cache"
+    }
     phones = []
     for _ in list_id:
         url = f"https://api.yclients.com/api/v1/client/{CID}/{_}"
-        head = {
-            f"Accept": "application/vnd.yclients.v2+json",
-            f'Accept-Language': 'ru-RU',
-            f'Authorization': f"Bearer {bearer_token}, User {user_tok}",
-            f'Cache-Control': "no-cache"
-        }
-        response = requests.get(url, headers=head)
-        phones.append(response.json()['data']['phone'][-10:])
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers=head) as response:
+                response = await response.json()
+        if response['success']:
+            phones.append(response['data']['phone'][-10:])
 
     return phones
 
 
-async def get_history_client(user_tok: int):
+async def get_history_client(user_tok: int, phone: str, client_id: int):
     url = f"https://api.yclients.com/api/v1/company/{CID}/clients/visits/search"
     head = {
         f"Accept": "application/vnd.yclients.v2+json",
@@ -119,22 +116,27 @@ async def get_history_client(user_tok: int):
     }
 
     payload = {
-        "client_id": 230494945,
-        "client_phone": "79687518203",
-        "from": "2024-06-01",
-        "to": "2024-06-30",
-        "attendance": None
+        "client_id": client_id,
+        "client_phone": f"{phone}",
+        "from": "2024-01-01",
+        "to": datetime.datetime.now().strftime('%Y-%m-%d')
     }
 
-    response = requests.post(url, headers=head, data=payload)
-    data = response.json()['data']['records']
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, headers=head, data=payload) as response:
+            response = await response.json()
 
-    dates_history = ""
+    if response['success']:
+        data = response['data']['records']
 
-    for _ in data:
-        dates_history += f"{_['date']}\n"
+        dates_history = ""
 
-    return dates_history
+        for _ in data:
+            dates_history += f"{_['date']}\n"
+
+        return data
+    else:
+        raise HttpBadRequest("Bad Request - 400")
 
 
 async def get_abonements(user_tok: int, phone_number: str):
@@ -149,21 +151,31 @@ async def get_abonements(user_tok: int, phone_number: str):
         "company_id": CID,
         'phone': phone_number
     }
-    response = requests.get(url, headers=head, params=querystring)
 
-    if response.status_code == 200 and response.json()['meta']['count'] > 0:
-        msg = (f"Название - {response.json()['data']['balance_string']}\n"
-               f"Период - {response.json()['data']['period']}\n"
-               f"Статус - {response.json()['data']['status']['title']}")
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, headers=head, params=querystring) as response:
+            response = await response.json()
 
-        return msg
+    message = ''
+    if response['success']:
+        for _ in range(len(response['data'])):
+
+            msg = f"Название - {response['data'][_]['type']['title']}\n"\
+                  f"Период - {response['data'][_]['type']['period']}\n"\
+                  f"Статус - {response['data'][_]['status']['title']}\n\n"
+
+            message += msg
+
+        return message
     else:
         return "Абонемент у данного пользователя отсутствует."
 
 
 async def update_profile(phone_number: str, user_id):
+    arr = await get_clients_ids(await get_user_token(LOGIN, PASSWORD))
     cursor.execute("""UPDATE app_bot_profile SET training_history = %s, info_subscription = %s WHERE id = %s """, (
-        await get_history_client(await get_user_token(LOGIN, PASSWORD)),
+        await get_history_client(await get_user_token(LOGIN, PASSWORD), phone_number,
+                                 arr[await binary_search(arr, 0, (phone_number[-10:]))]),
         await get_abonements(await get_user_token(LOGIN, PASSWORD), phone_number),
         user_id
     ))
@@ -176,3 +188,20 @@ async def check_crm(phone_number: str) -> bool:
                                                     await get_user_token(LOGIN, PASSWORD)):
         return True
     return False
+
+
+async def binary_search(arr, start_element, key):
+    end_element = len(arr) - 1
+    while start_element <= end_element:
+        middle_element = start_element + (end_element - start_element) // 2
+        if arr[middle_element] == key:
+            return middle_element
+        elif arr[middle_element] < key:
+            start_element = middle_element + 1
+        else:
+            end_element = middle_element - 1
+    return -1
+
+
+async def search(arr, key):
+    return any([arr[i] == key for i in range(len(arr))])

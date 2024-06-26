@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 services:
   web:
     build:
@@ -19,12 +19,12 @@ services:
 
     container_name: db_app
 
-    ports:
-      - '5432:5432'
     environment:
       POSTGRES_DB: 'bot'
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
+    ports:
+      - '5432:5432'
 
 
   app:

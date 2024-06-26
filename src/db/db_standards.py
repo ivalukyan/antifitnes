@@ -1,6 +1,15 @@
 from src.db.router import cursor, conn
 
 
+async def insert_standard(user_id):
+    cursor.execute("""INSERT INTO app_bot_standards(id, thunder, turkish_ascent_axel, turkish_ascent_kettlebell,
+     bench_press, axel_jerk, taking_on_axel_chest, gluteal_bridge, deadlift, jerk, taking_on_the_chest, axel_deadlift,
+      classic_squat, front_squat, squat_over_the_head, skipping_rope, push_ups, shuttle_running, farmer_walk, pull_ups,
+       high_jump, long_jump, holding_the_axel, handstand) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s,
+        %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s)""", (user_id, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                        0, 0, 0, 0, 0))
+    conn.commit()
+
 async def get_standards_by_id(user_id):
     cursor.execute("""SELECT * FROM app_bot_standards WHERE id=%s""", (user_id,))
     result = cursor.fetchall()[0]
