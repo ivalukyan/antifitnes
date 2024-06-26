@@ -1,5 +1,7 @@
+import asyncio
 import datetime
 import aiohttp
+
 
 from env import LOGIN, PASSWORD, BEARER_TOKEN, USER_TOKEN, CID
 from src.db.router import conn, cursor
@@ -106,7 +108,7 @@ async def get_phones_users(list_id: list, user_tok: str):
     return phones
 
 
-async def get_history_client(user_tok: int, phone: str, client_id: int):
+async def get_history_client(user_tok: int, phone: str, client_id: str):
     url = f"https://api.yclients.com/api/v1/company/{CID}/clients/visits/search"
     head = {
         f"Accept": "application/vnd.yclients.v2+json",
@@ -117,7 +119,7 @@ async def get_history_client(user_tok: int, phone: str, client_id: int):
 
     payload = {
         "client_id": client_id,
-        "client_phone": f"{phone}",
+        "client_phone": phone[-11:],
         "from": "2024-01-01",
         "to": datetime.datetime.now().strftime('%Y-%m-%d')
     }
@@ -125,6 +127,7 @@ async def get_history_client(user_tok: int, phone: str, client_id: int):
     async with aiohttp.ClientSession() as session:
         async with session.post(url, headers=head, data=payload) as response:
             response = await response.json()
+
 
     if response['success']:
         data = response['data']['records']
@@ -173,9 +176,10 @@ async def get_abonements(user_tok: int, phone_number: str):
 
 async def update_profile(phone_number: str, user_id):
     arr = await get_clients_ids(await get_user_token(LOGIN, PASSWORD))
+    phone_numbers = await get_phones_users(arr, await get_user_token(LOGIN, PASSWORD))
     cursor.execute("""UPDATE app_bot_profile SET training_history = %s, info_subscription = %s WHERE id = %s """, (
-        await get_history_client(await get_user_token(LOGIN, PASSWORD), phone_number,
-                                 arr[await binary_search(arr, 0, (phone_number[-10:]))]),
+        await get_history_client(await get_user_token(LOGIN, PASSWORD), '+79213224013',
+                                 arr[await search(phone_numbers, '+79213224013')]),
         await get_abonements(await get_user_token(LOGIN, PASSWORD), phone_number),
         user_id
     ))
@@ -190,18 +194,7 @@ async def check_crm(phone_number: str) -> bool:
     return False
 
 
-async def binary_search(arr, start_element, key):
-    end_element = len(arr) - 1
-    while start_element <= end_element:
-        middle_element = start_element + (end_element - start_element) // 2
-        if arr[middle_element] == key:
-            return middle_element
-        elif arr[middle_element] < key:
-            start_element = middle_element + 1
-        else:
-            end_element = middle_element - 1
-    return -1
-
-
-async def search(arr, key):
-    return any([arr[i] == key for i in range(len(arr))])
+async def search(arr: list, key: str):
+    for _ in range(len(arr)):
+        if arr[_] == (key[-10:]):
+            return _

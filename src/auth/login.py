@@ -33,7 +33,7 @@ class Form(StatesGroup):
 async def login(message: Message, state: FSMContext) -> None:
     await state.set_state(Form.number_login)
     await message.answer("<b>ВХОД В СИСТЕМУ</b>\n\n"
-                         "Введите номер своего телефона: ")
+                         "Введите номер своего телефона: \n<i>пример:</i> +79889998989")
 
 
 @router.message(Form.number_login)

@@ -19,6 +19,9 @@ services:
 
     container_name: db_app
 
+    env_file:
+      - .env
+
     environment:
       POSTGRES_DB: 'bot'
       POSTGRES_USER: 'postgres'

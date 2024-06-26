@@ -150,7 +150,7 @@ async def name_callback(callback: CallbackQuery, state: FSMContext) -> None:
 @router.callback_query(F.data == "number")
 async def number_callback(callback: CallbackQuery, state: FSMContext) -> None:
     await state.set_state(Form.save_number)
-    await callback.message.edit_text("Введите новый номер: ")
+    await callback.message.edit_text("Введите новый номер: \n<i>пример: +79889999898</i>")
 
 
 @router.callback_query(F.data == 'back')
