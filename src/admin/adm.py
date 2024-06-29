@@ -10,7 +10,7 @@ from aiogram.types import (
 )
 
 from bot import bot
-from src.db.db_users import get_all_users
+from src.db.db_profile import get_all_users
 from env import ADMINS, HOST_PROD
 
 router = Router()

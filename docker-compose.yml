@@ -23,7 +23,7 @@ services:
       - .env
 
     environment:
-      POSTGRES_DB: 'bot'
+      POSTGRES_DB: 'bot_app'
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
     ports:

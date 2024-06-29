@@ -1,19 +1,19 @@
 from src.db.router import cursor, conn
 
 
-async def insert_standard(user_id):
-    cursor.execute("""INSERT INTO app_bot_standards(id, thunder, turkish_ascent_axel, turkish_ascent_kettlebell,
+async def insert_standard(user_id, first_name):
+    cursor.execute("""INSERT INTO bot_app_standards(id, first_name,thunder, turkish_ascent_axel, turkish_ascent_kettlebell,
      bench_press, axel_jerk, taking_on_axel_chest, gluteal_bridge, deadlift, jerk, taking_on_the_chest, axel_deadlift,
       classic_squat, front_squat, squat_over_the_head, skipping_rope, push_ups, shuttle_running, farmer_walk, pull_ups,
        high_jump, long_jump, holding_the_axel, handstand) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s,
-        %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s)""", (user_id, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s)""", (user_id, first_name, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                                         0, 0, 0, 0, 0))
     conn.commit()
 
-async def get_standards_by_id(user_id):
-    cursor.execute("""SELECT * FROM app_bot_standards WHERE id=%s""", (user_id,))
-    result = cursor.fetchall()[0]
 
+async def get_standards_by_id(user_id):
+    cursor.execute("""SELECT * FROM bot_app_standards WHERE id=%s""", (user_id,))
+    result = cursor.fetchall()[0]
     conn.commit()
 
     msg = (f"Гром - {result[1]}\n"
@@ -47,621 +47,344 @@ async def get_standards_by_id(user_id):
 
 
 async def get_all_thunder():
-    cursor.execute("""SELECT thunder FROM app_bot_standards""")
+    cursor.execute("""SELECT thunder FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = f"📊ГРОМ📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊ГРОМ📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_turkish_ascent_axel():
-    cursor.execute("""SELECT turkish_ascent_axel FROM app_bot_standards""")
+    cursor.execute("""SELECT turkish_ascent_axel FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Турецкий подъем: Аксель📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Турецкий подъем: Аксель📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_turkish_ascent_kettlebell():
-    cursor.execute("""SELECT turkish_ascent_kettlebell FROM app_bot_standards""")
+    cursor.execute("""SELECT turkish_ascent_kettlebell FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Турецкий подъем: Гиря📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Турецкий подъем: Гиря📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_bench_press():
-    cursor.execute("""SELECT bench_press FROM app_bot_standards""")
+    cursor.execute("""SELECT bench_press FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Жим лежа📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Жим лежа📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_axel_jerk():
-    cursor.execute("""SELECT axel_jerk FROM app_bot_standards""")
+    cursor.execute("""SELECT axel_jerk FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Рывок акселя 1ПМ📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Рывок акселя 1ПМ📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_taking_on_axel_chest():
-    cursor.execute("""SELECT taking_on_axel_chest FROM app_bot_standards""")
+    cursor.execute("""SELECT taking_on_axel_chest FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = f"📊Взятие на грудь акселя 1ПМ📊\n\n"
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    sorted(result)
-
-    if result is not None and len(result) > 9:
-        msg = (f"📊Взятие на грудь акселя 1ПМ📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_gluteal_bridge():
-    cursor.execute("""SELECT gluteal_bridge FROM app_bot_standards""")
+    cursor.execute("""SELECT gluteal_bridge FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Ягодичный мостик 1ПМ📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Ягодичный мостик 1ПМ📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_deadlift():
-    cursor.execute("""SELECT deadlift FROM app_bot_standards""")
+    cursor.execute("""SELECT deadlift FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Становая тяга 1ПМ📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Становая тяга 1ПМ📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_jerk():
-    cursor.execute("""SELECT jerk FROM app_bot_standards""")
+    cursor.execute("""SELECT jerk FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Рывок 1ПМ📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Рывок 1ПМ📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_taking_on_the_chest():
-    cursor.execute("""SELECT taking_on_the_chest FROM app_bot_standards""")
+    cursor.execute("""SELECT taking_on_the_chest FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Взятие на грудь 1ПМ📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Взятие на грудь 1ПМ📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_axel_deadlift():
-    cursor.execute("""SELECT axel_deadlift FROM app_bot_standards""")
+    cursor.execute("""SELECT axel_deadlift FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Становая тяга акселя 1ПМ📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Становая тяга акселя 1ПМ📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_classic_squat():
-    cursor.execute("""SELECT classic_squat FROM app_bot_standards""")
+    cursor.execute("""SELECT classic_squat FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Присед 1ПМ: Классический📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Присед 1ПМ: Классический📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_front_squat():
-    cursor.execute("""SELECT front_squat FROM app_bot_standards""")
+    cursor.execute("""SELECT front_squat FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Присед 1ПМ: Фронтальный📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Присед 1ПМ: Фронтальный📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_squat_over_the_head():
-    cursor.execute("""SELECT squat_over_the_head FROM app_bot_standards""")
+    cursor.execute("""SELECT squat_over_the_head FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Присед 1ПМ: Над головой📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Присед 1ПМ: Над головой📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_skipping_rope():
-    cursor.execute("""SELECT skipping_rope FROM app_bot_standards""")
+    cursor.execute("""SELECT skipping_rope FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Скакалка📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Скакалка📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_push_ups():
-    cursor.execute("""SELECT push_ups FROM app_bot_standards""")
+    cursor.execute("""SELECT push_ups FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Отжимания от пола📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Отжимания от пола📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_shuttle_running():
-    cursor.execute("""SELECT shuttle_running FROM app_bot_standards""")
+    cursor.execute("""SELECT shuttle_running FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Челночный бег📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Челночный бег📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_farmer_walk():
-    cursor.execute("""SELECT farmer_walk FROM app_bot_standards""")
+    cursor.execute("""SELECT farmer_walk FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Прогулка фермера📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Прогулка фермера📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_pull_ups():
-    cursor.execute("""SELECT pull_ups FROM app_bot_standards""")
+    cursor.execute("""SELECT pull_ups FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Подтягивания📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Подтягивания📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_high_jump():
-    cursor.execute("""SELECT high_jump FROM app_bot_standards""")
+    cursor.execute("""SELECT high_jump FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Прыжок в высоту📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Прыжок в высоту📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_long_jump():
-    cursor.execute("""SELECT long_jump FROM app_bot_standards""")
+    cursor.execute("""SELECT long_jump FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = (f"📊Прыжок в длину📊\n\n")
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Прыжок в длину📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_holding_the_axel():
-    cursor.execute("""SELECT holding_the_axel FROM app_bot_standards""")
+    cursor.execute("""SELECT holding_the_axel FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Удержание акселя📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Удержание акселя📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"
 
 
 async def get_all_handstand():
-    cursor.execute("""SELECT handstand FROM app_bot_standards""")
+    cursor.execute("""SELECT handstand FROM bot_app_standards""")
     result = cursor.fetchall()[0]
-    print(result)
 
-    for _ in result:
-        _ = int(_)
+    msg = "📊Стойка на руках📊\n\n"
 
-    sorted(result)
+    if result is not None and len(result) > 0:
+        for _ in range(len(result)):
+            msg += f'{_ + 1}. {result[_]}\n'
 
-    if result is not None and len(result) > 9:
-        msg = (f"📊Стойка на руках📊\n\n"
-               f"1. {result[0]}\n"
-               f"2. {result[1]}\n"
-               f"3. {result[2]}\n"
-               f"4. {result[3]}\n"
-               f"5. {result[4]}\n"
-               f"6. {result[5]}\n"
-               f"7. {result[6]}\n"
-               f"8. {result[7]}\n"
-               f"9. {result[8]}\n"
-               f"10. {result[9]}")
         return msg
     else:
-        return "Количество заполненных нормативов меньше 10"
+        return "В выбранном сегменте нормативы отсутствуют!"

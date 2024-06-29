@@ -1,0 +1,120 @@
+import datetime
+import uuid
+
+from django.db import models
+
+
+# Create your models here.
+
+
+class User(models.Model):
+    id = models.IntegerField(primary_key=True, default=0)
+    first_name = models.CharField(max_length=50)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return str(self.id) + " " + str(self.first_name) + " " + "пользователь"
+
+
+class Standards(User):
+    thunder = models.TextField(default='0')
+    turkish_ascent_axel = models.TextField(default='0')
+    turkish_ascent_kettlebell = models.TextField(default='0')
+    bench_press = models.TextField(default='0')
+    axel_jerk = models.TextField(default='0')
+    taking_on_axel_chest = models.TextField(default='0')
+    gluteal_bridge = models.TextField(default='0')
+    deadlift = models.TextField(default='0')
+    jerk = models.TextField(default='0')
+    taking_on_the_chest = models.TextField(default='0')
+    axel_deadlift = models.TextField(default='0')
+    classic_squat = models.TextField(default='0')
+    front_squat = models.TextField(default='0')
+    squat_over_the_head = models.TextField(default='0')
+    skipping_rope = models.TextField(default='0')
+    push_ups = models.IntegerField(default=0)
+    shuttle_running = models.TextField(default='0')
+    farmer_walk = models.TextField(default='0')
+    pull_ups = models.TextField(default='0')
+    high_jump = models.TextField(default='0')
+    long_jump = models.TextField(default='0')
+    holding_the_axel = models.TextField(default='0')
+    handstand = models.TextField(default='0')
+
+    def __str__(self):
+        return str(self.id) + "нормативы"
+
+
+class Profile(User):
+    GENDERS = [
+        ('gen_men', 'Мужской'),
+        ('gen_women', 'Женский'),
+        ('gender', 'Неизвестно')
+    ]
+    username = models.CharField(max_length=50, default="")
+    gender = models.CharField(choices=GENDERS, max_length=10, default='gender')
+    phone_number = models.CharField(max_length=12, default="")
+    training_history = models.TextField(default="-")
+    number_of_referral_points = models.IntegerField(default=0)
+    info_subscription = models.TextField(default="-")
+    current_standard = models.TextField(default="-")
+
+    def __str__(self):
+        return str(self.phone_number) + " " + "профиль пользователя"
+
+
+def definition_month(month):
+    if month in ['1', '2', '3']:
+        return '1'
+    elif month in ['4', '5', '6']:
+        return '4'
+    elif month in ['7', '8', '9']:
+        return '7'
+    elif month in ['10', '11', '12']:
+        return '10'
+
+
+class Statistics(models.Model):
+    months = [
+        ('1', 'Январь'),
+        ('4', 'Апрель'),
+        ('7', 'Июль'),
+        ('10', 'Октябрь')
+    ]
+    id = models.IntegerField(default=uuid.uuid4, primary_key=True)
+    user_id = models.IntegerField(default=0)
+    user_name = models.TextField(max_length=20, default='your name')
+
+    thunder = models.TextField(default='0')
+    turkish_ascent_axel = models.TextField(default='0')
+    turkish_ascent_kettlebell = models.TextField(default='0')
+    bench_press = models.TextField(default='0')
+    axel_jerk = models.TextField(default='0')
+    taking_on_axel_chest = models.TextField(default='0')
+    gluteal_bridge = models.TextField(default='0')
+    deadlift = models.TextField(default='0')
+    jerk = models.TextField(default='0')
+    taking_on_the_chest = models.TextField(default='0')
+    axel_deadlift = models.TextField(default='0')
+    classic_squat = models.TextField(default='0')
+    front_squat = models.TextField(default='0')
+    squat_over_the_head = models.TextField(default='0')
+    skipping_rope = models.TextField(default='0')
+    push_ups = models.IntegerField(default=0)
+    shuttle_running = models.TextField(default='0')
+    farmer_walk = models.TextField(default='0')
+    pull_ups = models.TextField(default='0')
+    high_jump = models.TextField(default='0')
+    long_jump = models.TextField(default='0')
+    holding_the_axel = models.TextField(default='0')
+    handstand = models.TextField(default='0')
+    dynamic_month = datetime.datetime.now().month
+    dynamic_year = datetime.datetime.now().year
+
+    month = models.TextField(choices=months, default=definition_month(str(dynamic_month)))
+    year = models.TextField(default=dynamic_year)
+
+    def __str__(self):
+        return str(self.id) + " " + str(self.user_id) + " " + "статистика"

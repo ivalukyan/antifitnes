@@ -5,7 +5,7 @@ from aiogram.types import (
 )
 from env import URL_SCHEDULE
 from src.srm.srm_bot import check_crm
-from src.db.db_users import crm_eqv
+from src.db.db_profile import crm_eqv
 
 router = Router()
 
