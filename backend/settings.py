@@ -85,7 +85,7 @@ DATABASES = {
         'NAME': POSTGRES_DB,
         'USER': POSTGRES_USER,
         'PASSWORD': POSTGRES_PASSWORD,
-        'HOST': HOST_PROD,
+        'HOST': POSTGRES_HOST,
         'PORT': POSTGRES_PORT
     }
 }

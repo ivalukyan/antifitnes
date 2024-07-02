@@ -2,5 +2,5 @@ import psycopg2
 from env import POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, HOST_PROD
 
 
-conn = psycopg2.connect(f"dbname={POSTGRES_DB} user={POSTGRES_USER} host={HOST_PROD} password={POSTGRES_PASSWORD}")
+conn = psycopg2.connect(f"dbname={POSTGRES_DB} user={POSTGRES_USER} host={POSTGRES_HOST} password={POSTGRES_PASSWORD}")
 cursor = conn.cursor()
