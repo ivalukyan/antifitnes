@@ -19,8 +19,13 @@ from django.urls import path
 from bot_app import views
 
 urlpatterns = [
+    path('', views.index, name='home'),
     path('admin/', admin.site.urls),
-    path('standards/', views.StandardsUser.as_view()),
-    path('profile/', views.ProfileUser.as_view()),
-    path('statistics/', views.StatisticsUser.as_view())
+    path('standards/', views.standards, name='standards'),
+    path('standards/<int:pk>', views.StandardsID.as_view(), name='standards_id'),
+    path('standards/create/', views.standards_create, name='standards_create'),
+    path('profile/', views.profile),
+    path('statistics/', views.statistics, name='statistics'),
+    path('statistics/create', views.createstatistics, name='create_statistics'),
+    path('statistics/<int:pk>', views.StatisticsID.as_view(), name='statistic_id')
 ]

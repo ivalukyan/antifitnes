@@ -3,7 +3,7 @@ from src.db.router import cursor, conn
 
 async def create_users():
     cursor.execute("""CREATE TABLE IF NOT EXISTS bot_app_profile(
-                ID SERIAL PRIMARY KEY,
+                TELEGRAM_ID INTEGER,
                 FIRST_NAME TEXT,
                 USERNAME TEXT,
                 GENDER TEXT,
@@ -19,7 +19,7 @@ async def create_users():
 
 
 async def training_history(user_id: int):
-    cursor.execute("""SELECT training_history FROM bot_app_profile WHERE id =%s""", (user_id, ))
+    cursor.execute("""SELECT training_history FROM bot_app_profile WHERE telegram_id =%s""", (user_id, ))
     result = cursor.fetchone()[0]
     if result is not None:
         return result
@@ -28,7 +28,7 @@ async def training_history(user_id: int):
 
 
 async def number_of_referral_points(user_id: int):
-    cursor.execute("""SELECT number_of_referral_points FROM bot_app_profile WHERE id =%s""", (user_id, ))
+    cursor.execute("""SELECT number_of_referral_points FROM bot_app_profile WHERE telegram_id =%s""", (user_id, ))
     result = cursor.fetchone()[0]
 
     if result is not None:
@@ -38,7 +38,7 @@ async def number_of_referral_points(user_id: int):
 
 
 async def info_subscription(user_id: int):
-    cursor.execute("""SELECT info_subscription FROM bot_app_profile WHERE id =%s""", (user_id, ))
+    cursor.execute("""SELECT info_subscription FROM bot_app_profile WHERE telegram_id =%s""", (user_id, ))
     result = cursor.fetchone()[0]
 
     if result is not None:
@@ -49,7 +49,7 @@ async def info_subscription(user_id: int):
 
 async def add_info_profile(user_id, first_name, username, gender, phone_number, training_history,
                            number_of_referral_points, info_subscription, current_standard):
-    cursor.execute("""INSERT INTO bot_app_profile(id, first_name, username, gender, phone_number, training_history, 
+    cursor.execute("""INSERT INTO bot_app_profile(telegram_id, first_name, username, gender, phone_number, training_history, 
     number_of_referral_points, info_subscription, current_standard) 
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""", (user_id, first_name, username, gender, phone_number,
                                                      training_history, number_of_referral_points, info_subscription,
@@ -59,7 +59,7 @@ async def add_info_profile(user_id, first_name, username, gender, phone_number, 
 
 
 async def get_name(user_id):
-    cursor.execute("""SELECT first_name FROM bot_app_profile WHERE id = %s""", (user_id,))
+    cursor.execute("""SELECT first_name FROM bot_app_profile WHERE telegram_id = %s""", (user_id,))
     result = cursor.fetchone()[0]
     if result is not None:
         return result
@@ -68,7 +68,7 @@ async def get_name(user_id):
 
 
 async def check_login(user_id: int):
-    cursor.execute("""SELECT id FROM bot_app_profile""")
+    cursor.execute("""SELECT telegram_id FROM bot_app_profile""")
     result = cursor.fetchall()
     res = []
     for i in range(len(result)):
@@ -80,7 +80,7 @@ async def check_login(user_id: int):
 
 
 async def get_all_users():
-    cursor.execute("""SELECT id FROM bot_app_profile""")
+    cursor.execute("""SELECT telegram_id FROM bot_app_profile""")
     result = cursor.fetchall()
     res = []
     for i in range(len(result)):
@@ -91,7 +91,7 @@ async def get_all_users():
 
 async def crm_eqv(user_id):
     if user_id in await get_all_users():
-        cursor.execute("""SELECT phone_number FROM bot_app_profile WHERE id = %s""", (user_id, ))
+        cursor.execute("""SELECT phone_number FROM bot_app_profile WHERE telegram_id = %s""", (user_id, ))
         result = cursor.fetchone()[0]
 
         return result

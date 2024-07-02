@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+
+from bot_app import templates
 from env import (SECRET_KEY, POSTGRES_ENGINE, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_PORT,
                  POSTGRES_HOST, DEBUG)
 

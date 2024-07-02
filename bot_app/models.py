@@ -2,20 +2,23 @@ import datetime
 import uuid
 
 from django.db import models
+from django.urls import reverse
+
+from src.db.router import conn, cursor
 
 
 # Create your models here.
 
 
 class User(models.Model):
-    id = models.IntegerField(primary_key=True, default=0)
-    first_name = models.CharField(max_length=50)
+    telegram_id = models.IntegerField(default=89079009)
+    first_name = models.CharField(max_length=50, default='')
 
     class Meta:
         abstract = True
 
     def __str__(self):
-        return str(self.id) + " " + str(self.first_name) + " " + "пользователь"
+        return str(self.telegram_id) + " " + str(self.first_name) + " " + "пользователь"
 
 
 class Standards(User):
@@ -34,7 +37,7 @@ class Standards(User):
     front_squat = models.TextField(default='0')
     squat_over_the_head = models.TextField(default='0')
     skipping_rope = models.TextField(default='0')
-    push_ups = models.IntegerField(default=0)
+    push_ups = models.TextField(default=0)
     shuttle_running = models.TextField(default='0')
     farmer_walk = models.TextField(default='0')
     pull_ups = models.TextField(default='0')
@@ -44,7 +47,10 @@ class Standards(User):
     handstand = models.TextField(default='0')
 
     def __str__(self):
-        return str(self.id) + "нормативы"
+        return str(self.telegram_id) + "нормативы"
+
+    def get_absolute_url(self):
+        return reverse('standards_id', kwargs={'slug': self.slug})
 
 
 class Profile(User):
@@ -83,9 +89,11 @@ class Statistics(models.Model):
         ('7', 'Июль'),
         ('10', 'Октябрь')
     ]
-    id = models.IntegerField(default=uuid.uuid4, primary_key=True)
-    user_id = models.IntegerField(default=0)
-    user_name = models.TextField(max_length=20, default='your name')
+
+    dynamic_id = cursor.lastrowid + 1
+
+    user_id = models.IntegerField(default=89898989)
+    user_name = models.TextField(max_length=20, default='')
 
     thunder = models.TextField(default='0')
     turkish_ascent_axel = models.TextField(default='0')
@@ -117,4 +125,4 @@ class Statistics(models.Model):
     year = models.TextField(default=dynamic_year)
 
     def __str__(self):
-        return str(self.id) + " " + str(self.user_id) + " " + "статистика"
+        return str(self.user_id) + " " + "статистика"

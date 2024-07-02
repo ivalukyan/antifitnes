@@ -2,7 +2,7 @@ from src.db.router import cursor, conn
 
 
 async def insert_standard(user_id, first_name):
-    cursor.execute("""INSERT INTO bot_app_standards(id, first_name,thunder, turkish_ascent_axel, turkish_ascent_kettlebell,
+    cursor.execute("""INSERT INTO bot_app_standards(telegram_id, first_name,thunder, turkish_ascent_axel, turkish_ascent_kettlebell,
      bench_press, axel_jerk, taking_on_axel_chest, gluteal_bridge, deadlift, jerk, taking_on_the_chest, axel_deadlift,
       classic_squat, front_squat, squat_over_the_head, skipping_rope, push_ups, shuttle_running, farmer_walk, pull_ups,
        high_jump, long_jump, holding_the_axel, handstand) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s,
@@ -11,8 +11,22 @@ async def insert_standard(user_id, first_name):
     conn.commit()
 
 
+async def get_names_standards(name):
+    cursor.execute("SELECT first_name FROM bot_app_standards WHERE first_name=%s", (name,))
+    rows = cursor.fetchall()
+
+    result = []
+
+    if len(result) != 0:
+        for _ in range(len(rows)):
+            result.append(rows[_][0])
+
+        print(result)
+        return result
+
+
 async def get_standards_by_id(user_id):
-    cursor.execute("""SELECT * FROM bot_app_standards WHERE id=%s""", (user_id,))
+    cursor.execute("""SELECT * FROM bot_app_standards WHERE telegram_id=%s""", (user_id,))
     result = cursor.fetchall()[0]
     conn.commit()
 
