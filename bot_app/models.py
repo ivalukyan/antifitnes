@@ -1,10 +1,9 @@
 import datetime
-import uuid
 
 from django.db import models
 from django.urls import reverse
 
-from src.db.router import conn, cursor
+from src.db.router import cursor
 
 
 # Create your models here.
@@ -126,3 +125,13 @@ class Statistics(models.Model):
 
     def __str__(self):
         return str(self.user_id) + " " + "статистика"
+
+
+class StatisticsGet(models.Model):
+    dynamic_year = datetime.datetime.now().year
+    year = models.TextField(default=dynamic_year)
+
+    normative = models.TextField(default='норматив')
+
+    def __str__(self):
+        return str(self.normative) + " " + str(self.year)

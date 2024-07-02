@@ -109,6 +109,7 @@ def standards(requests):
 
 
 def statistics(requests):
+
     data = models.Statistics.objects.all()
     arg = {'data': data}
     return render(requests, 'statistics.html', arg)

@@ -1,4 +1,4 @@
-from .models import Standards, Statistics
+from .models import Standards, Statistics, StatisticsGet
 from django.forms import ModelForm
 from django import forms
 
@@ -236,5 +236,22 @@ class StatisticsForm(ModelForm):
             'year': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Год'
+            }),
+        }
+
+
+class StatisticsFormGet(forms.Form):
+    class Meta:
+        model = StatisticsGet
+        fields = ['normative', 'year']
+
+        widgets = {
+            'normative': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Норматив',
+            }),
+            'year': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Год',
             }),
         }
