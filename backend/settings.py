@@ -14,7 +14,7 @@ from pathlib import Path
 
 from bot_app import templates
 from env import (SECRET_KEY, POSTGRES_ENGINE, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_PORT,
-                 POSTGRES_HOST, DEBUG)
+                 POSTGRES_HOST, DEBUG, HOST_PROD)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -85,7 +85,7 @@ DATABASES = {
         'NAME': POSTGRES_DB,
         'USER': POSTGRES_USER,
         'PASSWORD': POSTGRES_PASSWORD,
-        'HOST': POSTGRES_HOST,
+        'HOST': HOST_PROD,
         'PORT': POSTGRES_PORT
     }
 }
