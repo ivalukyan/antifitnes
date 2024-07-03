@@ -27,5 +27,5 @@ urlpatterns = [
     path('profile/', views.profile),
     path('statistics/', views.statistics, name='statistics'),
     path('statistics/create', views.createstatistics, name='create_statistics'),
-    path('statistics/<int:pk>', views.StatisticsID.as_view(), name='statistic_id')
+    path('statistics/<str:standard>', views.statisticsID, name='statistic_id')
 ]

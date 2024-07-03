@@ -129,9 +129,9 @@ class Statistics(models.Model):
 
 class StatisticsGet(models.Model):
     dynamic_year = datetime.datetime.now().year
+
+    standard = models.TextField(default='')
     year = models.TextField(default=dynamic_year)
 
-    normative = models.TextField(default='норматив')
-
     def __str__(self):
-        return str(self.normative) + " " + str(self.year)
+        return str(self.standard) + " " + str(self.year)

@@ -11,7 +11,7 @@ from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect
 
 from bot_app import models
-from bot_app.forms import StandardsForm, StatisticsForm
+from bot_app.forms import StandardsForm, StatisticsForm, StatisticsFormGet
 
 
 class BotSerializer(serializers.ModelSerializer):
@@ -110,9 +110,21 @@ def standards(requests):
 
 def statistics(requests):
 
-    data = models.Statistics.objects.all()
-    arg = {'data': data}
-    return render(requests, 'statistics.html', arg)
+    if requests.method == 'POST':
+        form = StatisticsFormGet(requests.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('statistic_id', form.cleaned_data['standard'])
+        else:
+            print(form.errors)
+
+    form = StatisticsFormGet()
+    data = {'form': form}
+
+    db = models.StatisticsGet.objects.all()
+    db.delete()
+
+    return render(requests, 'statistics.html', data)
 
 
 def createstatistics(requests):
@@ -132,10 +144,21 @@ def createstatistics(requests):
     return render(requests, 'createstatistics.html', data)
 
 
-class StatisticsID(DetailView):
-    model = Statistics
-    template_name = 'statistic_id.html'
-    context_object_name = 'stat'
+# class StatisticsID(DetailView):
+#     model = Statistics
+#     template_name = 'statistic_id.html'
+#     context_object_name = 'stat'
+
+def statisticsID(requests, standard):
+    data = models.Statistics.objects.all()
+    standard = models.StatisticsGet.objects.all().values_list('standard', flat=True)
+    year = models.StatisticsGet.objects.all().values_list('year', flat=True)
+    norms = {
+        'гром': 'thunder',
+        'турецкий подъем: аксель': 'turkish_ascent_axel'
+    }
+    arg = {'data': data, 'standard': standard, 'year': year}
+    return render(requests, 'statistic_id.html', arg)
 
 
 def profile(requests):

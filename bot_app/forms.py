@@ -240,15 +240,15 @@ class StatisticsForm(ModelForm):
         }
 
 
-class StatisticsFormGet(forms.Form):
+class StatisticsFormGet(ModelForm):
     class Meta:
         model = StatisticsGet
-        fields = ['normative', 'year']
+        fields = ['standard', 'year']
 
         widgets = {
-            'normative': forms.TextInput(attrs={
+            'standard': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Норматив',
+                'placeholder': 'example: Гром',
             }),
             'year': forms.TextInput(attrs={
                 'class': 'form-control',

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from bot_app.models import Standards, Profile, Statistics
+from bot_app.models import Standards, Profile, Statistics, StatisticsGet
 
 # Register your models here.
 
@@ -51,6 +51,11 @@ class StatisticsAdmin(admin.ModelAdmin):
     search_fields = ['user_id', 'user_name']
 
 
+class StatisticGetAdmin(admin.ModelAdmin):
+    list_display = ['standard', 'year']
+
+
 admin.site.register(Standards, StandardsAdmin)
 admin.site.register(Profile, ProfileUserAdmin)
 admin.site.register(Statistics, StatisticsAdmin)
+admin.site.register(StatisticsGet, StatisticGetAdmin)

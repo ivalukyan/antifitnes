@@ -18,7 +18,7 @@
         <div class="container-md">
             <form method="post" style="margin-left: 32%; width: 500px; margin-top: 50px">
                   {% csrf_token %}
-                  <label for="{{ form.id.telegram_id_for_label }}">ID пользователя</label>
+                  <label for="{{ form.telegram_id.id_for_label }}">ID пользователя</label>
                    {{form.telegram_id}}<br>
                   <label for="{{ form.first_name.id_for_label }}">Имя пользователя</label>
                   {{form.first_name}}<br>
@@ -69,7 +69,7 @@
                   <label for="{{ form.handstand.id_for_label }}">Стойка на руках</label>
                   {{form.handstand}}<br>
                   <button type="submit" class="btn btn-primary">Сохранить</button>
-                  <a href="{% url 'statistics' %}" class="btn btn-warning">Вернуться к пользователям</a>
+                  <a href="{% url 'standards' %}" class="btn btn-warning">Вернуться к пользователям</a>
             </form>
 
         </div>
