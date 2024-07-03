@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from rest_framework import serializers, status
 from rest_framework.response import Response
@@ -9,9 +10,10 @@ from src.db.db_standards import get_names_standards
 from django.template import RequestContext
 from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate
 
 from bot_app import models
-from bot_app.forms import StandardsForm, StatisticsForm, StatisticsFormGet
+from bot_app.forms import StandardsForm, StatisticsForm, StatisticsFormGet, LoginForm
 
 
 class BotSerializer(serializers.ModelSerializer):
@@ -110,21 +112,11 @@ def standards(requests):
 
 def statistics(requests):
 
-    if requests.method == 'POST':
-        form = StatisticsFormGet(requests.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('statistic_id', form.cleaned_data['standard'])
-        else:
-            print(form.errors)
+    data = models.Statistics.objects.all()
 
-    form = StatisticsFormGet()
-    data = {'form': form}
+    arg = {'data': data}
 
-    db = models.StatisticsGet.objects.all()
-    db.delete()
-
-    return render(requests, 'statistics.html', data)
+    return render(requests, 'statistics.html', arg)
 
 
 def createstatistics(requests):
@@ -149,16 +141,19 @@ def createstatistics(requests):
 #     template_name = 'statistic_id.html'
 #     context_object_name = 'stat'
 
-def statisticsID(requests, standard):
-    data = models.Statistics.objects.all()
-    standard = models.StatisticsGet.objects.all().values_list('standard', flat=True)
-    year = models.StatisticsGet.objects.all().values_list('year', flat=True)
-    norms = {
-        'гром': 'thunder',
-        'турецкий подъем: аксель': 'turkish_ascent_axel'
-    }
-    arg = {'data': data, 'standard': standard, 'year': year}
+
+def statisticsID(requests, year_id, norm_id):
+    data = models.Statistics.objects.all().filter(year=year_id)
+    normative = models.Statistics.objects.all().filter(year=year_id).values_list(norm_id, flat=True)
+    arg = {'data': data, 'normative': normative, 'year': year_id, 'norm': norm_id}
     return render(requests, 'statistic_id.html', arg)
+
+
+def statistics_standards(requests, year_id):
+    data = models.Statistics.objects.all()
+
+    arg = {'data': data, 'year': year_id}
+    return render(requests, 'statistics_standards.html', arg)
 
 
 def profile(requests):
@@ -166,3 +161,21 @@ def profile(requests):
         data = models.Profile.objects.all()
         arg = {'data': data}
         return render(requests, 'profile.html', arg)
+
+
+def login(requests):
+    if requests.method == 'POST':
+        form = LoginForm(requests.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                return redirect('home')
+            else:
+                messages.error(requests, 'username or password not correct')
+                return redirect('login')
+    else:
+        form = LoginForm()
+
+    return render(requests, 'login.html', {'form': form})

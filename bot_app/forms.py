@@ -1,4 +1,4 @@
-from .models import Standards, Statistics, StatisticsGet
+from .models import Standards, Statistics, StatisticsGet, LoginUser
 from django.forms import ModelForm
 from django import forms
 
@@ -253,5 +253,23 @@ class StatisticsFormGet(ModelForm):
             'year': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Год',
+            }),
+        }
+
+
+class LoginForm(ModelForm):
+    class Meta:
+        model = LoginUser
+        fields = ['username', 'password']
+
+        widgets = {
+            'username': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'example: name',
+            }),
+            'password': forms.TextInput(attrs={
+                'type': 'password',
+                'class': 'form-control',
+                'placeholder': 'password',
             }),
         }
