@@ -12,7 +12,8 @@ from aiogram.types import (
 from src.db.db_standards import get_standards_by_id, insert_standard
 from src.db.db_profile import (training_history, number_of_referral_points, info_subscription, add_info_profile,
                                get_name, check_login)
-from src.srm.srm_bot import check_crm, update_profile, crm_info, search, crm, get_name_by_id
+from src.srm.srm_bot import check_crm, update_profile, crm_info, search, crm, get_name_by_id, get_history_client, \
+    get_personal_id, get_abonements
 from src.db.db_stats import insert_stats
 
 router = Router()
@@ -62,9 +63,12 @@ async def input_number(message: Message, state: FSMContext) -> None:
                                        username=message.from_user.username,
                                        gender='gen_men',
                                        phone_number=data['input_number'],
-                                       training_history="",
+                                       training_history=await get_history_client(crm['user_token'],
+                                                                                 data['input_number'],
+                                                                                 await get_personal_id(await search(
+                                                                                     data['input_number']))),
                                        number_of_referral_points=0,
-                                       info_subscription="",
+                                       info_subscription=await get_abonements(crm['user_token'], data['input_number']),
                                        current_standard=""
                                        )
             elif crm['sexes'][await search(data['input_number'])] == 'Женский':
@@ -73,17 +77,18 @@ async def input_number(message: Message, state: FSMContext) -> None:
                                        username=message.from_user.username,
                                        gender='gen_women',
                                        phone_number=data['input_number'],
-                                       training_history="",
+                                       training_history=await get_history_client(crm['user_token'],
+                                                                                 data['input_number'],
+                                                                                 await get_personal_id(await search(
+                                                                                     data['input_number']))),
                                        number_of_referral_points=0,
-                                       info_subscription="",
+                                       info_subscription=await get_abonements(crm['user_token'], data['input_number']),
                                        current_standard=""
                                        )
 
             await insert_standard(message.from_user.id, crm['names'][await search(data['input_number'])])
 
             await insert_stats(message.from_user.id, crm['names'][await search(data['input_number'])])
-
-            await update_profile(data['input_number'], message.from_user.id)
 
         await message.answer(
             f"{await get_name_by_id(await search(data['input_number']))}, добро пожаловать, в спортивный клуб!")

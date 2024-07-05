@@ -103,7 +103,7 @@ async def get_client_by_id(list_id, user_tok):
             async with session.get(url, headers=head) as response:
                 response = await response.json()
 
-    print(response)
+        print(response)
 
 
 async def get_phones_users(list_id, user_tok):
@@ -179,8 +179,9 @@ async def get_abonements(user_tok, phone_number):
         async with session.get(url, headers=head, params=querystring) as response:
             response = await response.json()
 
+    print(response)
     message = ''
-    if response['success']:
+    if response['success'] and response['meta']['count'] > 0:
         for _ in range(len(response['data'])):
 
             msg = f"Название - {response['data'][_]['type']['title']}\n"\
@@ -224,13 +225,12 @@ async def crm_info():
     crm['user_token'] = await get_user_token(LOGIN, PASSWORD)
 
     crm['ids'] = await get_clients_ids(crm['user_token'])
-    print(crm['ids'])
+
     crm['phones'] = await get_phones_users(crm['ids'].values(), crm['user_token'])
-    print(crm['phones'])
+
     crm['names'] = await get_name(crm['ids'].values(), crm['user_token'])
-    print(crm['names'])
+
     crm['sexes'] = await get_sex(crm['ids'].values(), crm['user_token'])
-    print(crm['sexes'])
 
 
 async def get_name(list_id, user_tok):
@@ -279,10 +279,14 @@ async def get_name_by_id(key):
     return crm['names'][key]
 
 
+async def get_personal_id(key):
+    return crm['ids'][key]
+
+
 async def main():
     await crm_info()
-    print(await search('+79111805320'))
-    print(await get_name_by_id(await search('+79111805320')))
+    print(await get_client_by_id(crm['ids'].values(), await get_user_token(LOGIN, PASSWORD)))
+    print(await get_history_client(await get_user_token(LOGIN, PASSWORD), '+79213224013', 81336093))
 
 
 if __name__ == '__main__':
