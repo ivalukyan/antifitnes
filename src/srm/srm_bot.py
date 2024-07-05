@@ -3,7 +3,6 @@ import datetime
 import aiohttp
 import logging
 
-
 from env import LOGIN, PASSWORD, BEARER_TOKEN, USER_TOKEN, CID
 from src.db.router import conn, cursor
 from aiohttp.http_exceptions import HttpBadRequest
@@ -147,17 +146,19 @@ async def get_history_client(user_tok, phone, client_id):
         async with session.post(url, headers=head, data=payload) as response:
             response = await response.json()
 
+
     if response['success']:
         data = response['data']['records']
 
         dates_history = ""
 
         for _ in data:
-            dates_history += "%s\n" % _['data']
+            dates_history += "%s\n" % _['date']
 
         if dates_history != "":
-            return data
-        else: return "История тренировок отсутствует"
+            return dates_history
+        else:
+            return "История тренировок отсутствует"
     else:
         raise HttpBadRequest("Bad Request - 400")
 
@@ -183,9 +184,8 @@ async def get_abonements(user_tok, phone_number):
     message = ''
     if response['success'] and response['meta']['count'] > 0:
         for _ in range(len(response['data'])):
-
-            msg = f"Название - {response['data'][_]['type']['title']}\n"\
-                  f"Период - {response['data'][_]['type']['period']}\n"\
+            msg = f"Название - {response['data'][_]['type']['title']}\n" \
+                  f"Период - {response['data'][_]['type']['period']}\n" \
                   f"Статус - {response['data'][_]['status']['title']}\n\n"
 
             message += msg

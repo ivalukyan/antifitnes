@@ -15,6 +15,7 @@ from src.db.db_profile import (training_history, number_of_referral_points, info
 from src.srm.srm_bot import check_crm, update_profile, crm_info, search, crm, get_name_by_id, get_history_client, \
     get_personal_id, get_abonements
 from src.db.db_stats import insert_stats
+from src.db.db_statistics import get_statistics_by_user
 
 router = Router()
 
@@ -57,6 +58,10 @@ async def input_number(message: Message, state: FSMContext) -> None:
 
         if await check_login(message.from_user.id):
 
+            await insert_standard(message.from_user.id, crm['names'][await search(data['input_number'])])
+
+            await insert_stats(message.from_user.id, crm['names'][await search(data['input_number'])])
+
             if crm['sexes'][await search(data['input_number'])] == 'Мужской':
                 await add_info_profile(user_id=message.from_user.id,
                                        first_name=crm['names'][await search(data['input_number'])],
@@ -69,7 +74,7 @@ async def input_number(message: Message, state: FSMContext) -> None:
                                                                                      data['input_number']))),
                                        number_of_referral_points=0,
                                        info_subscription=await get_abonements(crm['user_token'], data['input_number']),
-                                       current_standard=""
+                                       current_standard=await get_standards_by_id(message.from_user.id)
                                        )
             elif crm['sexes'][await search(data['input_number'])] == 'Женский':
                 await add_info_profile(user_id=message.from_user.id,
@@ -83,12 +88,8 @@ async def input_number(message: Message, state: FSMContext) -> None:
                                                                                      data['input_number']))),
                                        number_of_referral_points=0,
                                        info_subscription=await get_abonements(crm['user_token'], data['input_number']),
-                                       current_standard=""
+                                       current_standard=await get_standards_by_id(message.from_user.id)
                                        )
-
-            await insert_standard(message.from_user.id, crm['names'][await search(data['input_number'])])
-
-            await insert_stats(message.from_user.id, crm['names'][await search(data['input_number'])])
 
         await message.answer(
             f"{await get_name_by_id(await search(data['input_number']))}, добро пожаловать, в спортивный клуб!")
@@ -101,7 +102,8 @@ async def input_number(message: Message, state: FSMContext) -> None:
             [
                 InlineKeyboardButton(text="Абонемент", callback_data="card"),
                 InlineKeyboardButton(text="Нормативы", callback_data="normatives")
-            ]
+            ],
+            [InlineKeyboardButton(text="Статистика", callback_data="statistics")]
         ]))
     else:
         await message.answer("К сожалению, Вы не являетесь клиентом клуба")
@@ -144,6 +146,91 @@ async def callback_normatives(callback: CallbackQuery) -> None:
                                      ]))
 
 
+@router.callback_query(F.data == "statistics")
+async def callback_statistics(callback: CallbackQuery) -> None:
+    await callback.message.edit_text('Выберите год', reply_markup=InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="2024", callback_data="2024")],
+            [InlineKeyboardButton(text="2025", callback_data="2025")],
+            [InlineKeyboardButton(text="2026", callback_data="2026")],
+            [InlineKeyboardButton(text="2027", callback_data="2027")],
+            [InlineKeyboardButton(text="2028", callback_data="2028")],
+            [InlineKeyboardButton(text="2029", callback_data="2029")],
+            [InlineKeyboardButton(text="2030", callback_data="2030")]
+        ]
+    ))
+
+
+@router.callback_query(F.data == "2024")
+async def callback_2024(callback: CallbackQuery) -> None:
+    msg = await get_statistics_by_user(database['user_id'], '2024')
+    await callback.message.edit_text(f"📊Статистика📊\n\n"
+                                     f"{msg}",
+                                     reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                                         [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
+                                     ]))
+
+
+@router.callback_query(F.data == "2025")
+async def callback_2024(callback: CallbackQuery) -> None:
+    msg = await get_statistics_by_user(database['user_id'], '2025')
+    await callback.message.edit_text(f"📊Статистика📊\n\n"
+                                     f"{msg}",
+                                     reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                                         [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
+                                     ]))
+
+
+@router.callback_query(F.data == "2026")
+async def callback_2024(callback: CallbackQuery) -> None:
+    msg = await get_statistics_by_user(database['user_id'], '2026')
+    await callback.message.edit_text(f"📊Статистика📊\n\n"
+                                     f"{msg}",
+                                     reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                                         [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
+                                     ]))
+
+
+@router.callback_query(F.data == "2027")
+async def callback_2024(callback: CallbackQuery) -> None:
+    msg = await get_statistics_by_user(database['user_id'], '2027')
+    await callback.message.edit_text(f"📊Статистика📊\n\n"
+                                     f"{msg}",
+                                     reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                                         [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
+                                     ]))
+
+
+@router.callback_query(F.data == "2028")
+async def callback_2024(callback: CallbackQuery) -> None:
+    msg = await get_statistics_by_user(database['user_id'], '2028')
+    await callback.message.edit_text(f"📊Статистика📊\n\n"
+                                     f"{msg}",
+                                     reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                                         [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
+                                     ]))
+
+
+@router.callback_query(F.data == "2029")
+async def callback_2024(callback: CallbackQuery) -> None:
+    msg = await get_statistics_by_user(database['user_id'], '2029')
+    await callback.message.edit_text(f"📊Статистика📊\n\n"
+                                     f"{msg}",
+                                     reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                                         [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
+                                     ]))
+
+
+@router.callback_query(F.data == "2030")
+async def callback_2024(callback: CallbackQuery) -> None:
+    msg = await get_statistics_by_user(database['user_id'], '2030')
+    await callback.message.edit_text(f"📊Статистика📊\n\n"
+                                     f"{msg}",
+                                     reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                                         [InlineKeyboardButton(text="Назад в меню", callback_data="back_menu")]
+                                     ]))
+
+
 @router.callback_query(F.data == "back_menu")
 async def callback_back_menu(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.edit_text("📎Профиль📎", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
@@ -154,7 +241,8 @@ async def callback_back_menu(callback: CallbackQuery, state: FSMContext) -> None
         [
             InlineKeyboardButton(text="Абонемент", callback_data="card"),
             InlineKeyboardButton(text="Нормативы", callback_data="normatives")
-        ]
+        ],
+        [InlineKeyboardButton(text="Статистика", callback_data="statistics")]
     ]))
     await state.clear()
 
