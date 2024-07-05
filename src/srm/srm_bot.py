@@ -281,13 +281,3 @@ async def get_name_by_id(key):
 
 async def get_personal_id(key):
     return crm['ids'][key]
-
-
-async def main():
-    await crm_info()
-    print(await get_client_by_id(crm['ids'].values(), await get_user_token(LOGIN, PASSWORD)))
-    print(await get_history_client(await get_user_token(LOGIN, PASSWORD), '+79213224013', 81336093))
-
-
-if __name__ == '__main__':
-    asyncio.run(main())
