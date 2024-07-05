@@ -12,9 +12,8 @@ from aiogram.types import (
 from src.db.db_standards import get_standards_by_id, insert_standard
 from src.db.db_profile import (training_history, number_of_referral_points, info_subscription, add_info_profile,
                                get_name, check_login)
-from src.srm.srm_bot import check_crm, update_profile, crm_info, search, crm
+from src.srm.srm_bot import check_crm, update_profile, crm_info, search, crm, get_name_by_id
 from src.db.db_stats import insert_stats
-
 
 router = Router()
 
@@ -40,7 +39,6 @@ async def login(message: Message, state: FSMContext) -> None:
 
 @router.message(Form.number_login)
 async def input_number(message: Message, state: FSMContext) -> None:
-
     await message.answer('Настраиваем ваш профиль...')
 
     # Записываем веденный номер телефона в состояние
@@ -87,7 +85,8 @@ async def input_number(message: Message, state: FSMContext) -> None:
 
             await update_profile(data['input_number'], message.from_user.id)
 
-        await message.answer(f"{await get_name(message.from_user.id)}, добро пожаловать, в спортивный клуб!")
+        await message.answer(
+            f"{await get_name_by_id(await search(data['input_number']))}, добро пожаловать, в спортивный клуб!")
 
         await message.answer("📎Профиль📎", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [

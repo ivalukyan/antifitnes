@@ -102,10 +102,8 @@ async def get_client_by_id(list_id, user_tok):
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=head) as response:
                 response = await response.json()
-        if response['success']:
-            clients.append(response['data'])
 
-    return clients
+    print(response)
 
 
 async def get_phones_users(list_id, user_tok):
@@ -226,12 +224,13 @@ async def crm_info():
     crm['user_token'] = await get_user_token(LOGIN, PASSWORD)
 
     crm['ids'] = await get_clients_ids(crm['user_token'])
-
+    print(crm['ids'])
     crm['phones'] = await get_phones_users(crm['ids'].values(), crm['user_token'])
-
+    print(crm['phones'])
     crm['names'] = await get_name(crm['ids'].values(), crm['user_token'])
-
+    print(crm['names'])
     crm['sexes'] = await get_sex(crm['ids'].values(), crm['user_token'])
+    print(crm['sexes'])
 
 
 async def get_name(list_id, user_tok):
@@ -274,3 +273,17 @@ async def get_sex(list_id, user_tok):
         i += 1
 
     return sex
+
+
+async def get_name_by_id(key):
+    return crm['names'][key]
+
+
+async def main():
+    await crm_info()
+    print(await search('+79111805320'))
+    print(await get_name_by_id(await search('+79111805320')))
+
+
+if __name__ == '__main__':
+    asyncio.run(main())
