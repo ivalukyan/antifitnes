@@ -34,7 +34,7 @@ async def get_standards_by_id(user_id):
     msg = (f"Гром - {result[3]}\n"
            f"Турецкий подъем: Аксель - {result[4]}\n"
            f"Турецкий подъем: Гиря - {result[5]}\n"
-           f"Жим лежа 1ПМ - {result[6]}\[0n"
+           f"Жим лежа 1ПМ - {result[6]}\n"
            f"Рывок акселя 1ПМ - {result[7]}\n"
            f"Взятие на грудь акселя 1ПМ - {result[8]}\n"
            f"Ягодичный мостик 1ПМ - {result[9]}\n"
