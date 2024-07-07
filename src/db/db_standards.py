@@ -91,7 +91,7 @@ async def get_all_thunder():
 
 
 async def get_all_turkish_ascent_axel():
-    cursor.execute("""SELECT turkish_ascent_axel FROM bot_app_standards""")
+    cursor.execute("""SELECT turkish_ascent_axel, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Турецкий подъем: Аксель📊\n\n"
@@ -118,7 +118,7 @@ async def get_all_turkish_ascent_axel():
 
 
 async def get_all_turkish_ascent_kettlebell():
-    cursor.execute("""SELECT turkish_ascent_kettlebell FROM bot_app_standards""")
+    cursor.execute("""SELECT turkish_ascent_kettlebell, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Турецкий подъем: Гиря📊\n\n"
@@ -145,7 +145,7 @@ async def get_all_turkish_ascent_kettlebell():
 
 
 async def get_all_bench_press():
-    cursor.execute("""SELECT bench_press FROM bot_app_standards""")
+    cursor.execute("""SELECT bench_press, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Жим лежа📊\n\n"
@@ -172,7 +172,7 @@ async def get_all_bench_press():
 
 
 async def get_all_axel_jerk():
-    cursor.execute("""SELECT axel_jerk FROM bot_app_standards""")
+    cursor.execute("""SELECT axel_jerk, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Рывок акселя 1ПМ📊\n\n"
@@ -199,7 +199,7 @@ async def get_all_axel_jerk():
 
 
 async def get_all_taking_on_axel_chest():
-    cursor.execute("""SELECT taking_on_axel_chest FROM bot_app_standards""")
+    cursor.execute("""SELECT taking_on_axel_chest, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = f"📊Взятие на грудь акселя 1ПМ📊\n\n"
@@ -225,7 +225,7 @@ async def get_all_taking_on_axel_chest():
 
 
 async def get_all_gluteal_bridge():
-    cursor.execute("""SELECT gluteal_bridge FROM bot_app_standards""")
+    cursor.execute("""SELECT gluteal_bridge, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Ягодичный мостик 1ПМ📊\n\n"
@@ -252,7 +252,7 @@ async def get_all_gluteal_bridge():
 
 
 async def get_all_deadlift():
-    cursor.execute("""SELECT deadlift FROM bot_app_standards""")
+    cursor.execute("""SELECT deadlift, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Становая тяга 1ПМ📊\n\n"
@@ -279,7 +279,7 @@ async def get_all_deadlift():
 
 
 async def get_all_jerk():
-    cursor.execute("""SELECT jerk FROM bot_app_standards""")
+    cursor.execute("""SELECT jerk, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Рывок 1ПМ📊\n\n"
@@ -306,7 +306,7 @@ async def get_all_jerk():
 
 
 async def get_all_taking_on_the_chest():
-    cursor.execute("""SELECT taking_on_the_chest FROM bot_app_standards""")
+    cursor.execute("""SELECT taking_on_the_chest, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Взятие на грудь 1ПМ📊\n\n"
@@ -333,7 +333,7 @@ async def get_all_taking_on_the_chest():
 
 
 async def get_all_axel_deadlift():
-    cursor.execute("""SELECT axel_deadlift FROM bot_app_standards""")
+    cursor.execute("""SELECT axel_deadlift, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Становая тяга акселя 1ПМ📊\n\n"
@@ -360,7 +360,7 @@ async def get_all_axel_deadlift():
 
 
 async def get_all_classic_squat():
-    cursor.execute("""SELECT classic_squat FROM bot_app_standards""")
+    cursor.execute("""SELECT classic_squat, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Присед 1ПМ: Классический📊\n\n"
@@ -387,7 +387,7 @@ async def get_all_classic_squat():
 
 
 async def get_all_front_squat():
-    cursor.execute("""SELECT front_squat FROM bot_app_standards""")
+    cursor.execute("""SELECT front_squat, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Присед 1ПМ: Фронтальный📊\n\n"
@@ -414,7 +414,7 @@ async def get_all_front_squat():
 
 
 async def get_all_squat_over_the_head():
-    cursor.execute("""SELECT squat_over_the_head FROM bot_app_standards""")
+    cursor.execute("""SELECT squat_over_the_head, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Присед 1ПМ: Над головой📊\n\n"
@@ -441,7 +441,7 @@ async def get_all_squat_over_the_head():
 
 
 async def get_all_skipping_rope():
-    cursor.execute("""SELECT skipping_rope FROM bot_app_standards""")
+    cursor.execute("""SELECT skipping_rope, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Скакалка📊\n\n"
@@ -468,7 +468,7 @@ async def get_all_skipping_rope():
 
 
 async def get_all_push_ups():
-    cursor.execute("""SELECT push_ups FROM bot_app_standards""")
+    cursor.execute("""SELECT push_ups, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Отжимания от пола📊\n\n"
@@ -495,7 +495,7 @@ async def get_all_push_ups():
 
 
 async def get_all_shuttle_running():
-    cursor.execute("""SELECT shuttle_running FROM bot_app_standards""")
+    cursor.execute("""SELECT shuttle_running, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Челночный бег📊\n\n"
@@ -522,7 +522,7 @@ async def get_all_shuttle_running():
 
 
 async def get_all_farmer_walk():
-    cursor.execute("""SELECT farmer_walk FROM bot_app_standards""")
+    cursor.execute("""SELECT farmer_walk, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Прогулка фермера📊\n\n"
@@ -549,7 +549,7 @@ async def get_all_farmer_walk():
 
 
 async def get_all_pull_ups():
-    cursor.execute("""SELECT pull_ups FROM bot_app_standards""")
+    cursor.execute("""SELECT pull_ups, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Подтягивания📊\n\n"
@@ -576,7 +576,7 @@ async def get_all_pull_ups():
 
 
 async def get_all_high_jump():
-    cursor.execute("""SELECT high_jump FROM bot_app_standards""")
+    cursor.execute("""SELECT high_jump, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Прыжок в высоту📊\n\n"
@@ -603,7 +603,7 @@ async def get_all_high_jump():
 
 
 async def get_all_long_jump():
-    cursor.execute("""SELECT long_jump FROM bot_app_standards""")
+    cursor.execute("""SELECT long_jump, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = (f"📊Прыжок в длину📊\n\n")
@@ -630,7 +630,7 @@ async def get_all_long_jump():
 
 
 async def get_all_holding_the_axel():
-    cursor.execute("""SELECT holding_the_axel FROM bot_app_standards""")
+    cursor.execute("""SELECT holding_the_axel, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Удержание акселя📊\n\n"
@@ -657,7 +657,7 @@ async def get_all_holding_the_axel():
 
 
 async def get_all_handstand():
-    cursor.execute("""SELECT handstand FROM bot_app_standards""")
+    cursor.execute("""SELECT handstand, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = "📊Стойка на руках📊\n\n"
