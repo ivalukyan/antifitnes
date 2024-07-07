@@ -1,3 +1,5 @@
+import asyncio
+
 from src.db.router import cursor, conn
 
 
@@ -62,14 +64,26 @@ async def get_standards_by_id(user_id):
 
 
 async def get_all_thunder():
-    cursor.execute("""SELECT thunder FROM bot_app_standards""")
+    cursor.execute("""SELECT thunder, first_name FROM bot_app_standards""")
     result = cursor.fetchall()
 
     msg = f"📊ГРОМ📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -82,9 +96,21 @@ async def get_all_turkish_ascent_axel():
 
     msg = "📊Турецкий подъем: Аксель📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -97,9 +123,21 @@ async def get_all_turkish_ascent_kettlebell():
 
     msg = "📊Турецкий подъем: Гиря📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -112,9 +150,21 @@ async def get_all_bench_press():
 
     msg = "📊Жим лежа📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -127,9 +177,21 @@ async def get_all_axel_jerk():
 
     msg = "📊Рывок акселя 1ПМ📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -141,9 +203,21 @@ async def get_all_taking_on_axel_chest():
     result = cursor.fetchall()
 
     msg = f"📊Взятие на грудь акселя 1ПМ📊\n\n"
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -156,9 +230,21 @@ async def get_all_gluteal_bridge():
 
     msg = "📊Ягодичный мостик 1ПМ📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -171,9 +257,21 @@ async def get_all_deadlift():
 
     msg = "📊Становая тяга 1ПМ📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -186,9 +284,21 @@ async def get_all_jerk():
 
     msg = "📊Рывок 1ПМ📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -201,9 +311,21 @@ async def get_all_taking_on_the_chest():
 
     msg = "📊Взятие на грудь 1ПМ📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -216,9 +338,21 @@ async def get_all_axel_deadlift():
 
     msg = "📊Становая тяга акселя 1ПМ📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -231,9 +365,21 @@ async def get_all_classic_squat():
 
     msg = "📊Присед 1ПМ: Классический📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -246,9 +392,21 @@ async def get_all_front_squat():
 
     msg = "📊Присед 1ПМ: Фронтальный📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -261,9 +419,21 @@ async def get_all_squat_over_the_head():
 
     msg = "📊Присед 1ПМ: Над головой📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -276,9 +446,21 @@ async def get_all_skipping_rope():
 
     msg = "📊Скакалка📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -291,9 +473,21 @@ async def get_all_push_ups():
 
     msg = "📊Отжимания от пола📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -306,9 +500,21 @@ async def get_all_shuttle_running():
 
     msg = "📊Челночный бег📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -321,9 +527,21 @@ async def get_all_farmer_walk():
 
     msg = "📊Прогулка фермера📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -336,9 +554,21 @@ async def get_all_pull_ups():
 
     msg = "📊Подтягивания📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -351,9 +581,21 @@ async def get_all_high_jump():
 
     msg = "📊Прыжок в высоту📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -366,9 +608,21 @@ async def get_all_long_jump():
 
     msg = (f"📊Прыжок в длину📊\n\n")
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -381,9 +635,21 @@ async def get_all_holding_the_axel():
 
     msg = "📊Удержание акселя📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
@@ -396,9 +662,21 @@ async def get_all_handstand():
 
     msg = "📊Стойка на руках📊\n\n"
 
+    standards = {}
+    names = {}
+    count = 1
+
+    for _ in range(len(result)):
+        standards[_] = result[_][0]
+        names[_] = result[_][1]
+
+    sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
+
     if result is not None and len(result) > 0:
-        for _ in range(len(result)):
-            msg += f'{_ + 1}. {result[_][0]}\n'
+        for k in sorted_standard.keys():
+            msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
+
+            count += 1
 
         return msg
     else:
