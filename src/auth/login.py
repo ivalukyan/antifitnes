@@ -49,7 +49,7 @@ async def input_number(message: Message, state: FSMContext) -> None:
     # Записываем веденный номер телефона в состояние
     await state.update_data(input_number=message.text)
 
-
+    data = await state.get_data()
 
     await crm_info()
 
