@@ -9,6 +9,7 @@ from aiogram.types import Message
 
 from env import TOKEN
 from src.auth import login
+from src.profile import profile
 from src.schedule import training_session
 from src.stats import top
 from src.admin import adm
@@ -32,6 +33,7 @@ async def command_help(message: Message) -> None:
     await message.answer(f"‼️<b>КОМАНДЫ</b>‼️\n\n"
                          f"<i>/help</i> - возможность посмотреть все команды\n"
                          f"<i>/login</i> - команда для входа пользователя\n"
+                         f"<i>/profile</i> - команда для вызова профиля"
                          f"<i>/schedule</i> - команда для записи на тренировку\n"
                          f"<i>/top</i> - команда для просмотра рейтингов")
 
@@ -44,7 +46,7 @@ async def main():
     # Initialize Bot instance with default bot properties which will be passed to all API calls
 
     dp = Dispatcher()
-    dp.include_routers(login.router, training_session.router, top.router, adm.router, router)
+    dp.include_routers(login.router, training_session.router, top.router, adm.router, profile.router, router)
 
     # Start event dispatching
     await dp.start_polling(bot)
