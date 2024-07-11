@@ -1,20 +1,6 @@
-version: '3.9'
+version: '3'
+
 services:
-  web:
-    build:
-      context: .
-    container_name: web_app
-    command: python manage.py makemigrations && python manage.py migrate && python manage.py createsuperuser && python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/app
-    env_file:
-      - .env
-    ports:
-      - '8000:8000'
-    depends_on:
-      - db
-    networks:
-      - my-network
 
   db:
     image: postgres:16
@@ -30,6 +16,29 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - '5454:5432'
+    networks:
+      - my-network
+
+  web:
+    build:
+      context: .
+    container_name: web_app
+    command: >
+      sh -c "
+      python manage.py makemigrations &&
+      python manage.py migrate &&
+      python create_superuser.py &&
+      python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://your_user:your_password@db:5432/bot_app
     networks:
       - my-network
 
