@@ -13,8 +13,6 @@ services:
       - '8000:8000'
     depends_on:
       - db
-    networks:
-      - my-network
 
   db:
     image: postgres:16
@@ -30,8 +28,6 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - '5454:5432'
-    networks:
-      - my-network
 
 
   app:
@@ -45,5 +41,3 @@ services:
       - .env
     depends_on:
       - db
-    networks:
-      - my-network
