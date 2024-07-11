@@ -121,6 +121,34 @@ async def input_number(message: Message, state: FSMContext) -> None:
                                        info_subscription=await get_abonements(crm['user_token'], data['input_number']),
                                        current_standard=await get_standards_by_id(message.from_user.id)
                                        )
+        elif crm['sexes'][await search(data['input_number'])] == 'Неизвестно':
+            if message.from_user.username != '':
+                await add_info_profile(user_id=message.from_user.id,
+                                       first_name=crm['names'][await search(data['input_number'])],
+                                       username=message.from_user.username,
+                                       gender='gender',
+                                       phone_number=data['input_number'],
+                                       training_history=await get_history_client(crm['user_token'],
+                                                                                 data['input_number'],
+                                                                                 await get_personal_id(await search(
+                                                                                     data['input_number']))),
+                                       number_of_referral_points=0,
+                                       info_subscription=await get_abonements(crm['user_token'], data['input_number']),
+                                       current_standard=await get_standards_by_id(message.from_user.id)
+                                       )
+            else:
+                await add_info_profile(user_id=message.from_user.id,
+                                       first_name=crm['names'][await search(data['input_number'])],
+                                       username='ник пользователя',
+                                       gender='gender',
+                                       phone_number=data['input_number'],
+                                       training_history=await get_history_client(crm['user_token'],
+                                                                                 data['input_number'],
+                                                                                 await get_personal_id(await search(
+                                                                                     data['input_number']))),
+                                       number_of_referral_points=0,
+                                       info_subscription=await get_abonements(crm['user_token'], data['input_number']),
+                                       current_standard=await get_standards_by_id(message.from_user.id))
         await state.clear()
 
     else:
