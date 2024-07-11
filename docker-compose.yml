@@ -1,10 +1,10 @@
-version: "3.8"
+version: "3.9"
 services:
   web:
     build:
       context: .
     container_name: web_app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py migrate && python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
     env_file:
@@ -15,8 +15,8 @@ services:
       - db
 
   db:
-    image: postgres:latest
-
+    image: postgres:16
+    restart: always
     container_name: db_app
 
     env_file:

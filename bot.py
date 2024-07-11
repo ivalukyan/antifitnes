@@ -13,7 +13,6 @@ from src.profile import profile
 from src.schedule import training_session
 from src.stats import top
 from src.admin import adm
-from src.db.db_profile import create_users
 
 router = Router()
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
@@ -32,7 +31,7 @@ async def command_help(message: Message) -> None:
     await message.answer(f"‼️<b>КОМАНДЫ</b>‼️\n\n"
                          f"<i>/help</i> - возможность посмотреть все команды\n"
                          f"<i>/login</i> - команда для входа пользователя\n"
-                         f"<i>/profile</i> - команда для вызова профиля"
+                         f"<i>/profile</i> - команда для вызова профиля\n"
                          f"<i>/schedule</i> - команда для записи на тренировку\n"
                          f"<i>/top</i> - команда для просмотра рейтингов")
 
