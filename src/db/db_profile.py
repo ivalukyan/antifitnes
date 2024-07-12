@@ -1,23 +1,6 @@
 from src.db.router import cursor, conn
 
 
-async def create_users():
-    cursor.execute("""CREATE TABLE IF NOT EXISTS bot_app_profile(
-                TELEGRAM_ID INTEGER,
-                FIRST_NAME TEXT,
-                USERNAME TEXT,
-                GENDER TEXT,
-                PHONE_NUMBER TEXT,
-                TRAINING_HISTORY TEXT,
-                NUMBER_OF_REFERRAL_POINTS INTEGER,
-                INFO_SUBSCRIPTION TEXT,
-                CURRENT_STANDARD TEXT
-                );
-            """)
-
-    conn.commit()
-
-
 async def training_history(user_id: int):
     cursor.execute("""SELECT training_history FROM bot_app_profile WHERE telegram_id =%s""", (user_id, ))
     result = cursor.fetchone()[0]

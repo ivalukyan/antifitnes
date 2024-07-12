@@ -54,7 +54,8 @@ async def callback_request_adm(callback: CallbackQuery, state: FSMContext) -> No
 async def request_adm(message: Message, state: FSMContext) -> None:
     mes = message.text
     users = await get_all_users()
-    await state.clear()
     for _ in users:
         await bot.send_message(int(_), f"‼️РАССЛЫКА‼️\n\n"
                                        f"{mes}")
+
+    await state.clear()
