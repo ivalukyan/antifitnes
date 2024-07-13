@@ -2,7 +2,7 @@ from src.db.router import cursor, conn
 
 
 async def training_history(user_id: int):
-    cursor.execute("""SELECT training_history FROM bot_app_profile WHERE telegram_id =%s""", (user_id, ))
+    cursor.execute("""SELECT training_history FROM bot_app_profile WHERE telegram_id =%s""", (user_id,))
     result = cursor.fetchone()[0]
     if result is not None:
         return result
@@ -11,7 +11,7 @@ async def training_history(user_id: int):
 
 
 async def number_of_referral_points(user_id: int):
-    cursor.execute("""SELECT number_of_referral_points FROM bot_app_profile WHERE telegram_id =%s""", (user_id, ))
+    cursor.execute("""SELECT number_of_referral_points FROM bot_app_profile WHERE telegram_id =%s""", (user_id,))
     result = cursor.fetchone()[0]
 
     if result is not None:
@@ -21,7 +21,7 @@ async def number_of_referral_points(user_id: int):
 
 
 async def info_subscription(user_id: int):
-    cursor.execute("""SELECT info_subscription FROM bot_app_profile WHERE telegram_id =%s""", (user_id, ))
+    cursor.execute("""SELECT info_subscription FROM bot_app_profile WHERE telegram_id =%s""", (user_id,))
     result = cursor.fetchone()[0]
 
     if result is not None:
@@ -36,16 +36,16 @@ async def add_info_profile(user_id, first_name, username, gender, phone_number, 
     number_of_referral_points, info_subscription, current_standard) 
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""", (user_id, first_name, username, gender, phone_number,
                                                      training_history, number_of_referral_points, info_subscription,
-                                                     current_standard, ))
+                                                     current_standard,))
 
     conn.commit()
 
 
 async def get_name(user_id):
     cursor.execute("""SELECT first_name FROM bot_app_profile WHERE telegram_id = %s""", (user_id,))
-    result = cursor.fetchone()[0]
+    result = cursor.fetchone()
     if result is not None:
-        return result
+        return result[0]
     else:
         raise ValueError("No name")
 
@@ -74,8 +74,27 @@ async def get_all_users():
 
 async def crm_eqv(user_id):
     if user_id in await get_all_users():
-        cursor.execute("""SELECT phone_number FROM bot_app_profile WHERE telegram_id = %s""", (user_id, ))
-        result = cursor.fetchone()[0]
+        cursor.execute("""SELECT phone_number FROM bot_app_profile WHERE telegram_id = %s""", (user_id,))
+        result = cursor.fetchone()
 
-        return result
+        return result[0]
     return None
+
+
+async def update_profile(telegram_id: int, telegram_status: bool, username: str, training_history: str,
+                         number_of_referral_points: int, info_subscription: str, current_standard: str,
+                         phone_number: str):
+    cursor.execute("""UPDATE bot_app_profile SET telegram_id = %s, telegram_status = %s, username = %s,
+     training_history = %s, number_of_referral_points = %s, info_subscription = %s, current_standard = %s 
+     WHERE phone_number= %s""", (telegram_id, telegram_status, username, training_history, number_of_referral_points,
+                                 info_subscription, current_standard, phone_number,))
+    conn.commit()
+
+
+async def get_telegram_status(user_id) -> bool:
+    cursor.execute("""SELECT telegram_status FROM bot_app_profile WHERE telegram_id = %s""", (user_id, ))
+    result = cursor.fetchone()
+    if result is not None:
+        return result[0]
+    else:
+        return False

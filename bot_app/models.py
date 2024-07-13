@@ -10,7 +10,7 @@ from src.db.router import cursor
 
 
 class User(models.Model):
-    telegram_id = models.IntegerField(default=89079009)
+    telegram_id = models.IntegerField(blank=True, null=True)
     first_name = models.CharField(max_length=50, default='')
 
     class Meta:
@@ -58,13 +58,14 @@ class Profile(User):
         ('gen_women', 'Женский'),
         ('gender', 'Неизвестно')
     ]
-    username = models.CharField(max_length=50, default="")
+    username = models.CharField(max_length=50, default="", blank=True, null=True)
     gender = models.CharField(choices=GENDERS, max_length=10, default='gender')
     phone_number = models.CharField(max_length=12, default="")
-    training_history = models.TextField(default="-")
-    number_of_referral_points = models.IntegerField(default=0)
-    info_subscription = models.TextField(default="-")
-    current_standard = models.TextField(default="-")
+    training_history = models.TextField(default="-", blank=True, null=True)
+    number_of_referral_points = models.IntegerField(default=0, blank=True, null=True)
+    info_subscription = models.TextField(default="-", blank=True, null=True)
+    current_standard = models.TextField(default="-", blank=True, null=True)
+    telegram_status = models.BooleanField(default=False, blank=True, null=True)
 
     def __str__(self):
         return str(self.phone_number) + " " + "профиль пользователя"

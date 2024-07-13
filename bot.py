@@ -13,6 +13,7 @@ from src.profile import profile
 from src.schedule import training_session
 from src.stats import top
 from src.admin import adm
+from src.srm.srm_bot import CRMain
 
 router = Router()
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
@@ -20,6 +21,9 @@ bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 @router.message(CommandStart())
 async def command_start(message: Message) -> None:
+    await message.answer("Идет обновление...\nПодождите!")
+    await CRMain(message)
+    await message.answer("Обновление завершено")
     await message.answer(
         f"Здравствуйте, <i>{message.from_user.first_name}</i>, вас приветствует бот спортивного клуба\n\n"
         f"Для того чтобы продолжить ввойдите в свой аккканут с помощью команды - <b>/login</b>\n"
@@ -34,6 +38,13 @@ async def command_help(message: Message) -> None:
                          f"<i>/profile</i> - команда для вызова профиля\n"
                          f"<i>/schedule</i> - команда для записи на тренировку\n"
                          f"<i>/top</i> - команда для просмотра рейтингов")
+
+
+@router.message(Command('update'))
+async def command_update(message: Message) -> None:
+    await message.answer("Идет обновление")
+    await CRMain(message)
+    await message.answer("Обновление завершено")
 
 
 async def main():

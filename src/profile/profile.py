@@ -1,6 +1,5 @@
 from aiogram import F, Router
 from aiogram.filters import Command
-
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import (
@@ -8,11 +7,11 @@ from aiogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
 )
 
-from src.db.db_standards import get_standards_by_id, insert_standard
+from src.db.db_profile import get_telegram_status
 from src.db.db_profile import (training_history, number_of_referral_points, info_subscription,
                                get_name)
+from src.db.db_standards import get_standards_by_id
 from src.db.db_statistics import get_statistics_by_user
-from src.auth.login import login_users
 
 router = Router()
 
@@ -28,7 +27,7 @@ class Form(StatesGroup):
 
 @router.message(Command('profile'))
 async def profile(message: Message, state: FSMContext):
-    if message.from_user.id in login_users:
+    if await get_telegram_status(message.from_user.id):
         await message.answer(
             f"{await get_name(message.from_user.id)}, добро пожаловать, в спортивный клуб!")
 

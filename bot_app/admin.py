@@ -1,17 +1,19 @@
 from django.contrib import admin
 from bot_app.models import Standards, Profile, Statistics, StatisticsGet
 
+
 # Register your models here.
 
 
 class ProfileUserAdmin(admin.ModelAdmin):
     list_display = ['telegram_id', 'first_name', 'username', 'gender', 'phone_number',
-                    'training_history', 'number_of_referral_points', 'info_subscription', 'current_standard']
+                    'training_history', 'number_of_referral_points', 'info_subscription', 'current_standard',
+                    'telegram_status']
 
     list_editable = ['username', 'gender', 'phone_number', 'training_history',
-                     'number_of_referral_points', 'info_subscription', 'current_standard']
+                     'number_of_referral_points', 'info_subscription', 'current_standard', 'telegram_status']
 
-    list_filter = ['gender']
+    list_filter = ['gender', 'telegram_status']
 
     search_fields = ['first_name', 'phone_number']
 
@@ -43,7 +45,8 @@ class StatisticsAdmin(admin.ModelAdmin):
     list_editable = ['thunder', 'turkish_ascent_axel', 'turkish_ascent_kettlebell',
                      'bench_press', 'axel_jerk', 'taking_on_axel_chest', 'gluteal_bridge', 'deadlift', 'jerk',
                      'taking_on_the_chest', 'axel_deadlift', 'classic_squat', 'front_squat', 'squat_over_the_head',
-                     'skipping_rope', 'push_ups', 'shuttle_running', 'farmer_walk', 'pull_ups', 'high_jump', 'long_jump',
+                     'skipping_rope', 'push_ups', 'shuttle_running', 'farmer_walk', 'pull_ups', 'high_jump',
+                     'long_jump',
                      'holding_the_axel', 'handstand', 'month', 'year']
 
     list_filter = ['month', 'year']
