@@ -341,6 +341,7 @@ async def update_db(total_count: int, message) -> None:
     crm['names'] = result[1]
     crm['sexes'] = result[2]
     for _ in range(total_count, await get_total_count(crm['user_token'])):
+        print("%s - %s - %s" % (result[0][_ + 1], result[1][_ + 1], result[2][_ + 1]))
         phone = result[0][_ + 1]
         name = result[1][_ + 1]
         sex = result[2][_ + 1]
