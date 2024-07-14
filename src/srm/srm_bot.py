@@ -1,11 +1,12 @@
 import asyncio
-import aiohttp
-import logging
 import datetime
+import logging
+from datetime import datetime
 
-
-from aiohttp.http_exceptions import HttpBadRequest
+import aiohttp
 from aiogram.types import Message
+from aiohttp.http_exceptions import HttpBadRequest
+
 
 from env import LOGIN, PASSWORD, BEARER_TOKEN, USER_TOKEN, CID
 from src.db.router import cursor, conn
@@ -13,6 +14,8 @@ from src.db.router import cursor, conn
 bearer_token = BEARER_TOKEN
 user_token = USER_TOKEN
 CID = CID
+
+
 
 login = LOGIN
 password = PASSWORD
@@ -35,7 +38,9 @@ crm = {
     'phones': dict,
     'names': dict,
     'sexes': dict,
-    'total_count': 0
+    'total_count': 0,
+    'proces': 10,
+    'proces_': 10
 }
 
 
@@ -132,7 +137,6 @@ async def get_info_about_users(list_id, user_tok, msg):
 
         await print_progress(cnt, len(list_id))
         await print_process(cnt, len(list_id), msg)
-
     return phones, names, sexes
 
 
@@ -228,19 +232,6 @@ async def search(key):
         if crm['phones'][_ + 1] == (key[-10:]):
             return _ + 1
 
-
-# async def crm_info():
-#     crm['user_token'] = await get_user_token(LOGIN, PASSWORD)
-#
-#     crm['ids'] = await get_clients_ids(crm['user_token'])
-#
-#     crm['phones'] = await get_phones_users(crm['ids'].values(), crm['user_token'])
-#
-#     crm['names'] = await get_name(crm['ids'].values(), crm['user_token'])
-#
-#     crm['sexes'] = await get_sex(crm['ids'].values(), crm['user_token'])
-
-
 async def get_name_by_id(key):
     return crm['names'][key]
 
@@ -250,71 +241,73 @@ async def get_personal_id(key):
 
 
 async def print_progress(cnt, total):
-    pr1 = round(cnt / total * 100, 1)
-    cnt_10 = 0
-    cnt_30 = 0
-    cnt_50 = 0
-    cnt_70 = 0
-    cnt_90 = 0
-    if pr1 == 10 and cnt_10 == 0:
-        print('[= 10%           ]')
-        cnt_10 += 1
-    elif pr1 == 20:
-        print('[= 20% =         ]')
-    elif pr1 == 30 and cnt_30 == 0:
-        print('[== 30% =        ]')
-        cnt_30 += 1
-    elif pr1 == 40:
-        print('[=== 40% =       ]')
-    elif pr1 == 50 and cnt_50 == 0:
-        print('[==== 50% =      ]')
-        cnt_50 += 1
-    elif pr1 == 60:
-        print('[===== 60% =     ]')
-    elif pr1 == 70 and cnt_70 == 0:
-        print('[===== 70% ==    ]')
-        cnt_70 += 1
-    elif pr1 == 80:
-        print('[===== 80% ===   ]')
-    elif pr1 == 90 and cnt_90 == 0:
-        print('[===== 90% ====  ]')
-        cnt_90 += 1
-    elif pr1 == 100:
+    progress = round(cnt / total * 100, 1)
+
+    if progress == 100 and crm['proces'] == 100:
+        crm['proces'] = 10
         print('[===== 100% =====]')
+    elif progress == 90 and crm['proces'] == 90:
+        crm['proces'] = 100
+        print('[===== 90% ====  ]')
+    elif progress == 80 and crm['proces'] == 80:
+        crm['proces'] = 90
+        print('[===== 80% ===   ]')
+    elif progress == 70 and crm['proces'] == 70:
+        crm['proces'] = 80
+        print('[===== 70% ==    ]')
+    elif progress == 60 and crm['proces'] == 60:
+        crm['proces'] = 70
+        print('[===== 60% =     ]')
+    elif progress == 50 and crm['proces'] == 50:
+        crm['proces'] = 60
+        print('[==== 50% =      ]')
+    elif progress == 40 and crm['proces'] == 40:
+        crm['proces'] = 50
+        print('[=== 40% =       ]')
+    elif progress == 30 and crm['proces'] == 30:
+        crm['proces'] = 40
+        print('[== 30% =        ]')
+    elif progress == 20 and crm['proces'] == 20:
+        crm['proces'] = 30
+        print('[= 20% =         ]')
+    elif progress == 10 and crm['proces'] == 10:
+        crm['proces'] = 20
+        print('[= 10%           ]')
 
 
 async def print_process(cnt, total, message: Message):
-    pr1 = round(cnt / total * 100, 3)
-    cnt_10 = 0
-    cnt_30 = 0
-    cnt_50 = 0
-    cnt_70 = 0
-    cnt_90 = 0
-    if pr1 == 10 and cnt_10 == 0:
-        await message.answer('[= 10%           ]')
-        cnt_10 += 1
-    elif pr1 == 20:
-        await message.answer('[= 20% =         ]')
-    elif pr1 == 30 and cnt_30 == 0:
-        await message.answer('[== 30% =        ]')
-        cnt_30 += 1
-    elif pr1 == 40:
-        await message.answer('[=== 40% =       ]')
-    elif pr1 == 50 and cnt_50 == 0:
-        await message.answer('[==== 50% =      ]')
-        cnt_50 += 1
-    elif pr1 == 60:
-        await message.answer('[===== 60% =     ]')
-    elif pr1 == 70 and cnt_70 == 0:
-        await message.answer('[===== 70% ==    ]')
-        cnt_70 += 1
-    elif pr1 == 80:
-        await message.answer('[===== 80% ===   ]')
-    elif pr1 == 90 and cnt_90 == 0:
-        await message.answer('[===== 90% ====  ]')
-        cnt_90 += 1
-    elif pr1 == 100:
+    progress = round(cnt / total * 100, 1)
+
+    if progress == 100 and crm['proces_'] == 100:
+        crm['proces_'] = 10
         await message.answer('[===== 100% =====]')
+    elif progress == 90 and crm['proces_'] == 90:
+        crm['proces_'] = 100
+        await message.answer('[===== 90% ====  ]')
+    elif progress == 80 and crm['proces_'] == 80:
+        crm['proces_'] = 90
+        await message.answer('[===== 80% ===   ]')
+    elif progress == 70 and crm['proces_'] == 70:
+        crm['proces_'] = 80
+        await message.answer('[===== 70% ==    ]')
+    elif progress == 60 and crm['proces_'] == 60:
+        crm['proces_'] = 70
+        await message.answer('[===== 60% =     ]')
+    elif progress == 50 and crm['proces_'] == 50:
+        crm['proces_'] = 60
+        await message.answer('[==== 50% =      ]')
+    elif progress == 40 and crm['proces_'] == 40:
+        crm['proces_'] = 50
+        await message.answer('[=== 40% =       ]')
+    elif progress == 30 and crm['proces_'] == 30:
+        crm['proces_'] = 40
+        await message.answer('[== 30% =        ]')
+    elif progress == 20 and crm['proces_'] == 20:
+        crm['proces_'] = 30
+        await message.answer('[= 20% =         ]')
+    elif progress == 10 and crm['proces_'] == 10:
+        crm['proces_'] = 20
+        await message.answer('[= 10%           ]')
 
 
 async def checking_info_in_db() -> bool:
@@ -334,9 +327,9 @@ async def checking_update_in_db(total_count: int) -> bool:
         return True
 
 
-async def update_db(total_count: int, message) -> None:
+async def update_db(total_count: int, msg) -> None:
     crm['ids'] = await get_clients_ids(crm['user_token'])
-    result = await get_info_about_users(crm['ids'].values(), crm['user_token'], message)
+    result = await get_info_about_users(crm['ids'].values(), crm['user_token'], msg)
     crm['phones'] = result[0]
     crm['names'] = result[1]
     crm['sexes'] = result[2]
@@ -370,14 +363,31 @@ async def get_total_count(user_tok) -> int:
 
 
 async def CRMain(msg):
+    time = datetime.now().strftime("[ %H:%M ]")
+
+    year = datetime.now().year
+    month = datetime.now().month
+    day = datetime.now().day
 
     crm['user_token'] = await get_user_token(LOGIN, PASSWORD)
-    print("token: %s" % crm['user_token'])
+    print("%s - token: %s" % (time, crm['user_token']))
 
     if await checking_info_in_db() and await checking_update_in_db(crm['total_count']):
-        print("DB is already filled in")
+        print("%s - DB is already filled in" % time)
     else:
+        await msg.answer("Идет обновление...\nПодождите!")
         await update_db(crm['total_count'], msg)
+        await msg.answer("Обновление завершено")
+        await msg.answer("Следующее обновление будет - %s - %s/%s/%s" % (time, day, month, year))
+
         crm['total_count'] = await get_total_count(crm['user_token'])
-        print("DB updated")
-        print("total count: %s" % crm['total_count'])
+
+        print("%s - DB updated" % time)
+        print("%s - total count: %s" % (time, crm['total_count']))
+
+
+async def task(msg):
+    while True:
+        await CRMain(msg)
+        await asyncio.sleep(86400)
+

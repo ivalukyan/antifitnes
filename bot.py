@@ -10,10 +10,11 @@ from aiogram.types import Message
 from env import TOKEN
 from src.auth import login
 from src.profile import profile
-from src.schedule import training_session
+from src.schedules import training_session
 from src.stats import top
 from src.admin import adm
-from src.srm.srm_bot import CRMain
+from src.srm.srm_bot import task
+
 
 router = Router()
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
@@ -21,9 +22,7 @@ bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 @router.message(CommandStart())
 async def command_start(message: Message) -> None:
-    await message.answer("Идет обновление...\nПодождите!")
-    await CRMain(message)
-    await message.answer("Обновление завершено")
+
     await message.answer(
         f"Здравствуйте, <i>{message.from_user.first_name}</i>, вас приветствует бот спортивного клуба\n\n"
         f"Для того чтобы продолжить ввойдите в свой аккканут с помощью команды - <b>/login</b>\n"
@@ -42,9 +41,7 @@ async def command_help(message: Message) -> None:
 
 @router.message(Command('update'))
 async def command_update(message: Message) -> None:
-    await message.answer("Идет обновление")
-    await CRMain(message)
-    await message.answer("Обновление завершено")
+    await asyncio.create_task(await task(message))
 
 
 async def main():
@@ -56,7 +53,6 @@ async def main():
 
     dp = Dispatcher()
     dp.include_routers(login.router, training_session.router, top.router, adm.router, profile.router, router)
-
     # Start event dispatching
     await dp.start_polling(bot)
 
