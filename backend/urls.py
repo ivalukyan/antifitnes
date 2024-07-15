@@ -21,11 +21,11 @@ from bot_app import views
 urlpatterns = [
     path('', views.login, name='login'),
     path('home/', views.index, name='home'),
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     path('standards/', views.standards, name='standards'),
     path('standards/<int:pk>', views.StandardsID.as_view(), name='standards_id'),
     path('standards/create/', views.standards_create, name='standards_create'),
-    path('profile/', views.profile),
+    path('profile/', views.profile, name='profile'),
     path('statistics/', views.statistics, name='statistics'),
     path('statistics/create', views.createstatistics, name='create_statistics'),
     path('statistics/<str:year_id>/<str:norm_id>', views.statisticsID, name='statistic_id'),

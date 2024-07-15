@@ -1,25 +1,31 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Статистика</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/standards.css">
+    <link rel="stylesheet" href="{% static 'stylesheet/standards.css' %}">
 </head>
 <body>
-<div class="caption-top">
-    <header class="d-flex justify-content-center py-3" style="background-color: #1b1b1b" >
-        <ul class="nav nav-pills">
-            <li class="nav-item"><a href="{% url 'home'%}" class="nav-link active" aria-current="page">Главная страница</a></li>
-            <li class="nav-item"><a href="/admin/" class="nav-link">Админ панель</a></li>
-            <li class="nav-item"><a href="https://t.me/rcbobot" class="nav-link">Телеграмм бот</a></li>
-        </ul>
-    </header>
+<div class="logo">
+    <img src="https://cdn.icon-icons.com/icons2/38/PNG/512/dumbbell_sport_5072.png" data-size="512">
+    <a href="{% url 'home'%}">Антифитнес</a>
 </div>
-<div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+<div class="navigation">
+    <div class="nav-items">
+        <a href="{% url 'home'%}">Home</a>
+        <a href="/admin/">Admin</a>
+        <a href="https://t.me/rcbobot">Telegram Bot</a>
+    </div>
+</div>
+<div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center" style="margin-top: 100px" >
 
-    <div class="list-group">
+    <div class="list-group" style="width: 800px">
         {% for standard in data %}
-        <a href="{% url 'standards_id' standard.id%}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+        <a href="{% url 'standards_id' standard.id%}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true" style="border-radius: 10px">
             <img src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png" height="32" width="32">
             <div class="d-flex gap-2 w-100 justify-content-between">
                 <div class="container-md">
@@ -29,7 +35,7 @@
             </div>
         </a><br>
         {% endfor %}
-        <a href="{% url 'standards_create' %}" class="btn btn-primary">Заолнить нормативы</a>
+        <a href="{% url 'standards_create' %}" class="btn btn-primary" style="width: 100%">Заолнить нормативы</a>
     </div>
 
 </div>

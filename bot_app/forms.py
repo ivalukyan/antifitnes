@@ -264,12 +264,12 @@ class LoginForm(ModelForm):
 
         widgets = {
             'username': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'example: name',
+                'class': 'custom-input',
+                'placeholder': 'Your name',
             }),
             'password': forms.TextInput(attrs={
-                'type': 'password',
                 'class': 'form-control',
-                'placeholder': 'password',
+                'type': 'password',
+                'placeholder': 'Your password',
             }),
         }
