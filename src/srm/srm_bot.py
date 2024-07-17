@@ -153,7 +153,7 @@ async def get_history_client(user_tok, phone, client_id):
         "client_id": client_id,
         "client_phone": phone[-11:],
         "from": "2023-01-01",
-        "to": datetime.datetime.now().strftime('%Y-%m-%d')
+        "to": datetime.now().strftime('%Y-%m-%d')
     }
 
     async with aiohttp.ClientSession() as session:
@@ -310,10 +310,11 @@ async def print_process(cnt, total, message: Message):
         await message.answer('[= 10%           ]')
 
 
-async def checking_info_in_db() -> bool:
+async def checking_info_in_db(total_count) -> bool:
     cursor.execute("""SELECT phone_number FROM bot_app_profile""")
     data = cursor.fetchall()
-    if len(data) == 0:
+    print(data)
+    if len(data) != total_count:
         return False
     else:
         return True
@@ -372,13 +373,13 @@ async def CRMain(msg):
     crm['user_token'] = await get_user_token(LOGIN, PASSWORD)
     print("%s - token: %s" % (time, crm['user_token']))
 
-    if await checking_info_in_db() and await checking_update_in_db(crm['total_count']):
+    if await checking_info_in_db(await get_total_count(crm['user_token'])):
         print("%s - DB is already filled in" % time)
     else:
         await msg.answer("Идет обновление...\nПодождите!")
         await update_db(crm['total_count'], msg)
         await msg.answer("Обновление завершено")
-        await msg.answer("Следующее обновление будет - %s - %s/%s/%s" % (time, day, month, year))
+        await msg.answer("Следующее обновление будет - %s - %s/%s/%s" % (time, day+1, month, year))
 
         crm['total_count'] = await get_total_count(crm['user_token'])
 
@@ -390,4 +391,3 @@ async def task(msg):
     while True:
         await CRMain(msg)
         await asyncio.sleep(86400)
-
