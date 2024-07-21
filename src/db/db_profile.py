@@ -66,10 +66,11 @@ async def get_all_users():
     cursor.execute("""SELECT telegram_id FROM bot_app_profile""")
     result = cursor.fetchall()
     res = []
-    for i in range(len(result)):
-        res.append(result[i][0])
+    if result is not None:
+        for i in range(len(result)):
+            res.append(result[i][0])
 
-    return res
+        return res
 
 
 async def crm_eqv(user_id):
