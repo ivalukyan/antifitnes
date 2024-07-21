@@ -48,9 +48,11 @@ async def input_number(message: Message, state: FSMContext) -> None:
 
     if await checking_number(data['input_number']):
 
-        await insert_standard(message.from_user.id, crm['names'][await search(data['input_number'])])
+        # Not prod: при отсутствии данных бот создавал default данные в таблице Standards - Нормативы
+        # await insert_standard(message.from_user.id, crm['names'][await search(data['input_number'])])
 
-        await insert_stats(message.from_user.id, crm['names'][await search(data['input_number'])])
+        # Not prod: при отсутствии данных бот создавал default данные в таблице Statistic - Статистика
+        # await insert_stats(message.from_user.id, crm['names'][await search(data['input_number'])])
 
         await update_profile(
             telegram_id=message.from_user.id,
