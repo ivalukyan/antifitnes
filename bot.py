@@ -13,7 +13,7 @@ from src.profile import profile
 from src.schedules import training_session
 from src.stats import top
 from src.admin import adm
-from src.srm.srm_bot import task, CRMain
+from src.srm.srm_bot import task
 
 
 router = Router()
@@ -41,7 +41,7 @@ async def command_help(message: Message) -> None:
 
 @router.message(Command('update'))
 async def command_update(message: Message) -> None:
-    await asyncio.create_task(await CRMain(message))
+    await asyncio.create_task(await task(message))
 
 
 async def main():

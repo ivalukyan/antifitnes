@@ -313,7 +313,7 @@ async def print_process(cnt, total, message: Message):
 async def checking_info_in_db(total_count) -> bool:
     cursor.execute("""SELECT phone_number FROM bot_app_profile""")
     data = cursor.fetchall()
-    print(data)
+
     if len(data) != total_count:
         return False
     else:
@@ -335,7 +335,6 @@ async def update_db(total_count: int, msg) -> None:
     crm['names'] = result[1]
     crm['sexes'] = result[2]
     for _ in range(total_count, await get_total_count(crm['user_token'])):
-        print("%s - %s - %s" % (result[0][_ + 1], result[1][_ + 1], result[2][_ + 1]))
         phone = result[0][_ + 1]
         name = result[1][_ + 1]
         sex = result[2][_ + 1]
@@ -364,7 +363,10 @@ async def get_total_count(user_tok) -> int:
 
 
 async def CRMain(msg):
-    time = datetime.now().strftime("[ %H:%M ]")
+    hour = datetime.now().hour
+    minute = datetime.now().minute
+
+    time = '[ %s : %s ]' % (hour, minute)
 
     year = datetime.now().year
     month = datetime.now().month
@@ -376,10 +378,9 @@ async def CRMain(msg):
     if await checking_info_in_db(await get_total_count(crm['user_token'])):
         print("%s - DB is already filled in" % time)
     else:
-        await msg.answer("Идет обновление...\nПодождите!")
+        await msg.answer("%s - Идет обновление...\nПодождите!" % time)
         await update_db(crm['total_count'], msg)
-        await msg.answer("Обновление завершено")
-        await msg.answer("Следующее обновление будет - %s - %s/%s/%s" % (time, day+1, month, year))
+        await msg.answer("%s - Обновление завершено - %s/%s/%s" % (time, day+1, month, year))
 
         crm['total_count'] = await get_total_count(crm['user_token'])
 
@@ -390,4 +391,4 @@ async def CRMain(msg):
 async def task(msg):
     while True:
         await CRMain(msg)
-        await asyncio.sleep(86400)
+        await asyncio.sleep(3600)
