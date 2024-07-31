@@ -54,12 +54,15 @@ async def check_login(user_id: int):
     cursor.execute("""SELECT telegram_id FROM bot_app_profile""")
     result = cursor.fetchall()
     res = []
-    for i in range(len(result)):
-        res.append(result[i][0])
-    if user_id in res:
-        return False
+    if result is not None:
+        for i in range(len(result)):
+            res.append(result[i][0])
+        if user_id in res:
+            return False
+        else:
+            return True
     else:
-        return True
+        return False
 
 
 async def get_all_users():
