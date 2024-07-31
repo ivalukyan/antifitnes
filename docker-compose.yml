@@ -40,8 +40,6 @@ services:
   app:
     build:
       context: .
-    environment:
-      - .env
     container_name: bot
     command: python bot.py run
     env_file:
