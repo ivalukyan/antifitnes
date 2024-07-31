@@ -31,8 +31,8 @@ async def get_names_standards(name):
 async def get_standards_by_id(user_id):
     cursor.execute("""SELECT * FROM bot_app_standards WHERE telegram_id=%s""", (user_id,))
     result = cursor.fetchall()
-    print(result)
-    if result is not None:
+
+    if result is not None and len(result) != 0:
         result = result[0]
         conn.commit()
 
