@@ -33,8 +33,6 @@ services:
       - '8000:8000'
     depends_on:
       - db
-    environment:
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db147.45.247.128:5432/${POSTGRES_DB}
     networks:
       - my-network
 
