@@ -16,7 +16,6 @@ user_token = USER_TOKEN
 CID = CID
 
 
-
 login = LOGIN
 password = PASSWORD
 
@@ -228,9 +227,10 @@ async def check_crm(phone_number: str) -> bool:
 
 
 async def search(key):
-    for _ in range(len(crm['phones'].values())):
+    for _ in range(len(crm['phones'].values)):
         if crm['phones'][_ + 1] == (key[-10:]):
             return _ + 1
+
 
 async def get_name_by_id(key):
     return crm['names'][key]
