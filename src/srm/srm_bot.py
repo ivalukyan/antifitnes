@@ -392,21 +392,3 @@ async def task(msg):
     while True:
         await CRMain(msg)
         await asyncio.sleep(3600)
-
-
-async def main():
-
-    crm['user_token'] = await get_user_token(LOGIN, PASSWORD)
-
-    crm['ids'] = await get_clients_ids(crm['user_token'])
-
-    print(crm['ids'].values())
-
-    print(await search('+79111584140'))
-    print(await get_personal_id(await search('+79111584140')))
-
-    print(await get_history_client(crm['user_token'], '+79111584140', await get_personal_id(await search('+79111584140'))))
-
-
-if __name__ == '__main__':
-    asyncio.run(main())
