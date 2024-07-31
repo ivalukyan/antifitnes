@@ -34,7 +34,7 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgres://your_user:your_password@db:5432/bot_app
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db147.45.247.128:5432/${POSTGRES_DB}
     networks:
       - my-network
 
