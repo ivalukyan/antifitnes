@@ -30,37 +30,42 @@ async def get_names_standards(name):
 
 async def get_standards_by_id(user_id):
     cursor.execute("""SELECT * FROM bot_app_standards WHERE telegram_id=%s""", (user_id,))
-    result = cursor.fetchall()[0]
-    conn.commit()
-
-    msg = (f"Гром - {result[3]}\n"
-           f"Турецкий подъем: Аксель - {result[4]}\n"
-           f"Турецкий подъем: Гиря - {result[5]}\n"
-           f"Жим лежа 1ПМ - {result[6]}\n"
-           f"Рывок акселя 1ПМ - {result[7]}\n"
-           f"Взятие на грудь акселя 1ПМ - {result[8]}\n"
-           f"Ягодичный мостик 1ПМ - {result[9]}\n"
-           f"Становая тяга 1ПМ - {result[10]}\n"
-           f"Рывок 1ПМ - {result[11]}\n"
-           f"Взятие на грудь 1ПМ - {result[12]}\n"
-           f"Становая тяга акселя 1ПМ - {result[13]}\n"
-           f"Присед 1ПМ: Классический - {result[14]}\n"
-           f"Присед 1ПМ: Фронтальный - {result[15]}\n"
-           f"Присед 1ПМ: Над головой - {result[16]}\n"
-           f"Скакалка - {result[17]}\n"
-           f"Отжимания от пола - {result[18]}\n"
-           f"Челночный бег - {result[19]}\n"
-           f"Прогулка фермера - {result[20]}\n"
-           f"Подтягивания - {result[21]}\n"
-           f"Прыжок в высоту - {result[22]}\n"
-           f"Прыжок в длину - {result[23]}\n"
-           f"Удержание акселя - {result[24]}\n"
-           f"Стойка на руках - {result[25]}\n")
-
+    result = cursor.fetchall()
     if result is not None:
-        return msg
+        result = result[0]
+        conn.commit()
+
+        msg = (f"Гром - {result[3]}\n"
+               f"Турецкий подъем: Аксель - {result[4]}\n"
+               f"Турецкий подъем: Гиря - {result[5]}\n"
+               f"Жим лежа 1ПМ - {result[6]}\n"
+               f"Рывок акселя 1ПМ - {result[7]}\n"
+               f"Взятие на грудь акселя 1ПМ - {result[8]}\n"
+               f"Ягодичный мостик 1ПМ - {result[9]}\n"
+               f"Становая тяга 1ПМ - {result[10]}\n"
+               f"Рывок 1ПМ - {result[11]}\n"
+               f"Взятие на грудь 1ПМ - {result[12]}\n"
+               f"Становая тяга акселя 1ПМ - {result[13]}\n"
+               f"Присед 1ПМ: Классический - {result[14]}\n"
+               f"Присед 1ПМ: Фронтальный - {result[15]}\n"
+               f"Присед 1ПМ: Над головой - {result[16]}\n"
+               f"Скакалка - {result[17]}\n"
+               f"Отжимания от пола - {result[18]}\n"
+               f"Челночный бег - {result[19]}\n"
+               f"Прогулка фермера - {result[20]}\n"
+               f"Подтягивания - {result[21]}\n"
+               f"Прыжок в высоту - {result[22]}\n"
+               f"Прыжок в длину - {result[23]}\n"
+               f"Удержание акселя - {result[24]}\n"
+               f"Стойка на руках - {result[25]}\n")
+
+        if result is not None:
+            return msg
+        else:
+            raise ValueError("No standard for user id {}".format(user_id))
     else:
-        raise ValueError("No standard for user id {}".format(user_id))
+        msg = "У данного пользователя нет нормативов"
+        return msg
 
 
 async def get_all_thunder():
