@@ -62,7 +62,7 @@ async def check_login(user_id: int):
         else:
             return True
     else:
-        return False
+        return True
 
 
 async def get_all_users():
