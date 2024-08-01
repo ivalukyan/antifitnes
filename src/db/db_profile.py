@@ -1,3 +1,6 @@
+import psycopg2
+
+from env import POSTGRES_DB, POSTGRES_USER, POSTGRES_HOST, POSTGRES_PASSWORD
 from src.db.router import cursor, conn
 
 
@@ -51,18 +54,25 @@ async def get_name(user_id):
 
 
 async def check_login(user_id: int):
-    cursor.execute("""SELECT telegram_id FROM bot_app_profile""")
-    result = cursor.fetchall()
-    res = []
-    if result is not None:
-        for i in range(len(result)):
-            res.append(result[i][0])
-        if user_id in res:
-            return False
+    try:
+        cursor.execute("""SELECT telegram_id FROM bot_app_profile""")
+        result = cursor.fetchall()
+        res = []
+        if result is not None:
+            for i in range(len(result)):
+                res.append(result[i][0])
+            if user_id in res:
+                return False
+            else:
+                return True
         else:
             return True
-    else:
-        return True
+    except psycopg2.ProgrammingError as e:
+        print(e)
+        conn.rollback()
+    except psycopg2.InterfaceError as e:
+        print(e)
+        conn.cursor()
 
 
 async def get_all_users():
