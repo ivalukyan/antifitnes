@@ -14,6 +14,7 @@ from src.schedules import training_session
 from src.stats import top
 from src.admin import adm
 from src.srm.srm_bot import task, CRMain
+from src.db.router import cursor,conn
 
 
 router = Router()
@@ -42,6 +43,13 @@ async def command_help(message: Message) -> None:
 @router.message(Command('update'))
 async def command_update(message: Message) -> None:
     await CRMain(message)
+
+
+@router.message(Command('delete'))
+async def command_delete(message: Message) -> None:
+    cursor.execute("""DELETE FROM public.bot_app_profile""")
+    conn.commit()
+    await message.answer("Пользователи удалены!")
 
 
 async def main():
