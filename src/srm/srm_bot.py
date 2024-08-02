@@ -7,14 +7,14 @@ import aiohttp
 from aiogram.types import Message
 from aiohttp.http_exceptions import HttpBadRequest
 
-
 from env import LOGIN, PASSWORD, BEARER_TOKEN, USER_TOKEN, CID
 from src.db.router import cursor, conn
+
+import json
 
 bearer_token = BEARER_TOKEN
 user_token = USER_TOKEN
 CID = CID
-
 
 login = LOGIN
 password = PASSWORD
@@ -62,22 +62,24 @@ async def get_clients_ids(user_tok):
     ids = {}
     cnt = 1
 
-    for _ in range(71):
+    for _ in range(1, 11):
         await asyncio.sleep(0.12)
         url = f"https://api.yclients.com/api/v1/company/{CID}/clients/search"
         head = {
             f"Accept": "application/vnd.yclients.v2+json",
-            f'Accept-Language': 'ru-RU',
+            f'Content-Type': 'application/json',
             f'Authorization': f"Bearer {bearer_token}, User {user_tok}",
             f'Cache-Control': "no-cache"
         }
-        querystring = {
-            "page": _
-        }
+        payload = json.dumps({
+            "page": _,
+            "page_size": 200,
+        })
         async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=head, params=querystring) as response:
+            async with session.post(url, headers=head, data=payload) as response:
                 resp = await response.json()
 
+        print(resp)
         if resp['success']:
             for i in range(len(resp['data'])):
                 ids[cnt] = resp['data'][i]['id']
@@ -391,7 +393,7 @@ async def CRMain(msg):
     else:
         await msg.answer("%s - Идет обновление...\nПодождите!" % time)
         await update_db(crm['total_count'], msg)
-        await msg.answer("%s - Обновление завершено - %s/%s/%s" % (time, day+1, month, year))
+        await msg.answer("%s - Обновление завершено - %s/%s/%s" % (time, day + 1, month, year))
 
         crm['total_count'] = await get_total_count(crm['user_token'])
 
@@ -403,3 +405,15 @@ async def task(msg):
     while True:
         await CRMain(msg)
         await asyncio.sleep(3600)
+
+
+async def main():
+    crm['user_token'] = await get_user_token(LOGIN, PASSWORD)
+    print("token: %s" % crm['user_token'])
+
+    crm['ids'] = await get_clients_ids(crm['user_token'])
+    print("ids: %s" % crm['ids'])
+
+
+if __name__ == '__main__':
+    asyncio.run(main())
