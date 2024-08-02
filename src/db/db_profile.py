@@ -121,7 +121,3 @@ async def get_all_phones(phone_number: str) -> bool:
             return True
         else:
             return False
-
-
-if __name__ == '__main__':
-    asyncio.run(get_all_phones("+79111584140"))
