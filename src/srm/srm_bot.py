@@ -227,9 +227,11 @@ async def check_crm(phone_number: str) -> bool:
 
 
 async def search(key):
-    for _ in range(len(crm['phones'].values())):
-        if crm['phones'][_ + 1] == (key[-10:]):
-            return _ + 1
+    if crm['phones'].values() is not None:
+        for _ in range(len(crm['phones'].values())):
+            if crm['phones'][_ + 1] == (key[-10:]):
+                return _ + 1
+    return None
 
 
 async def get_name_by_id(key):
