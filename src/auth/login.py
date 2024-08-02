@@ -46,7 +46,7 @@ async def input_number(message: Message, state: FSMContext) -> None:
 
     data = await state.get_data()
 
-    if await checking_number(data['input_number']) and await get_all_phones(data['input_number']):
+    if await checking_number(data['input_number']) and await get_all_phones(data['input_number'][-10:]):
 
         # Not prod: при отсутствии данных бот создавал default данные в таблице Standards - Нормативы
         # await insert_standard(message.from_user.id, crm['names'][await search(data['input_number'])])

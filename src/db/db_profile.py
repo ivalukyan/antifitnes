@@ -115,9 +115,10 @@ async def get_all_phones(phone_number: str) -> bool:
     res = []
     if result is not None:
         for i in range(len(result)):
-            res.append(result[i][0])
+            res.append(result[i][0][-10:])
             print(res)
         if phone_number in res:
             return True
         else:
             return False
+
