@@ -111,6 +111,7 @@ async def get_all_phones(phone_number: str) -> bool:
     cursor.execute("""SELECT phone_number FROM bot_app_profile""")
     result = cursor.fetchall()
     if result is not None:
+        print(result)
         if phone_number in result[0]:
             return True
         else:
