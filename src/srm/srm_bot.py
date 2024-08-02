@@ -228,6 +228,7 @@ async def check_crm(phone_number: str) -> bool:
 
 async def search(key):
     if crm['phones'] is not None:
+        print(crm['phones'])
         for _ in range(len(crm['phones'].values())):
             if crm['phones'][_ + 1] == (key[-10:]):
                 return _ + 1
