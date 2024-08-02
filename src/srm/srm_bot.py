@@ -340,16 +340,19 @@ async def update_db(total_count: int, msg) -> None:
     crm['names'] = result[1]
     crm['sexes'] = result[2]
     if len(result) != 0:
-        for _ in range(total_count, await get_total_count(crm['user_token'])):
-            phone = result[0][_ + 1]
-            name = result[1][_ + 1]
-            sex = result[2][_ + 1]
-            cursor.execute("""INSERT INTO bot_app_profile(telegram_id, first_name, username, gender, phone_number, 
-                        training_history, number_of_referral_points, info_subscription, current_standard, telegram_status) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", (None, name, None, sex,
-                                                                     phone, None, None, None, None,
-                                                                     None))
-            conn.commit()
+        if len(result[0]) != 0 and len(result[1]) != 0 and len(result[2]) != 0:
+            for _ in range(total_count, await get_total_count(crm['user_token'])):
+                phone = result[0][_ + 1]
+                name = result[1][_ + 1]
+                sex = result[2][_ + 1]
+                cursor.execute("""INSERT INTO bot_app_profile(telegram_id, first_name, username, gender, phone_number, 
+                            training_history, number_of_referral_points, info_subscription, current_standard, telegram_status) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", (None, name, None, sex,
+                                                                         phone, None, None, None, None,
+                                                                         None))
+                conn.commit()
+        else:
+            await msg.answer("Ошибка данных номеров имя или пола")
     else:
         await msg.answer("Ошибка загрузки данных из CRM")
 
