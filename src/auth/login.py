@@ -9,7 +9,7 @@ from aiogram.types import (
 )
 
 from src.db.db_profile import (check_login)
-from src.db.db_profile import update_profile
+from src.db.db_profile import update_profile, get_all_phones
 from src.db.db_standards import get_standards_by_id, insert_standard
 from src.db.db_stats import insert_stats
 from src.srm.srm_bot import search, crm, get_history_client, get_personal_id, get_abonements
@@ -46,7 +46,7 @@ async def input_number(message: Message, state: FSMContext) -> None:
 
     data = await state.get_data()
 
-    if await checking_number(data['input_number']):
+    if await checking_number(data['input_number']) and await get_all_phones(data['input_number']):
 
         # Not prod: при отсутствии данных бот создавал default данные в таблице Standards - Нормативы
         # await insert_standard(message.from_user.id, crm['names'][await search(data['input_number'])])

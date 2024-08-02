@@ -54,25 +54,18 @@ async def get_name(user_id):
 
 
 async def check_login(user_id: int):
-    try:
-        cursor.execute("""SELECT telegram_id FROM bot_app_profile""")
-        result = cursor.fetchall()
-        res = []
-        if result is not None:
-            for i in range(len(result)):
-                res.append(result[i][0])
-            if user_id in res:
-                return False
-            else:
-                return True
+    cursor.execute("""SELECT telegram_id FROM bot_app_profile""")
+    result = cursor.fetchall()
+    res = []
+    if result is not None:
+        for i in range(len(result)):
+            res.append(result[i][0])
+        if user_id in res:
+            return False
         else:
             return True
-    except psycopg2.ProgrammingError as e:
-        print(e)
-        conn.rollback()
-    except psycopg2.InterfaceError as e:
-        print(e)
-        conn.cursor()
+    else:
+        return True
 
 
 async def get_all_users():
@@ -106,9 +99,19 @@ async def update_profile(telegram_id: int, telegram_status: bool, username: str,
 
 
 async def get_telegram_status(user_id) -> bool:
-    cursor.execute("""SELECT telegram_status FROM bot_app_profile WHERE telegram_id = %s""", (user_id, ))
+    cursor.execute("""SELECT telegram_status FROM bot_app_profile WHERE telegram_id = %s""", (user_id,))
     result = cursor.fetchone()
     if result is not None:
         return result[0]
     else:
         return False
+
+
+async def get_all_phones(phone_number: str) -> bool:
+    cursor.execute("""SELECT phone_number FROM bot_app_profile""")
+    result = cursor.fetchall()
+    if result is not None:
+        if phone_number in result:
+            return True
+        else:
+            return False
