@@ -350,6 +350,8 @@ async def update_db(total_count: int, msg) -> None:
                                                                      phone, None, None, None, None,
                                                                      None))
             conn.commit()
+    else:
+        await msg.answer("Ошибка загрузки данных из CRM")
 
 
 async def get_total_count(user_tok) -> int:
