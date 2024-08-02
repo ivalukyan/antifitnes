@@ -1,3 +1,5 @@
+import asyncio
+
 import psycopg2
 
 from env import POSTGRES_DB, POSTGRES_USER, POSTGRES_HOST, POSTGRES_PASSWORD
@@ -110,9 +112,16 @@ async def get_telegram_status(user_id) -> bool:
 async def get_all_phones(phone_number: str) -> bool:
     cursor.execute("""SELECT phone_number FROM bot_app_profile""")
     result = cursor.fetchall()
+    res = []
     if result is not None:
-        print(result[0])
-        if phone_number in result[0]:
+        for i in range(len(result)):
+            res.append(result[i][0])
+            print(res)
+        if phone_number in res:
             return True
         else:
             return False
+
+
+if __name__ == '__main__':
+    asyncio.run(get_all_phones("+79111584140"))
