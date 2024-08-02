@@ -405,15 +405,3 @@ async def task(msg):
     while True:
         await CRMain(msg)
         await asyncio.sleep(3600)
-
-
-async def main():
-    crm['user_token'] = await get_user_token(LOGIN, PASSWORD)
-    print("token: %s" % crm['user_token'])
-
-    crm['ids'] = await get_clients_ids(crm['user_token'])
-    print("ids: %s" % crm['ids'])
-
-
-if __name__ == '__main__':
-    asyncio.run(main())
