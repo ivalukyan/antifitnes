@@ -237,7 +237,9 @@ async def get_name_by_id(key):
 
 
 async def get_personal_id(key):
-    return crm['ids'][key]
+    if crm['ids'][key] is not None:
+        return crm['ids'][key]
+    return None
 
 
 async def print_progress(cnt, total):
