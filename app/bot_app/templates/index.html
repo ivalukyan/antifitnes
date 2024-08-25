@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="{% static 'stylesheet/home.css' %}">
+    <title>Home</title>
+</head>
+<body>
+<nav>
+    <div class="title">
+        <img src="https://cdn.icon-icons.com/icons2/38/PNG/512/dumbbell_sport_5072.png" data-size="512">
+        <a href="{% url 'home'%}">Антифитнес</a>
+    </div>
+    <div class="nav-links">
+        <a href="https://t.me/rcbobot">Telegram Bot</a>
+        <a href="/admin/">Admin</a>
+        <a href="{% url 'statistics'%}">Статистика</a>
+        <a href="{% url 'standards'%}">Пользователи</a>
+    </div>
+</nav>
+<div class="container">
+    <div class="card">
+        <h3>Статистика</h3>
+        <p>На данной странице вы сможете добавить пользователя со статистикой</p>
+        <a href="{% url 'statistics'%}" class="button">Выбрать</a>
+    </div>
+        <div class="card">
+        <h3>Нормативы</h3>
+        <p>На данной странице вы сможете добавить нормативы для пользователя</p>
+        <a href="{% url 'standards'%}" class="button">Выбрать</a>
+    </div>
+        <div class="card">
+        <h3>Пользователи</h3>
+        <p>На данной странице вы сможете посмотреть всех пользователей системы</p>
+        <a href="/profile/" class="button">Выбрать</a>
+    </div>
+</div>
+</body>
+</html>

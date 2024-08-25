@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+
+  database:
+    image: postgres:alpine3.20
+    restart: always
+    container_name: db_app
+
+    env_file:
+      - .env
+    ports:
+      - '5454:5432'
+    networks:
+      - my-network
+
+  web:
+    build:
+      context: app
+    container_name: web_app
+    command: >
+      sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    ports:
+      - '8000:8000'
+    networks:
+      - my-network
+
+
+  bot:
+    build:
+      context: bot
+    container_name: bot
+    command: python bot.py run
+    env_file:
+      - .env
+    depends_on:
+      - web
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge

@@ -1,0 +1,159 @@
+import asyncio
+
+from env import Postgres
+from db.router import cursor, conn
+
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+from uuid import uuid4
+
+from sqlalchemy import Column, Integer, String, DateTime, UUID, Boolean, BIGINT, Text
+
+
+postgres = Postgres()
+
+Base = declarative_base()
+
+
+engine = create_engine(f"postgresql://{postgres.user}:{postgres.password}@{postgres.host}:{postgres.port}/{postgres.db}")
+Session = sessionmaker(bind=engine)
+
+
+class Profile(Base):
+    __tablename__ = 'bot_app_profile'
+
+    id = Column(UUID, primary_key=True, default=uuid4)
+    telegram_id = Column(BIGINT, nullable=True)
+    first_name = Column(String, nullable=True, default='')
+    username = Column(String, nullable=True)
+    gender = Column(String, nullable=True, default='gender')
+    phone_number = Column(String, nullable=True, default='')
+    training_history = Column(Text, nullable=True, default='-')
+    number_of_referral_points = Column(Integer, nullable=True, default=0)
+    info_subscription = Column(Text, nullable=True, default="-")
+    current_standard = Column(Text, nullable=True, default="-")
+    telegram_status = Column(Boolean, nullable=True, default=False)
+
+
+Base.metadata.create_all(engine)
+
+
+async def training_history(user_id: int):
+    cursor.execute("""SELECT training_history FROM bot_app_profile WHERE telegram_id =%s""", (user_id,))
+    result = cursor.fetchone()
+    if result is not None:
+        return result[0]
+    else:
+        return "История тренировок отсутствует"
+
+
+async def number_of_referral_points(user_id: int):
+    cursor.execute("""SELECT number_of_referral_points FROM bot_app_profile WHERE telegram_id =%s""", (user_id,))
+    result = cursor.fetchone()
+    print(result)
+    if result is not None:
+        return result[0]
+    else:
+        return None
+
+
+async def info_subscription(user_id: int):
+    cursor.execute("""SELECT info_subscription FROM bot_app_profile WHERE telegram_id =%s""", (user_id,))
+    result = cursor.fetchone()
+
+    if result is not None:
+        return result[0]
+    else:
+        return None
+
+
+async def add_info_profile(user_id, first_name, username, gender, phone_number, training_history,
+                           number_of_referral_points, info_subscription, current_standard):
+    cursor.execute("""INSERT INTO bot_app_profile(telegram_id, first_name, username, gender, phone_number, training_history, 
+    number_of_referral_points, info_subscription, current_standard) 
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""", (user_id, first_name, username, gender, phone_number,
+                                                     training_history, number_of_referral_points, info_subscription,
+                                                     current_standard,))
+
+    conn.commit()
+
+
+async def get_name(user_id):
+    cursor.execute("""SELECT first_name FROM bot_app_profile WHERE telegram_id = %s""", (user_id,))
+    result = cursor.fetchone()
+    if result is not None:
+        return result[0]
+    else:
+        raise ValueError("No name")
+
+
+async def check_login(user_id: int):
+    cursor.execute("""SELECT telegram_id FROM bot_app_profile""")
+    result = cursor.fetchall()
+    res = []
+    if result is not None:
+        for i in range(len(result)):
+            res.append(result[i][0])
+        if user_id in res:
+            return False
+        else:
+            return True
+    else:
+        return True
+
+
+async def get_all_users():
+    cursor.execute("""SELECT telegram_id FROM bot_app_profile""")
+    result = cursor.fetchall()
+    res = []
+    print(result)
+    if result is not None:
+        for i in range(len(result)):
+            if result[i][0] is not None:
+                res.append(result[i][0])
+
+        print(res)
+        return res
+    return None
+
+
+async def crm_eqv(user_id):
+    if user_id in await get_all_users():
+        cursor.execute("""SELECT phone_number FROM bot_app_profile WHERE telegram_id = %s""", (user_id,))
+        result = cursor.fetchone()
+
+        return result[0]
+    return None
+
+
+async def update_profile(telegram_id: int, telegram_status: bool, username: str, training_history: str,
+                         info_subscription: str, current_standard: str,
+                         phone_number: str):
+    cursor.execute("""UPDATE bot_app_profile SET telegram_id = %s, telegram_status = %s, username = %s,
+     training_history = %s, info_subscription = %s, current_standard = %s 
+     WHERE phone_number= %s""", (telegram_id, telegram_status, username, training_history, info_subscription,
+                                 current_standard, phone_number,))
+    conn.commit()
+
+
+async def get_telegram_status(user_id) -> bool:
+    cursor.execute("""SELECT telegram_status FROM bot_app_profile WHERE telegram_id = %s""", (user_id,))
+    result = cursor.fetchone()
+    if result is not None:
+        return result[0]
+    else:
+        return False
+
+
+async def get_all_phones(phone_number: str) -> bool:
+    cursor.execute("""SELECT phone_number FROM bot_app_profile""")
+    result = cursor.fetchall()
+    res = []
+    if result is not None:
+        for i in range(len(result)):
+            res.append(result[i][0][-10:])
+        if phone_number in res:
+            return True
+        return False
