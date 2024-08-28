@@ -10,7 +10,7 @@ from django.urls import reverse
 
 class User(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4)
-    telegram_id = models.IntegerField(blank=True, null=True)
+    telegram_id = models.BigIntegerField(blank=True, null=True)
     first_name = models.CharField(max_length=50, default='')
 
     class Meta:
@@ -62,7 +62,7 @@ class Profile(User):
     gender = models.CharField(choices=GENDERS, max_length=10, default='gender')
     phone_number = models.CharField(max_length=12, default="")
     training_history = models.TextField(default="-", blank=True, null=True)
-    number_of_referral_points = models.IntegerField(default=0, blank=True, null=True)
+    number_of_referral_points = models.TextField(default="Реферальные баллы отсутствуют", blank=True, null=True)
     info_subscription = models.TextField(default="-", blank=True, null=True)
     current_standard = models.TextField(default="-", blank=True, null=True)
     telegram_status = models.BooleanField(default=False, blank=True, null=True)
@@ -91,7 +91,7 @@ class Statistics(models.Model):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid4)
-    user_id = models.IntegerField(default=89898989)
+    user_id = models.BigIntegerField(default=89898989)
     user_name = models.TextField(max_length=20, default='')
 
     thunder = models.FloatField(default='0', null=True)

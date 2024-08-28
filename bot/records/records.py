@@ -1,10 +1,7 @@
 from aiogram import F, Router
-from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import (
-    Message,
-    InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery,
-)
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+
 from db.db_standards import (get_all_thunder, get_all_pull_ups, get_all_jerk, get_all_holding_the_axel,
                                  get_all_taking_on_axel_chest, get_all_axel_jerk, get_all_taking_on_the_chest,
                                  get_all_deadlift, get_all_axel_deadlift, get_all_handstand,
@@ -13,29 +10,31 @@ from db.db_standards import (get_all_thunder, get_all_pull_ups, get_all_jerk, ge
                                  get_all_turkish_ascent_kettlebell, get_all_farmer_walk,
                                  get_all_front_squat, get_all_classic_squat, get_all_squat_over_the_head,
                                  get_all_gluteal_bridge, get_all_skipping_rope, get_all_shuttle_running)
-from yaclients.yaclients import check_crm
-from db.db_profile import crm_eqv
+from db.db_profile import Profile
+from db.router import Session
+
+from auth.login import check_login_in_crm
 
 router = Router()
 
 
 @router.callback_query(F.data == "top")
-async def top(callback: CallbackQuery, state: FSMContext) -> None:
-    data = await state.get_data()
+async def top(callback: CallbackQuery) -> None:
 
-    if await check_crm(await crm_eqv(callback.message.chat.id)):
+    if await check_login(callback.message.chat.id):
         await callback.message.edit_text("Выберите норматив: ", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [
                 InlineKeyboardButton(text="Силовые нормативы", callback_data="power_standards"),
                 InlineKeyboardButton(text="Функциональные нормативы", callback_data="fun_standards"),
             ],
             [InlineKeyboardButton(text="Назад", callback_data="back")]
-        ]), resize_keyboard=True, one_time_keyboard=True)
+        ]))
     else:
         await callback.message.edit_text("Вы не зарегестрированы в CRM",
-                                         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                                             [InlineKeyboardButton(text="Назад", callback_data="help")]
-                                         ]))
+                                        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                                            [InlineKeyboardButton(text="Назад", callback_data="help")]
+                                        ]))
+
 
 
 @router.callback_query(F.data == "power_standards")
@@ -108,7 +107,8 @@ async def back_callback(call: CallbackQuery):
         [
             InlineKeyboardButton(text="Силовые нормативы", callback_data="power_standards"),
             InlineKeyboardButton(text="Функциональные нормативы", callback_data="fun_standards")
-        ]
+        ],
+        [InlineKeyboardButton(text="Назад", callback_data="back")]
     ]))
 
 
@@ -294,3 +294,13 @@ async def handstand_callback(call: CallbackQuery):
     await call.message.edit_text(msg, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Назад в меню", callback_data="back_norm")]
     ]))
+
+
+async def check_login(user_id: int) -> bool:
+    """Check user login in CRM"""
+    db_session = Session()
+    res = db_session.query(Profile.telegram_status).filter(Profile.telegram_id == user_id).first()
+
+    if not res:
+        return False
+    return res

@@ -1,77 +1,85 @@
-import asyncio
+from db.router import Base, Session, engine
+from uuid import uuid4
+from sqlalchemy import Column, Integer, String, DateTime, UUID, Boolean, BIGINT, Text, Float
 
-from db.router import cursor, conn
+
+class Standards(Base):
+    __tablename__ = "bot_app_standards"
+    id = Column(UUID, primary_key=True, default=uuid4)
+    telegram_id = Column(BIGINT, nullable=True)
+    first_name = Column(String, nullable=True)
+    thunder = Column(Float, nullable=True, default=0)
+    turkish_ascent_axel = Column(Float, nullable=True, default=0)
+    turkish_ascent_kettlebell = Column(Float, nullable=True, default=0)
+    bench_press = Column(Float, nullable=True, default=0)
+    axel_jerk = Column(Float, nullable=True, default=0)
+    taking_on_axel_chest = Column(Float, nullable=True, default=0)
+    gluteal_bridge = Column(Float, nullable=True, default=0)
+    deadlift = Column(Float, nullable=True, default=0)
+    jerk = Column(Float, nullable=True, default=0)
+    taking_on_the_chest = Column(Float, nullable=True, default=0)
+    axel_deadlift = Column(Float, nullable=True, default=0)
+    classic_squat = Column(Float, nullable=True, default=0)
+    front_squat = Column(Float, nullable=True, default=0)
+    squat_over_the_head = Column(Float, nullable=True, default=0)
+    skipping_rope = Column(Float, nullable=True, default=0)
+    push_ups = Column(Float, nullable=True, default=0)
+    shuttle_running = Column(Float, nullable=True, default=0)
+    farmer_walk = Column(Float, nullable=True, default=0)
+    pull_ups = Column(Float, nullable=True, default=0)
+    high_jump = Column(Float, nullable=True, default=0)
+    long_jump = Column(Float, nullable=True, default=0)
+    holding_the_axel = Column(Float, nullable=True, default=0)
+    handstand = Column(Float, nullable=True, default=0)
+
+
+Base.metadata.create_all(engine)
 
 
 async def insert_standard(user_id, first_name):
-    cursor.execute("""INSERT INTO bot_app_standards(telegram_id, first_name,thunder, turkish_ascent_axel, turkish_ascent_kettlebell,
-     bench_press, axel_jerk, taking_on_axel_chest, gluteal_bridge, deadlift, jerk, taking_on_the_chest, axel_deadlift,
-      classic_squat, front_squat, squat_over_the_head, skipping_rope, push_ups, shuttle_running, farmer_walk, pull_ups,
-       high_jump, long_jump, holding_the_axel, handstand) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s,
-        %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s)""",
-                   (user_id, first_name, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0))
-    conn.commit()
-
-
-async def get_names_standards(name):
-    cursor.execute("SELECT first_name FROM bot_app_standards WHERE first_name=%s", (name,))
-    rows = cursor.fetchall()
-
-    result = []
-
-    if len(result) != 0:
-        for _ in range(len(rows)):
-            result.append(rows[_][0])
-
-        print(result)
-        return result
+    db_session = Session()
+    standard = Standards(user_id=user_id, first_name=first_name)
+    db_session.add(standard)
+    db_session.commit()
 
 
 async def get_standards_by_id(user_id):
-    cursor.execute("""SELECT * FROM bot_app_standards WHERE telegram_id=%s""", (user_id,))
-    result = cursor.fetchall()
+    db_session = Session()
+    result = db_session.query(Standards).filter(Standards.telegram_id == user_id).first()
 
-    if result is not None and len(result) != 0:
-        result = result[0]
-        conn.commit()
-
-        msg = (f"Гром - {result[3]}\n"
-               f"Турецкий подъем: Аксель - {result[4]}\n"
-               f"Турецкий подъем: Гиря - {result[5]}\n"
-               f"Жим лежа 1ПМ - {result[6]}\n"
-               f"Рывок акселя 1ПМ - {result[7]}\n"
-               f"Взятие на грудь акселя 1ПМ - {result[8]}\n"
-               f"Ягодичный мостик 1ПМ - {result[9]}\n"
-               f"Становая тяга 1ПМ - {result[10]}\n"
-               f"Рывок 1ПМ - {result[11]}\n"
-               f"Взятие на грудь 1ПМ - {result[12]}\n"
-               f"Становая тяга акселя 1ПМ - {result[13]}\n"
-               f"Присед 1ПМ: Классический - {result[14]}\n"
-               f"Присед 1ПМ: Фронтальный - {result[15]}\n"
-               f"Присед 1ПМ: Над головой - {result[16]}\n"
-               f"Скакалка - {result[17]}\n"
-               f"Отжимания от пола - {result[18]}\n"
-               f"Челночный бег - {result[19]}\n"
-               f"Прогулка фермера - {result[20]}\n"
-               f"Подтягивания - {result[21]}\n"
-               f"Прыжок в высоту - {result[22]}\n"
-               f"Прыжок в длину - {result[23]}\n"
-               f"Удержание акселя - {result[24]}\n"
-               f"Стойка на руках - {result[25]}\n")
-
-        if result is not None:
-            return msg
-        else:
-            raise ValueError("No standard for user id {}".format(user_id))
-    else:
+    if not result:
         msg = "У данного пользователя нет нормативов"
         return msg
+    else:
+        msg = (f"Гром - {result.thunder}\n"
+               f"Турецкий подъем: Аксель - {result.turkish_ascent_axel}\n"
+               f"Турецкий подъем: Гиря - {result.turkish_ascent_kettlebell}\n"
+               f"Жим лежа 1ПМ - {result.bench_press}\n"
+               f"Рывок акселя 1ПМ - {result.axel_jerk}\n"
+               f"Взятие на грудь акселя 1ПМ - {result.taking_on_axel_chest}\n"
+               f"Ягодичный мостик 1ПМ - {result.gluteal_bridge}\n"
+               f"Становая тяга 1ПМ - {result.deadlift}\n"
+               f"Рывок 1ПМ - {result.jerk}\n"
+               f"Взятие на грудь 1ПМ - {result.taking_on_the_chest}\n"
+               f"Становая тяга акселя 1ПМ - {result.axel_deadlift}\n"
+               f"Присед 1ПМ: Классический - {result.classic_squat}\n"
+               f"Присед 1ПМ: Фронтальный - {result.front_squat}\n"
+               f"Присед 1ПМ: Над головой - {result.squat_over_the_head}\n"
+               f"Скакалка - {result.skipping_rope}\n"
+               f"Отжимания от пола - {result.push_ups}\n"
+               f"Челночный бег - {result.shuttle_running}\n"
+               f"Прогулка фермера - {result.farmer_walk}\n"
+               f"Подтягивания - {result.pull_ups}\n"
+               f"Прыжок в высоту - {result.high_jump}\n"
+               f"Прыжок в длину - {result.long_jump}\n"
+               f"Удержание акселя - {result.holding_the_axel}\n"
+               f"Стойка на руках - {result.handstand}\n")
 
 
 async def get_all_thunder():
-    cursor.execute("""SELECT thunder, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get thunder"""
+    db_session = Session()
+    result = db_session.query(Standards.thunder and Standards.first_name).all()
 
     msg = f"📊ГРОМ📊\n\n"
 
@@ -97,8 +105,9 @@ async def get_all_thunder():
 
 
 async def get_all_turkish_ascent_axel():
-    cursor.execute("""SELECT turkish_ascent_axel, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get turkish ascent axel"""
+    db_session = Session()
+    result = db_session.query(Standards.turkish_ascent_axel and Standards.first_name).all()
 
     msg = "📊Турецкий подъем: Аксель📊\n\n"
 
@@ -124,8 +133,9 @@ async def get_all_turkish_ascent_axel():
 
 
 async def get_all_turkish_ascent_kettlebell():
-    cursor.execute("""SELECT turkish_ascent_kettlebell, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get turkish ascent kettlebell"""
+    db_session = Session()
+    result = db_session.query(Standards.turkish_ascent_kettlebell and Standards.first_name).all()
 
     msg = "📊Турецкий подъем: Гиря📊\n\n"
 
@@ -151,8 +161,9 @@ async def get_all_turkish_ascent_kettlebell():
 
 
 async def get_all_bench_press():
-    cursor.execute("""SELECT bench_press, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get bench press"""
+    db_session = Session()
+    result = db_session.query(Standards.bench_press and Standards.first_name).all()
 
     msg = "📊Жим лежа📊\n\n"
 
@@ -178,8 +189,9 @@ async def get_all_bench_press():
 
 
 async def get_all_axel_jerk():
-    cursor.execute("""SELECT axel_jerk, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get axel jerk"""
+    db_session = Session()
+    result = db_session.query(Standards.axel_jerk and Standards.first_name).all()
 
     msg = "📊Рывок акселя 1ПМ📊\n\n"
 
@@ -205,8 +217,9 @@ async def get_all_axel_jerk():
 
 
 async def get_all_taking_on_axel_chest():
-    cursor.execute("""SELECT taking_on_axel_chest, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get taking on axel chest"""
+    db_session = Session()
+    result = db_session.query(Standards.taking_on_axel_chest and Standards.first_name).all()
 
     msg = f"📊Взятие на грудь акселя 1ПМ📊\n\n"
     standards = {}
@@ -231,8 +244,9 @@ async def get_all_taking_on_axel_chest():
 
 
 async def get_all_gluteal_bridge():
-    cursor.execute("""SELECT gluteal_bridge, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get gluteal bridge"""
+    db_session = Session()
+    result = db_session.query(Standards.gluteal_bridge and Standards.first_name).all()
 
     msg = "📊Ягодичный мостик 1ПМ📊\n\n"
 
@@ -258,8 +272,9 @@ async def get_all_gluteal_bridge():
 
 
 async def get_all_deadlift():
-    cursor.execute("""SELECT deadlift, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get deadlift"""
+    db_session = Session()
+    result = db_session.query(Standards.deadlift and Standards.first_name).all()
 
     msg = "📊Становая тяга 1ПМ📊\n\n"
 
@@ -285,8 +300,9 @@ async def get_all_deadlift():
 
 
 async def get_all_jerk():
-    cursor.execute("""SELECT jerk, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get jerk"""
+    db_session = Session()
+    result = db_session.query(Standards.jerk and Standards.first_name).all()
 
     msg = "📊Рывок 1ПМ📊\n\n"
 
@@ -312,8 +328,9 @@ async def get_all_jerk():
 
 
 async def get_all_taking_on_the_chest():
-    cursor.execute("""SELECT taking_on_the_chest, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get taking on the chest"""
+    db_session = Session()
+    result = db_session.query(Standards.taking_on_the_chest and Standards.first_name).all()
 
     msg = "📊Взятие на грудь 1ПМ📊\n\n"
 
@@ -339,8 +356,9 @@ async def get_all_taking_on_the_chest():
 
 
 async def get_all_axel_deadlift():
-    cursor.execute("""SELECT axel_deadlift, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get deadlift"""
+    db_session = Session()
+    result = db_session.query(Standards.deadlift and Standards.first_name).all()
 
     msg = "📊Становая тяга акселя 1ПМ📊\n\n"
 
@@ -366,8 +384,9 @@ async def get_all_axel_deadlift():
 
 
 async def get_all_classic_squat():
-    cursor.execute("""SELECT classic_squat, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get classic squat"""
+    db_session = Session()
+    result = db_session.query(Standards.classic_squat and Standards.first_name).all()
 
     msg = "📊Присед 1ПМ: Классический📊\n\n"
 
@@ -393,8 +412,9 @@ async def get_all_classic_squat():
 
 
 async def get_all_front_squat():
-    cursor.execute("""SELECT front_squat, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get front squat"""
+    db_session = Session()
+    result = db_session.query(Standards.front_squat and Standards.first_name).all()
 
     msg = "📊Присед 1ПМ: Фронтальный📊\n\n"
 
@@ -420,8 +440,9 @@ async def get_all_front_squat():
 
 
 async def get_all_squat_over_the_head():
-    cursor.execute("""SELECT squat_over_the_head, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get squat over the head"""
+    db_session = Session()
+    result = db_session.query(Standards.squat_over_the_head and Standards.first_name).all()
 
     msg = "📊Присед 1ПМ: Над головой📊\n\n"
 
@@ -447,8 +468,9 @@ async def get_all_squat_over_the_head():
 
 
 async def get_all_skipping_rope():
-    cursor.execute("""SELECT skipping_rope, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get skipping rope"""
+    db_session = Session()
+    result = db_session.query(Standards.skipping_rope and Standards.first_name).all()
 
     msg = "📊Скакалка📊\n\n"
 
@@ -474,8 +496,9 @@ async def get_all_skipping_rope():
 
 
 async def get_all_push_ups():
-    cursor.execute("""SELECT push_ups, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get push ups"""
+    db_session = Session()
+    result = db_session.query(Standards.push_ups and Standards.first_name).all()
 
     msg = "📊Отжимания от пола📊\n\n"
 
@@ -501,8 +524,9 @@ async def get_all_push_ups():
 
 
 async def get_all_shuttle_running():
-    cursor.execute("""SELECT shuttle_running, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get shuttle running"""
+    db_session = Session()
+    result = db_session.query(Standards.shuttle_running and Standards.first_name).all()
 
     msg = "📊Челночный бег📊\n\n"
 
@@ -528,8 +552,9 @@ async def get_all_shuttle_running():
 
 
 async def get_all_farmer_walk():
-    cursor.execute("""SELECT farmer_walk, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get farmer walk"""
+    db_session = Session()
+    result = db_session.query(Standards.farmer_walk and Standards.first_name).all()
 
     msg = "📊Прогулка фермера📊\n\n"
 
@@ -555,8 +580,9 @@ async def get_all_farmer_walk():
 
 
 async def get_all_pull_ups():
-    cursor.execute("""SELECT pull_ups, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get pull ups"""
+    db_session = Session()
+    result = db_session.query(Standards.pull_ups and Standards.first_name).all()
 
     msg = "📊Подтягивания📊\n\n"
 
@@ -582,8 +608,9 @@ async def get_all_pull_ups():
 
 
 async def get_all_high_jump():
-    cursor.execute("""SELECT high_jump, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get high jump"""
+    db_session = Session()
+    result = db_session.query(Standards.high_jump and Standards.first_name).all()
 
     msg = "📊Прыжок в высоту📊\n\n"
 
@@ -609,8 +636,9 @@ async def get_all_high_jump():
 
 
 async def get_all_long_jump():
-    cursor.execute("""SELECT long_jump, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get long jump"""
+    db_session = Session()
+    result = db_session.query(Standards.long_jump and Standards.first_name).all()
 
     msg = (f"📊Прыжок в длину📊\n\n")
 
@@ -636,8 +664,9 @@ async def get_all_long_jump():
 
 
 async def get_all_holding_the_axel():
-    cursor.execute("""SELECT holding_the_axel, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """holding the axel"""
+    db_session = Session()
+    result = db_session.query(Standards.holding_the_axel and Standards.first_name).all()
 
     msg = "📊Удержание акселя📊\n\n"
 
@@ -663,8 +692,9 @@ async def get_all_holding_the_axel():
 
 
 async def get_all_handstand():
-    cursor.execute("""SELECT handstand, first_name FROM bot_app_standards""")
-    result = cursor.fetchall()
+    """Get handstand"""
+    db_session = Session()
+    result = db_session.query(Standards.handstand and Standards.first_name).all()
 
     msg = "📊Стойка на руках📊\n\n"
 

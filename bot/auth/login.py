@@ -3,15 +3,15 @@ import re
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import (
-    CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton,
-    Message)
+from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, Message
 
-from db.db_profile import update_profile, get_all_phones, get_telegram_status
+from db.db_profile import update_profile, get_all_phones, get_telegram_status, update_profile
 from db.db_standards import get_standards_by_id
-from yaclients.yaclients import search, crm, get_history_client, get_personal_id, get_abonements
+from yaclients.yaclients import Yclients
+from env import Crm
 
 router = Router()
+crm = Crm()
 
 
 class Form(StatesGroup):
@@ -46,7 +46,9 @@ async def input_number(message: Message, state: FSMContext) -> None:
 
     data = await state.get_data()
 
-    if await checking_number(data['input_number']) and await get_all_phones(data['input_number'][-10:]):
+    api = Yclients(bearer_token=crm.bearer, company_id=crm.company_id, user_token=crm.user)
+
+    if await checking_number(user_number=data['input_number']) and await check_login_in_crm(phone=data["input_number"]):
 
         # Not prod: при отсутствии данных бот создавал default данные в таблице Standards - Нормативы
         # await insert_standard(message.from_user.id, crm['names'][await search(data['input_number'])])
@@ -54,28 +56,23 @@ async def input_number(message: Message, state: FSMContext) -> None:
         # Not prod: при отсутствии данных бот создавал default данные в таблице Statistic - Статистика
         # await insert_stats(message.from_user.id, crm['names'][await search(data['input_number'])])
 
-        await update_profile(
-            telegram_id=message.from_user.id,
-            telegram_status=True,
-            username=message.from_user.username,
-            training_history=await get_history_client(crm['user_token'],
-                                                      data['input_number'][-11:],
-                                                      await get_personal_id(await search(
-                                                          data['input_number']))),
-            info_subscription=await get_abonements(crm['user_token'], data['input_number']),
-            current_standard=await get_standards_by_id(message.from_user.id),
-            phone_number=data['input_number'][-10:]
-        )
+        await update_profile(telegram_id=message.from_user.id, first_name=await api.name(data["input_number"]),
+                             username=message.from_user.username, gender=await api.gender(await api.id(data["input_number"])),
+                             phone=data["input_number"], history=await api.history(data["input_number"], await api.id(data["input_number"])),
+                             referral=await api.referals(await api.id(data["input_number"])), subscription=await api.abonement(data["input_number"]),
+                             standard=await get_standards_by_id(message.from_user.id), status=True)
 
         await message.answer("Вы успешно вошли!", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="Профиль", callback_data="profile")]
         ]))
+        await state.clear()
 
     else:
         await message.answer("К сожалению, Вы не являетесь клиентом клуба",
                              reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                  [InlineKeyboardButton(text="Назад", callback_data="back")]
                              ]))
+        await state.clear()
 
 
 async def checking_number(user_number) -> bool:
@@ -94,3 +91,12 @@ async def check_name(user_name) -> bool:
         return True
     else:
         return False
+    
+
+async def check_login_in_crm(phone: str) -> bool:
+    
+    api = Yclients(bearer_token=crm.bearer, company_id=crm.company_id, user_token=crm.user)
+    info = await api.id(phone=phone)
+    if not info:
+        return False
+    return True

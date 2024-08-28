@@ -51,25 +51,26 @@ class Yclients:
     async def info_db(self) -> None:
         """Get info for Database"""
         url = f"https://api.yclients.com/api/v1/company/{self.company_id}/clients/search"
-        payload = {
-            "page": 1,
-            "page_size": 200,
-            "fields": [
-                "id",
-                "name",
-                "phone",
-                "visits_count",
-                "last_visit_date",
-                "first_visit_date"
-            ]
-        }
-        async with httpx.AsyncClient() as c:
-            response = await c.post(url=url, json=payload, headers=self.headers)
-        res = ujson.loads(response.text)
-        print(res)
-        if res['success']:
-            # this in feature updatre data in DB
-            print(res['data'])
+        for _ in range(9):
+            payload = {
+                "page": _,
+                "page_size": 200,
+                "fields": [
+                    "id",
+                    "name",
+                    "phone",
+                    "visits_count",
+                    "last_visit_date",
+                    "first_visit_date"
+                ]
+            }
+            async with httpx.AsyncClient() as c:
+                response = await c.post(url=url, json=payload, headers=self.headers)
+            res = ujson.loads(response.text)
+
+            if res['success']:
+                # this in feature updatre data in DB
+                print(res['data'])
 
     async def history(self, phone: str, client_id: int) -> None:
         "Get traning history client"
@@ -83,7 +84,21 @@ class Yclients:
         async with httpx.AsyncClient() as c:
             response = await c.post(url=url, json=payload, headers=self.headers)
         res = ujson.loads(response.text)
-        print(res)
+
+        if res['success']:
+            data = res['data']['records']
+
+            dates_history = ""
+
+            for _ in data:
+                dates_history += "%s\n" % _['date']
+
+            if dates_history != "":
+                return dates_history
+            else:
+                return "История тренировок отсутствует"
+        else:
+            raise HttpBadRequest("Bad request")
 
     async def abonement(self, phone: str) -> None:
         url = f"https://api.yclients.com/api/v1/loyalty/abonements/"
@@ -94,7 +109,40 @@ class Yclients:
         async with httpx.AsyncClient() as c:
             response = await c.get(url=url, headers=self.headers, params=querystring)
         res = ujson.loads(response.text)
-        print(res)
+        
+        message = ''
+        if res['success']:
+            for _ in range(len(res['data'])):
+                msg = (f"{res['data'][_]['type']['title']}\n"
+                    f"Период --> {res['data'][_]['type']['period']}\t"
+                    f"Статус --> {res['data'][_]['status']['title']}\n\n")
+
+                message += msg
+
+            return message
+        else:
+            return "Абонемент у данного пользователя отсутствует."
+        
+    async def referals(self, client_id: int) -> None:
+        url = f"https://api.yclients.com/api/v1/loyalty/client_cards/{client_id}"
+        async with httpx.AsyncClient() as c:
+            response = await c.get(url=url, headers=self.headers)
+        res = ujson.loads(response.text)
+    
+        if res['success']:
+            if not res['data']:
+                return "Баланс --> 0"
+            else:
+                return (f"{res['data'][0]['type']['title']}\n"
+                        f"Баланс --> {res['data'][0]['balance']}")
+            
+    async def gender(self, client_id: int) -> None:
+        url = f"https://api.yclients.com/api/v1/client/{self.company_id}/{client_id}"
+        async with httpx.AsyncClient() as c:
+            response = await c.get(url=url, headers=self.headers)
+        res =ujson.loads(response.text)
+        if res['success']:
+            return res['data']['sex']
 
     async def id(self, phone: str) -> None:
         """Get id client"""
@@ -103,8 +151,7 @@ class Yclients:
             "page": 1,
             "page_size": 200,
             "fields": [
-                "id",
-                "phone"
+                "id"
             ],
             "filters":[
                 {
@@ -120,7 +167,11 @@ class Yclients:
         res = ujson.loads(response.text)
         
         if res['success']:
+            if not res['data']:
+                return None
+            
             return res['data'][0]['id']
+        
 
     async def name(self, phone) -> None:
         """Get name client"""
@@ -129,7 +180,6 @@ class Yclients:
             "page": 1,
             "page_size": 200,
             "fields": [
-                "id",
                 "name"
             ],
             "filters":[
@@ -175,7 +225,17 @@ async def user_token(login: str, password: str, bearer_token: str, language: str
 
 async def main():
 
+    # Not prod: Буспалова Полина
     # +79213224013
+
+    # Not prod: Кондратьев Виктор
+    # +79151539393
+
+    # Not prod: Карпенко Павел
+    # +79111584140
+
+    # Not prod: Виктория Заметаева
+    # +79219471530
 
     # this is user_token
     # await user_token(login=Crm().login, password=Crm().password, bearer_token=Crm().bearer)
@@ -184,8 +244,11 @@ async def main():
     # await api.info_db()
     # await api.abonement("+79213224013")
     # await api.id("+79213224013")
-    # await api.name("+79213224013")
-    await api.history("+79213224013", await api.id("+79213224013"))
+    # await api.name("+79219471530")
+    # await api.history("+79213224013", await api.id("+79213224013"))
+    # await api.referals(await api.id("+79219471530"))
+    # await api.gender(await api.id("+79213224013"))
+    
 
 
 if __name__ == '__main__':

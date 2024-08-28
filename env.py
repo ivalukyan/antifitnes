@@ -21,13 +21,13 @@ class Urls:
 
 
 # CRM
-class CRM:
+class Crm:
     def __init__(self):
         self.login = os.getenv("LOGIN")
         self.password = os.getenv("PASSWORD")
-        self.bearer_token = os.getenv("BEARER_TOKEN")
+        self.bearer = os.getenv("BEARER_TOKEN")
         self.company_id = os.getenv("CID")
-        self.url_schedule = os.getenv("URL_SCHEDULE")
+        self.user = os.getenv("USER_TOKEN")
 
 
 # DJANGO
