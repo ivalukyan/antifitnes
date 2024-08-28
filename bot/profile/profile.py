@@ -113,15 +113,14 @@ async def callback_statistics(callback: CallbackQuery) -> None:
 
 
 @router.callback_query(F.data == "logout")
-async def logout(callback: CallbackQuery, state: FSMContext):
-    data = await state.get_data()
+async def logout(callback: CallbackQuery) -> None:
 
     db_session = Session()
     db_session.query(Profile).filter(Profile.telegram_id == callback.message.chat.id).update({'telegram_status': False})
     db_session.commit()
 
     await callback.message.edit_text(
-        f"Здравствуйте, <i>{get_name(callback.message.chat.id)}</i>, вас приветствует бот спортивного клуба\n\n",
+        f"Здравствуйте, <i>{await get_name(callback.message.chat.id)}</i>, вас приветствует бот спортивного клуба\n\n",
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text='Войти', callback_data='login')],
             [InlineKeyboardButton(text="Помощь", callback_data='help')]

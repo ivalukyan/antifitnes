@@ -5,7 +5,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, Message
 
-from db.db_profile import update_profile, get_all_phones, get_telegram_status, update_profile
+from db.router import Session
+from db.db_profile import update_profile, get_telegram_status, update_profile, Profile
 from db.db_standards import get_standards_by_id
 from yaclients.yaclients import Yclients
 from env import Crm
@@ -55,12 +56,26 @@ async def input_number(message: Message, state: FSMContext) -> None:
 
         # Not prod: при отсутствии данных бот создавал default данные в таблице Statistic - Статистика
         # await insert_stats(message.from_user.id, crm['names'][await search(data['input_number'])])
+        if await signin_check(data["input_number"]):
 
-        await update_profile(telegram_id=message.from_user.id, first_name=await api.name(data["input_number"]),
-                             username=message.from_user.username, gender=await api.gender(await api.id(data["input_number"])),
-                             phone=data["input_number"], history=await api.history(data["input_number"], await api.id(data["input_number"])),
-                             referral=await api.referals(await api.id(data["input_number"])), subscription=await api.abonement(data["input_number"]),
-                             standard=await get_standards_by_id(message.from_user.id), status=True)
+            db_session = Session()
+            db_session.query(Profile).filter(Profile.telegram_id == message.from_user.id).update({'telegram_id':message.from_user.id,
+                                                                                                  'first_name': await api.name(data["input_number"]),
+                                                                                                  'username': message.from_user.username,
+                                                                                                  'gender': await api.gender(await api.id(data["input_number"])),
+                                                                                                  'training_history': await api.history(data["input_number"], await api.id(data["input_number"])),
+                                                                                                  'number_of_referral_points': await api.referals(await api.id(data["input_number"])),
+                                                                                                  'info_subscription': await api.abonement(data["input_number"]),
+                                                                                                  'current_standard': await get_standards_by_id(message.from_user.id),
+                                                                                                  'telegram_status': True})
+            db_session.commit()
+
+        else:
+            await update_profile(telegram_id=message.from_user.id, first_name=await api.name(data["input_number"]),
+                                username=message.from_user.username, gender=await api.gender(await api.id(data["input_number"])),
+                                phone=data["input_number"], history=await api.history(data["input_number"], await api.id(data["input_number"])),
+                                referral=await api.referals(await api.id(data["input_number"])), subscription=await api.abonement(data["input_number"]),
+                                standard=await get_standards_by_id(message.from_user.id), status=True)
 
         await message.answer("Вы успешно вошли!", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="Профиль", callback_data="profile")]
@@ -98,5 +113,15 @@ async def check_login_in_crm(phone: str) -> bool:
     api = Yclients(bearer_token=crm.bearer, company_id=crm.company_id, user_token=crm.user)
     info = await api.id(phone=phone)
     if not info:
+        return False
+    return True
+
+
+async def signin_check(phone: str) -> None:
+
+    db_session = Session()
+    res = db_session.query(Profile).filter(Profile.phone_number == phone).first()
+
+    if not res:
         return False
     return True

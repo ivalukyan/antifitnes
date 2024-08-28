@@ -1,6 +1,6 @@
 from db.router import Base, Session, engine
 from uuid import uuid4
-from sqlalchemy import Column, Integer, String, DateTime, UUID, Boolean, BIGINT, Text
+from sqlalchemy import Column, String, UUID, Boolean, BIGINT, Text
 
 
 class Profile(Base):
@@ -38,7 +38,7 @@ async def training_history(user_id: int):
     result = db_session.query(Profile.training_history).filter(Profile.telegram_id == user_id).first()
 
     if result is not None:
-        return result
+        return result[0]
     else:
         return "История тренировок отсутствует"
 
@@ -49,7 +49,7 @@ async def number_of_referral_points(user_id: int):
     result = db_session.query(Profile.number_of_referral_points).filter(Profile.telegram_id == user_id).first()
   
     if result is not None:
-        return result
+        return result[0]
     else:
         return 0
 
@@ -60,7 +60,7 @@ async def info_subscription(user_id: int):
     result = db_sesion.query(Profile.info_subscription).filter(Profile.telegram_id == user_id).first()
 
     if result is not None:
-        return result
+        return result[0]
     else:
         return "Отсутствует"
 
