@@ -79,21 +79,22 @@ async def get_standards_by_id(user_id):
 async def get_all_thunder():
     """Get thunder"""
     db_session = Session()
-    result = db_session.query(Standards.thunder and Standards.first_name).all()
+    standard = db_session.query(Standards.thunder).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = f"📊ГРОМ📊\n\n"
+    msg = f"📊Гром📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -107,21 +108,22 @@ async def get_all_thunder():
 async def get_all_turkish_ascent_axel():
     """Get turkish ascent axel"""
     db_session = Session()
-    result = db_session.query(Standards.turkish_ascent_axel and Standards.first_name).all()
+    standard = db_session.query(Standards.turkish_ascent_axel).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Турецкий подъем: Аксель📊\n\n"
+    msg = f"📊Турецкий подъем: Аксель📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -135,21 +137,22 @@ async def get_all_turkish_ascent_axel():
 async def get_all_turkish_ascent_kettlebell():
     """Get turkish ascent kettlebell"""
     db_session = Session()
-    result = db_session.query(Standards.turkish_ascent_kettlebell and Standards.first_name).all()
+    standard = db_session.query(Standards.turkish_ascent_kettlebell).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Турецкий подъем: Гиря📊\n\n"
+    msg = f"📊Турецкий подъем: Гиря📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -163,21 +166,22 @@ async def get_all_turkish_ascent_kettlebell():
 async def get_all_bench_press():
     """Get bench press"""
     db_session = Session()
-    result = db_session.query(Standards.bench_press and Standards.first_name).all()
+    standard = db_session.query(Standards.bench_press).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Жим лежа📊\n\n"
+    msg = f"📊Жим лежа 1ПМ📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -186,26 +190,27 @@ async def get_all_bench_press():
         return msg
     else:
         return "В выбранном сегменте нормативы отсутствуют!"
-
+    
 
 async def get_all_axel_jerk():
     """Get axel jerk"""
     db_session = Session()
-    result = db_session.query(Standards.axel_jerk and Standards.first_name).all()
+    standard = db_session.query(Standards.bench_press).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Рывок акселя 1ПМ📊\n\n"
+    msg = f"📊Рывок акселя 1ПМ📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -219,20 +224,22 @@ async def get_all_axel_jerk():
 async def get_all_taking_on_axel_chest():
     """Get taking on axel chest"""
     db_session = Session()
-    result = db_session.query(Standards.taking_on_axel_chest and Standards.first_name).all()
+    standard = db_session.query(Standards.taking_on_axel_chest).all()
+    name = db_session.query(Standards.first_name).all()
 
     msg = f"📊Взятие на грудь акселя 1ПМ📊\n\n"
+
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -241,26 +248,27 @@ async def get_all_taking_on_axel_chest():
         return msg
     else:
         return "В выбранном сегменте нормативы отсутствуют!"
-
+    
 
 async def get_all_gluteal_bridge():
     """Get gluteal bridge"""
     db_session = Session()
-    result = db_session.query(Standards.gluteal_bridge and Standards.first_name).all()
+    standard = db_session.query(Standards.gluteal_bridge).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Ягодичный мостик 1ПМ📊\n\n"
+    msg = f"📊Ягодичный мостик 1ПМ📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -274,21 +282,22 @@ async def get_all_gluteal_bridge():
 async def get_all_deadlift():
     """Get deadlift"""
     db_session = Session()
-    result = db_session.query(Standards.deadlift and Standards.first_name).all()
+    standard = db_session.query(Standards.deadlift).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Становая тяга 1ПМ📊\n\n"
+    msg = f"📊Становая тяга 1ПМ📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -302,21 +311,22 @@ async def get_all_deadlift():
 async def get_all_jerk():
     """Get jerk"""
     db_session = Session()
-    result = db_session.query(Standards.jerk and Standards.first_name).all()
+    standard = db_session.query(Standards.jerk).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Рывок 1ПМ📊\n\n"
+    msg = f"📊Рывок 1ПМ📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -330,21 +340,22 @@ async def get_all_jerk():
 async def get_all_taking_on_the_chest():
     """Get taking on the chest"""
     db_session = Session()
-    result = db_session.query(Standards.taking_on_the_chest and Standards.first_name).all()
+    standard = db_session.query(Standards.taking_on_axel_chest).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Взятие на грудь 1ПМ📊\n\n"
+    msg = f"📊Взятие на грудь 1ПМ📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -358,21 +369,22 @@ async def get_all_taking_on_the_chest():
 async def get_all_axel_deadlift():
     """Get deadlift"""
     db_session = Session()
-    result = db_session.query(Standards.deadlift and Standards.first_name).all()
+    standard = db_session.query(Standards.deadlift).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Становая тяга акселя 1ПМ📊\n\n"
+    msg = f"📊Становая тяга акселя 1ПМ📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -386,21 +398,22 @@ async def get_all_axel_deadlift():
 async def get_all_classic_squat():
     """Get classic squat"""
     db_session = Session()
-    result = db_session.query(Standards.classic_squat and Standards.first_name).all()
+    standard = db_session.query(Standards.classic_squat).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Присед 1ПМ: Классический📊\n\n"
+    msg = f"📊Присед 1ПМ: Классический📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -414,21 +427,22 @@ async def get_all_classic_squat():
 async def get_all_front_squat():
     """Get front squat"""
     db_session = Session()
-    result = db_session.query(Standards.front_squat and Standards.first_name).all()
+    standard = db_session.query(Standards.front_squat).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Присед 1ПМ: Фронтальный📊\n\n"
+    msg = f"📊Присед 1ПМ: Фронтальный📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -442,21 +456,22 @@ async def get_all_front_squat():
 async def get_all_squat_over_the_head():
     """Get squat over the head"""
     db_session = Session()
-    result = db_session.query(Standards.squat_over_the_head and Standards.first_name).all()
+    standard = db_session.query(Standards.squat_over_the_head).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Присед 1ПМ: Над головой📊\n\n"
+    msg = f"📊Присед 1ПМ: Над головой📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -470,21 +485,22 @@ async def get_all_squat_over_the_head():
 async def get_all_skipping_rope():
     """Get skipping rope"""
     db_session = Session()
-    result = db_session.query(Standards.skipping_rope and Standards.first_name).all()
+    standard = db_session.query(Standards.skipping_rope).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Скакалка📊\n\n"
+    msg = f"📊Скакалка📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -498,21 +514,22 @@ async def get_all_skipping_rope():
 async def get_all_push_ups():
     """Get push ups"""
     db_session = Session()
-    result = db_session.query(Standards.push_ups and Standards.first_name).all()
+    standard = db_session.query(Standards.push_ups).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Отжимания от пола📊\n\n"
+    msg = f"📊Отжимания от пола📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -526,21 +543,22 @@ async def get_all_push_ups():
 async def get_all_shuttle_running():
     """Get shuttle running"""
     db_session = Session()
-    result = db_session.query(Standards.shuttle_running and Standards.first_name).all()
+    standard = db_session.query(Standards.shuttle_running).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Челночный бег📊\n\n"
+    msg = f"📊Челночный бег📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -554,21 +572,22 @@ async def get_all_shuttle_running():
 async def get_all_farmer_walk():
     """Get farmer walk"""
     db_session = Session()
-    result = db_session.query(Standards.farmer_walk and Standards.first_name).all()
+    standard = db_session.query(Standards.farmer_walk).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Прогулка фермера📊\n\n"
+    msg = f"📊Прогулка фермера📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -582,21 +601,22 @@ async def get_all_farmer_walk():
 async def get_all_pull_ups():
     """Get pull ups"""
     db_session = Session()
-    result = db_session.query(Standards.pull_ups and Standards.first_name).all()
+    standard = db_session.query(Standards.pull_ups).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Подтягивания📊\n\n"
+    msg = f"📊Подтягивания📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -610,21 +630,22 @@ async def get_all_pull_ups():
 async def get_all_high_jump():
     """Get high jump"""
     db_session = Session()
-    result = db_session.query(Standards.high_jump and Standards.first_name).all()
+    standard = db_session.query(Standards.high_jump).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Прыжок в высоту📊\n\n"
+    msg = f"📊Прыжок в высоту📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -638,21 +659,22 @@ async def get_all_high_jump():
 async def get_all_long_jump():
     """Get long jump"""
     db_session = Session()
-    result = db_session.query(Standards.long_jump and Standards.first_name).all()
+    standard = db_session.query(Standards.long_jump).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = (f"📊Прыжок в длину📊\n\n")
+    msg = f"📊Прыжок в длину📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -666,21 +688,22 @@ async def get_all_long_jump():
 async def get_all_holding_the_axel():
     """holding the axel"""
     db_session = Session()
-    result = db_session.query(Standards.holding_the_axel and Standards.first_name).all()
+    standard = db_session.query(Standards.holding_the_axel).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Удержание акселя📊\n\n"
+    msg = f"📊Удержание акселя📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
@@ -694,21 +717,22 @@ async def get_all_holding_the_axel():
 async def get_all_handstand():
     """Get handstand"""
     db_session = Session()
-    result = db_session.query(Standards.handstand and Standards.first_name).all()
+    standard = db_session.query(Standards.handstand).all()
+    name = db_session.query(Standards.first_name).all()
 
-    msg = "📊Стойка на руках📊\n\n"
+    msg = f"📊Стойка на руках📊\n\n"
 
     standards = {}
     names = {}
     count = 1
 
-    for _ in range(len(result)):
-        standards[_] = result[_][0]
-        names[_] = result[_][1]
+    for _ in range(len(standard)):
+        standards[_] = standard[_][0]
+        names[_] = name[_][0]
 
     sorted_standard = {k: v for k, v in sorted(standards.items(), key=lambda item: item[1])}
 
-    if result is not None and len(result) > 0:
+    if standard is not None and len(standard) > 0:
         for k in sorted_standard.keys():
             msg += f'{count}. {sorted_standard[k]} - {names[k]}\n'
 
