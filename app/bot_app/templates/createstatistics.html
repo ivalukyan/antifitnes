@@ -48,8 +48,8 @@
                   <img src="https://cdn.icon-icons.com/icons2/38/PNG/512/dumbbell_sport_5072.png" data-size="512" height="32" width="32">
                   Антифитнес</a>
       </nav>
-     <div class="container-md">
-            <form method="post" style="max-width: 500px; justify-content: center;">
+     <div class="container-md" style="align-items: center;">
+            <form method="post" style="max-width: 500px;">
                   {% csrf_token %}
                   <div class="mb-3">
                         <label for="{{ form.telegram_id.id_for_label }}">ID пользователя</label>
