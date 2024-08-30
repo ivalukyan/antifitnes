@@ -86,11 +86,11 @@ def standards_create(requests):
     return render(requests, 'createstandards.html', data)
 
 
-# def standards_id(requests, pk):
-#     data = models.Standards.objects.get(id=pk)
-#     print(data)
-#     arg = {'data': data}
-#     return render(requests, 'standards_id.html', arg)
+def standards_id(requests, pk):
+    data = models.Standards.objects.all().filter(telegram_id=pk)
+    # print(data[0].first_name)
+    arg = {'standard': data[0]}
+    return render(requests, 'standards_id.html', arg)
 
 class StandardsID(DetailView):
     model = Standards
