@@ -86,7 +86,7 @@ async def callback_card(callback: CallbackQuery) -> None:
 async def callback_normatives(callback: CallbackQuery) -> None:
 
     msg = await get_standards_by_id(callback.message.chat.id)
-    await callback.message.edit_text(f"📈АНАЛИЗ НОРМАТИВОВ📈\n\n{msg}",
+    await callback.message.edit_text(f"📈ТВОИ РЕКОРДЫ📈\n\n{msg}",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="profile")]
                                      ]))
