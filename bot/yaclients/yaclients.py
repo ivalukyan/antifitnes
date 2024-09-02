@@ -114,8 +114,8 @@ class Yclients:
         if res['success']:
             for _ in range(len(res['data'])):
                 msg = (f"{res['data'][_]['type']['title']}\n"
-                    f"Период --> {res['data'][_]['type']['period']}\t"
-                    f"Статус --> {res['data'][_]['status']['title']}\n\n")
+                    f"Период: {res['data'][_]['type']['period']}\t"
+                    f"Статус: {res['data'][_]['status']['title']}\n\n")
 
                 message += msg
 
@@ -131,10 +131,10 @@ class Yclients:
     
         if res['success']:
             if not res['data']:
-                return "Баланс --> 0"
+                return "Баланс: 0 баллов"
             else:
                 return (f"{res['data'][0]['type']['title']}\n"
-                        f"Баланс --> {res['data'][0]['balance']}")
+                        f"Баланс: {res['data'][0]['balance']} баллов")
             
     async def gender(self, client_id: int) -> None:
         url = f"https://api.yclients.com/api/v1/client/{self.company_id}/{client_id}"

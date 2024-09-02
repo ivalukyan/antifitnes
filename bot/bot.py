@@ -34,7 +34,7 @@ async def command_start(message: Message, state: FSMContext) -> None:
     await state.update_data(user_id=message.from_user.id, name=message.from_user.first_name, username=message.from_user.username)
 
     await message.answer(
-        f"Здравствуйте, <i>{message.from_user.first_name}</i>, вас приветствует бот спортивного клуба\n\n",
+        f"<i>{message.from_user.first_name}</i>, вас приветствует бот спортивного Клуба Антифитнес\n\n",
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text='Войти', callback_data='login')],
             [InlineKeyboardButton(text="Помощь", callback_data='help')]
@@ -57,7 +57,7 @@ async def command_help(callback: CallbackQuery) -> None:
 async def back_to_menu(callback: CallbackQuery):
 
     await callback.message.edit_text(
-        f"Здравствуйте, <i>{callback.message.chat.first_name}</i>, вас приветствует бот спортивного клуба\n\n",
+        f"<i>{callback.message.chat.first_name}</i>, вас приветствует бот спортивного Клуба Антифитнес\n\n",
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text='Войти', callback_data='login')],
             [InlineKeyboardButton(text="Помощь", callback_data='help')]

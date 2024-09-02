@@ -33,21 +33,17 @@ async def profile(callback: CallbackQuery):
     if await get_telegram_status(callback.message.chat.id):
 
         await callback.message.edit_text(f"{await get_name(callback.message.chat.id)},"
-                                         f" добро пожаловать, в спортивный клуб!\n\n📎Профиль📎",
+                                         f" добро пожаловать, в спортивный Клуб Антифитнес!",
                                          reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                                             [
-                                                 InlineKeyboardButton(text="История тренировок",
-                                                                      callback_data="history_tren"),
-                                                 InlineKeyboardButton(text="Кол-во реферальных баллов",
-                                                                      callback_data="ref_bonus"),
-                                             ],
-                                             [
-                                                 InlineKeyboardButton(text="Абонемент", callback_data="card"),
-                                                 InlineKeyboardButton(text="Нормативы", callback_data="normatives")
-                                             ],
-                                             [InlineKeyboardButton(text="Статистика", callback_data="statistics")],
-                                             [InlineKeyboardButton(text="Выйти", callback_data="logout"),
-                                              InlineKeyboardButton(text="Назад", callback_data="back")]
+                                            [InlineKeyboardButton(text="История тренировок",
+                                                                      callback_data="history_tren")],
+                                            [InlineKeyboardButton(text="Кол-во реферальных баллов",
+                                                                      callback_data="ref_bonus")],
+                                            [InlineKeyboardButton(text="Абонемент", callback_data="card")],
+                                            [InlineKeyboardButton(text="Нормативы", callback_data="normatives")],
+                                            [InlineKeyboardButton(text="Статистика", callback_data="statistics")],
+                                            [InlineKeyboardButton(text="Выйти", callback_data="logout")],
+                                            [InlineKeyboardButton(text="Назад", callback_data="back")]
                                          ]))
     else:
         await callback.message.edit_text("Вы не зарегестрированы",
@@ -70,7 +66,7 @@ async def callback_history_tren(callback: CallbackQuery) -> None:
 async def callback_ref_bonus(callback: CallbackQuery) -> None:
 
     msg = await number_of_referral_points(callback.message.chat.id)
-    await callback.message.edit_text("🔗Реферальные бонусы🔗\n\n%s" % msg,
+    await callback.message.edit_text("🔗Программа длительных взаимоотношений🔗\n\n%s" % msg,
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="profile")]
                                      ]))
@@ -90,7 +86,7 @@ async def callback_card(callback: CallbackQuery) -> None:
 async def callback_normatives(callback: CallbackQuery) -> None:
 
     msg = await get_standards_by_id(callback.message.chat.id)
-    await callback.message.edit_text(f"📉АНАЛИЗ НОРМАТИВОВ📉\n\n{msg}",
+    await callback.message.edit_text(f"📈АНАЛИЗ НОРМАТИВОВ📈\n\n{msg}",
                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                                          [InlineKeyboardButton(text="Назад в меню", callback_data="profile")]
                                      ]))
