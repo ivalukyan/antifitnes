@@ -250,6 +250,12 @@ async def main():
     # await api.gender(await api.id("+79213224013"))
     
 
+# def uuid_random():
 
-if __name__ == '__main__':
-    asyncio.run(main())
+#     from uuid import uuid4
+
+#     print(uuid4().hex)
+
+
+# if __name__ == '__main__':
+#     uuid_random()

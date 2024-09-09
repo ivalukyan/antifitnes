@@ -74,6 +74,7 @@ async def get_standards_by_id(user_id):
                f"Прыжок в длину - {result.long_jump}\n"
                f"Удержание акселя - {result.holding_the_axel}\n"
                f"Стойка на руках - {result.handstand}\n")
+        return msg
 
 
 async def get_all_thunder():
