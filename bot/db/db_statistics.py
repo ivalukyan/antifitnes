@@ -43,7 +43,7 @@ class Statistics(Base):
 async def get_statistics_by_user(user_id, year_id):
     """Get user statistics"""
     db_session = Session()
-    result = db_session.query(Statistics).filter(Statistics.user_id == user_id and Statistics.year == year_id)
+    result = db_session.query(Statistics).filter(Statistics.user_id == user_id and Statistics.year == year_id).all()
 
     message = ""
     if result is not None:
