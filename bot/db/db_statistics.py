@@ -47,6 +47,7 @@ async def get_statistics_by_user(user_id, year_id):
 
     message = ""
     if result is not None:
+        print(result)
         for _ in result:
             if _[26] == '1':
                 msg = (f"🤸‍♂️<b>Статистика за Январь</b>🤸‍♂️\n\n"
